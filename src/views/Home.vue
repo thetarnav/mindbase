@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from "vue"
 import {
   IonContent,
   IonButton,
@@ -21,9 +21,9 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonCard,
-  IonCardContent,
-} from "@ionic/vue";
+  // IonCard,
+  // IonCardContent,
+} from "@ionic/vue"
 
 export default defineComponent({
   name: "App",
@@ -34,14 +34,18 @@ export default defineComponent({
     IonContent,
     IonTitle,
     IonToolbar,
-    IonCard,
-    IonCardContent,
+    // IonCard,
+    // IonCardContent,
   },
   setup() {
-    return {};
+    return {}
   },
-});
+})
 </script>
 
-<style>
+<style lang="postcss">
+$test: red;
+h1 {
+  background: $test;
+}
 </style>

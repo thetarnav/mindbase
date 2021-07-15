@@ -1,0 +1,7 @@
+{
+  "name": "mindbase",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
