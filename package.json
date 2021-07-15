@@ -14,6 +14,7 @@
     "@ionic/vue": "^6.0.0-beta.1",
     "@ionic/vue-router": "^6.0.0-beta.1",
     "vue": "3.0.11",
+    "vue-global-api": "^0.2.1",
     "vue-router": "^4.0.10"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "tailwindcss": "^2.2.4",
     "typescript": "^4.3.2",
     "vite": "^2.4.0",
+    "vite-plugin-components": "^0.12.2",
     "vue-tsc": "^0.0.24"
   }
 }

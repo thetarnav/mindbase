@@ -4,6 +4,11 @@ import router from "./router"
 
 import { IonicVue } from "@ionic/vue"
 
+// Global Composition API imports
+import "vue-global-api/ref"
+import "vue-global-api/reactive"
+import "vue-global-api/computed"
+
 // /* Tailwind */
 import "./styles/tailwind.css"
 
