@@ -1,11 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-// module.exports = {
-//   plugins: {
-//     tailwindcss: {},
-//     autoprefixer: {},
-//   },
-// }
-
 // PostCSS configuration
 module.exports = cfg => {
   // import tokens as Sass variables
