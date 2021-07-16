@@ -2,19 +2,28 @@
 // read more https://github.com/vuejs/vue-next/pull/3399
 
 declare module 'vue' {
-	export interface GlobalComponents {
-		IonButton: typeof import('@ionic/vue')['IonButton']
-		IonButtons: typeof import('@ionic/vue')['IonButtons']
-		IonChip: typeof import('@ionic/vue')['IonChip']
-		IonContent: typeof import('@ionic/vue')['IonContent']
-		IonHeader: typeof import('@ionic/vue')['IonHeader']
-		IonIcon: typeof import('@ionic/vue')['IonIcon']
-		IonLabel: typeof import('@ionic/vue')['IonLabel']
-		IonPage: typeof import('@ionic/vue')['IonPage']
-		IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
-		IonTitle: typeof import('@ionic/vue')['IonTitle']
-		IonToolbar: typeof import('@ionic/vue')['IonToolbar']
-	}
+  export interface GlobalComponents {
+    AboutModal: typeof import('./src/components/AboutModal.vue')['default']
+    ExploreContainer: typeof import('./src/components/ExploreContainer.vue')['default']
+    IonBackButton: typeof import('@ionic/vue')['IonBackButton']
+    IonButton: typeof import('@ionic/vue')['IonButton']
+    IonButtons: typeof import('@ionic/vue')['IonButtons']
+    IonChip: typeof import('@ionic/vue')['IonChip']
+    IonContent: typeof import('@ionic/vue')['IonContent']
+    IonHeader: typeof import('@ionic/vue')['IonHeader']
+    IonIcon: typeof import('@ionic/vue')['IonIcon']
+    IonInput: typeof import('@ionic/vue')['IonInput']
+    IonItem: typeof import('@ionic/vue')['IonItem']
+    IonLabel: typeof import('@ionic/vue')['IonLabel']
+    IonPage: typeof import('@ionic/vue')['IonPage']
+    IonRouterOutlet: typeof import('@ionic/vue')['IonRouterOutlet']
+    IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
+    IonSlide: typeof import('@ionic/vue')['IonSlide']
+    IonSlides: typeof import('@ionic/vue')['IonSlides']
+    IonTitle: typeof import('@ionic/vue')['IonTitle']
+    IonToolbar: typeof import('@ionic/vue')['IonToolbar']
+    Tabs: typeof import('./src/components/common/Tabs.vue')['default']
+  }
 }
 
-export {}
+export { }
