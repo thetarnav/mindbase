@@ -1,5 +1,6 @@
 import { NavigationGuardWithThis } from 'vue-router'
 import router from '.'
+import '@/modules/auth'
 
 const isLoggedIn = ref(false)
 

@@ -1,3 +1,5 @@
+import '@/modules/firebase'
+
 // Global Composition API imports
 import 'vue-global-api/ref'
 import 'vue-global-api/reactive'

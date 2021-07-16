@@ -22,7 +22,7 @@ const slideOpts = {
 		<div class="buttons">
 			<ion-button size="large" @click="login">
 				<ion-icon slot="start" :icon="logoGoogle" />
-				Sign in with Google
+				Google Sign-In
 			</ion-button>
 			<ion-button
 				size="large"
