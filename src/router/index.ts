@@ -9,7 +9,8 @@ const routes: Array<RouteRecordRaw> = [
 		redirect: '/tabs/home',
 	},
 	{
-		path: '*',
+		// not-found
+		path: '/:pathMatch(.*)*',
 		redirect: '/tabs/home',
 	},
 	{
