@@ -23,7 +23,7 @@ const slugifyUsername = debounce(
 
 const formSubmit = async () => {
 	const result = await emailSignIn(email.value, password.value, username.value)
-	message.value = result ?? ''
+	message.value = (result as any) ?? ''
 }
 </script>
 <template>

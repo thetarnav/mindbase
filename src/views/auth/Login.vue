@@ -13,7 +13,7 @@ const disabledSubmit = computed<boolean>(() =>
 
 const login = async () => {
 	const result = await emailLogin(email.value, password.value)
-	message.value = result ?? ''
+	message.value = (result as any) ?? ''
 }
 </script>
 <template>
