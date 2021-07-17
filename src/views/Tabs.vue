@@ -1,3 +1,18 @@
+<script lang="ts" setup>
+import { toggleBadge } from '@/modules/recaptcha'
+import {
+	notificationsOutline,
+	homeOutline,
+	libraryOutline,
+	searchOutline,
+} from 'ionicons/icons'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+	toggleBadge(false)
+})
+</script>
+
 <template>
 	<ion-page>
 		<ion-tabs>
@@ -26,21 +41,3 @@
 		</ion-tabs>
 	</ion-page>
 </template>
-
-<script lang="ts" setup>
-import {
-	IonTabBar,
-	IonTabButton,
-	IonTabs,
-	IonLabel,
-	IonIcon,
-	IonPage,
-	IonRouterOutlet,
-} from '@ionic/vue'
-import {
-	notificationsOutline,
-	homeOutline,
-	libraryOutline,
-	searchOutline,
-} from 'ionicons/icons'
-</script>

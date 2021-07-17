@@ -10,6 +10,7 @@ import App from './App.vue'
 import router from './router'
 
 import { IonicVue } from '@ionic/vue'
+import { VueReCaptcha } from 'vue-recaptcha-v3'
 
 // /* Tailwind */
 import './styles/tailwind.css'
@@ -33,7 +34,10 @@ import '@ionic/vue/css/display.css'
 /* Theme variables */
 import './styles/variables.css'
 
-const app = createApp(App).use(IonicVue).use(router)
+const app = createApp(App)
+	.use(IonicVue)
+	.use(router)
+	.use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_KEY })
 
 router.isReady().then(() => {
 	app.mount('#app')

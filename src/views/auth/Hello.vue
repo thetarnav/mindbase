@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { checkUser, googleSignIn } from '@/modules/auth'
+import { toggleBadge } from '@/modules/recaptcha'
 import router from '@/router'
 import { logoGoogle, mail } from 'ionicons/icons'
 import { onMounted } from 'vue'
@@ -7,6 +8,7 @@ import { onMounted } from 'vue'
 onMounted(async () => {
 	const alreadyLogged = await checkUser()
 	alreadyLogged && router.push({ name: 'Home' })
+	toggleBadge(true)
 })
 
 const slideOpts = {

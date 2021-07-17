@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { emailSignIn } from '@/modules/auth'
+import runRecaptcha, { toggleBadge } from '@/modules/recaptcha'
 import { arrowForward } from 'ionicons/icons'
 import { debounce } from 'lodash'
 import slugify from 'slugify'
+import { onMounted, onUnmounted } from 'vue'
 
 const username = ref(''),
 	email = ref(''),
@@ -22,6 +24,7 @@ const slugifyUsername = debounce(
 )
 
 const formSubmit = async () => {
+	runRecaptcha('sign-in')
 	const result = await emailSignIn(email.value, password.value, username.value)
 	message.value = (result as any) ?? ''
 }
@@ -81,6 +84,10 @@ const formSubmit = async () => {
 				<ion-button size="large" type="submit" :disabled="disabledSubmit">
 					<ion-icon slot="end" :icon="arrowForward" />
 					Sign In
+				</ion-button>
+				<ion-button size="large" @click="runRecaptcha">
+					<ion-icon slot="end" />
+					RECAPTCHA
 				</ion-button>
 				<p>
 					Already have an account? <br />

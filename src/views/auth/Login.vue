@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { emailLogin } from '@/modules/auth'
+import runRecaptcha, { toggleBadge } from '@/modules/recaptcha'
 import { arrowForward } from 'ionicons/icons'
+import { onMounted, onUnmounted } from 'vue'
 
 const email = ref(''),
 	password = ref(''),
@@ -12,6 +14,7 @@ const disabledSubmit = computed<boolean>(() =>
 )
 
 const login = async () => {
+	runRecaptcha('login')
 	const result = await emailLogin(email.value, password.value)
 	message.value = (result as any) ?? ''
 }
