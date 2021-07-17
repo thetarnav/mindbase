@@ -1,20 +1,12 @@
 import { NavigationGuardWithThis } from 'vue-router'
-import router from '.'
-import '@/modules/auth'
+import { checkUser, isLoggedIn } from '@/modules/auth'
 
-const isLoggedIn = ref(false)
-
-export const login = (): void => {
-	isLoggedIn.value = true
-	router.push({ name: 'Home' })
-}
-
-const guard: NavigationGuardWithThis<undefined> = (to, from, next) => {
+const guard: NavigationGuardWithThis<undefined> = async (to, from, next) => {
 	// const toHelloPage = to.matched.some(route => route.name === 'Hello')
-	const toHelloPage = ['Login', 'SignUp', 'Hello'].includes(to.name as any)
+	const toHelloPage = ['Login', 'SignUp', 'Hello'].includes(to.name as any),
+		isUser = isLoggedIn() || (await checkUser())
 
-	if (!toHelloPage && !isLoggedIn.value) next({ name: 'Hello' })
-	else next()
+	!toHelloPage && !isUser ? next({ name: 'Hello' }) : next()
 }
 
 export default guard

@@ -20,6 +20,7 @@ declare module 'vue' {
     IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
     IonSlide: typeof import('@ionic/vue')['IonSlide']
     IonSlides: typeof import('@ionic/vue')['IonSlides']
+    IonText: typeof import('@ionic/vue')['IonText']
     IonTitle: typeof import('@ionic/vue')['IonTitle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
     Tabs: typeof import('./src/components/common/Tabs.vue')['default']

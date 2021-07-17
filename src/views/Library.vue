@@ -12,7 +12,7 @@
 				</ion-buttons>
 				<ion-title>Library</ion-title>
 				<ion-buttons slot="end">
-					<ion-button>
+					<ion-button :router-link="{ name: 'Account' }">
 						<ion-icon :icon="personOutline" />
 					</ion-button>
 				</ion-buttons>
@@ -28,7 +28,7 @@
 				</ion-toolbar>
 			</ion-header>
 
-			<ExploreContainer name="Tab 2 page" />
+			<!-- <ExploreContainer name="Tab 2 page" /> -->
 		</ion-content>
 	</ion-page>
 </template>

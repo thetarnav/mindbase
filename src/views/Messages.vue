@@ -9,7 +9,7 @@
 				</ion-buttons>
 				<ion-title>Messages</ion-title>
 				<ion-buttons slot="end">
-					<ion-button>
+					<ion-button :router-link="{ name: 'Account' }">
 						<ion-icon :icon="personOutline" />
 					</ion-button>
 				</ion-buttons>
@@ -22,7 +22,7 @@
 				</ion-toolbar>
 			</ion-header>
 
-			<ExploreContainer name="Tab 3 page" />
+			<!-- <ExploreContainer name="Tab 3 page" /> -->
 		</ion-content>
 	</ion-page>
 </template>

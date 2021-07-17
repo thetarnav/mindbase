@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { auth } from '@/modules/firebase'
-import router from '@/router'
+import { emailSignIn } from '@/modules/auth'
 import { arrowForward } from 'ionicons/icons'
 import { debounce } from 'lodash'
 import slugify from 'slugify'
 
 const username = ref(''),
 	email = ref(''),
-	password = ref('')
+	password = ref(''),
+	message = ref('')
 
 // Disable submit if fields are empty
 const disabledSubmit = computed<boolean>(() =>
@@ -22,18 +22,8 @@ const slugifyUsername = debounce(
 )
 
 const formSubmit = async () => {
-	try {
-		const result = await auth.createUserWithEmailAndPassword(
-			email.value,
-			password.value,
-		)
-		console.log(result)
-		// TODO: Send new user info (uid + username) to the API
-		router.push({ name: 'Home' })
-	} catch (error) {
-		// TODO: Properly handle the error
-		console.error(error)
-	}
+	const result = await emailSignIn(email.value, password.value, username.value)
+	message.value = result ?? ''
 }
 </script>
 <template>
@@ -58,6 +48,7 @@ const formSubmit = async () => {
 				<ion-item>
 					<ion-label position="floating">Unique username</ion-label>
 					<ion-input
+						name="username"
 						type="text"
 						:required="true"
 						v-model.trim="username"
@@ -66,17 +57,25 @@ const formSubmit = async () => {
 				</ion-item>
 				<ion-item>
 					<ion-label position="floating">Your email</ion-label>
-					<ion-input type="email" :required="true" v-model.trim="email" />
+					<ion-input
+						name="email"
+						type="email"
+						:required="true"
+						v-model.trim="email"
+					/>
 				</ion-item>
 				<ion-item>
 					<ion-label position="floating">New password</ion-label>
 					<ion-input
+						name="password"
 						type="password"
 						:required="true"
 						v-model.trim="password"
 					/>
 				</ion-item>
-				<p class="form-alert"></p>
+				<ion-text v-if="message" color="warning">
+					<p class="mt-4">{{ message }}</p>
+				</ion-text>
 			</div>
 			<div class="submit-group">
 				<ion-button size="large" type="submit" :disabled="disabledSubmit">

@@ -53,6 +53,11 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+	{
+		path: '/account',
+		name: 'Account',
+		component: () => import('../views/auth/Account.vue'),
+	},
 ]
 
 const router = createRouter({

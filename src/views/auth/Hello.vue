@@ -1,6 +1,14 @@
 <script lang="ts" setup>
+import { checkUser, googleSignIn } from '@/modules/auth'
+import router from '@/router'
 import { logoGoogle, mail } from 'ionicons/icons'
-import { login } from '@/router/authGuard'
+import { onMounted } from 'vue'
+
+onMounted(async () => {
+	const alreadyLogged = await checkUser()
+	alreadyLogged && router.push({ name: 'Home' })
+})
+
 const slideOpts = {
 	speed: 400,
 	spaceBetween: 64,
@@ -20,7 +28,7 @@ const slideOpts = {
 			</ion-slide>
 		</ion-slides>
 		<div class="buttons">
-			<ion-button size="large" @click="login">
+			<ion-button size="large" @click="googleSignIn">
 				<ion-icon slot="start" :icon="logoGoogle" />
 				Google Sign-In
 			</ion-button>

@@ -4,7 +4,7 @@
 			<ion-toolbar>
 				<ion-title>Home</ion-title>
 				<ion-buttons slot="end">
-					<ion-button>
+					<ion-button :router-link="{ name: 'Account' }">
 						<ion-icon :icon="personOutline" />
 					</ion-button>
 				</ion-buttons>

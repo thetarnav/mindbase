@@ -6,4 +6,6 @@
 
 <script lang="ts" setup>
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
+import router from './router'
+// router.push('/')
 </script>

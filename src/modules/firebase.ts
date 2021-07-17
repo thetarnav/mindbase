@@ -16,6 +16,5 @@ const config = {
 firebase.initializeApp(config)
 
 export const auth = firebase.auth()
-const googleProvider = new firebase.auth.GoogleAuthProvider()
-export const googleSignIn = (): Promise<void> =>
-	auth.signInWithRedirect(googleProvider)
+
+export default firebase

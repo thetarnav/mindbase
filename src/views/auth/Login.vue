@@ -1,6 +1,20 @@
 <script lang="ts" setup>
-import { login } from '@/router/authGuard'
+import { emailLogin } from '@/modules/auth'
 import { arrowForward } from 'ionicons/icons'
+
+const email = ref(''),
+	password = ref(''),
+	message = ref('')
+
+// Disable submit if fields are empty
+const disabledSubmit = computed<boolean>(() =>
+	[email.value, password.value].includes(''),
+)
+
+const login = async () => {
+	const result = await emailLogin(email.value, password.value)
+	message.value = result ?? ''
+}
 </script>
 <template>
 	<ion-page id="login-page">
@@ -20,16 +34,29 @@ import { arrowForward } from 'ionicons/icons'
 			<div class="inputs">
 				<ion-item>
 					<ion-label position="floating">Enter your email</ion-label>
-					<ion-input type="email" />
+					<ion-input
+						name="email"
+						type="email"
+						:required="true"
+						v-model="email"
+					/>
 				</ion-item>
 				<ion-item>
 					<ion-label position="floating">Password</ion-label>
-					<ion-input type="password" />
+					<ion-input
+						name="password"
+						type="password"
+						:required="true"
+						v-model="password"
+					/>
 				</ion-item>
+				<ion-text v-if="message" color="warning">
+					<p class="mt-4">{{ message }}</p>
+				</ion-text>
 				<p>Forgotten? hmm?</p>
 			</div>
 			<div class="submit-group">
-				<ion-button size="large" @click="login">
+				<ion-button size="large" :disabled="disabledSubmit" @click="login">
 					<ion-icon slot="end" :icon="arrowForward" />
 					Login
 				</ion-button>
