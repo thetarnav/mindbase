@@ -2,24 +2,31 @@
 import { arrowForward, logoGoogle } from 'ionicons/icons'
 import { defineProps, toRefs } from 'vue'
 import { useRoute } from 'vue-router'
+import { googleSignIn } from '@/modules/auth'
 
 const props = defineProps({
-	method: { type: Function, required: true },
+	method: { type: Function, default: undefined },
 	disabled: { type: Boolean, default: false },
 })
 const { method, disabled } = toRefs(props)
+const onClick = () => method.value?.()
 
 const page = useRoute().name
 </script>
 
 <template>
 	<div class="auth-submit-group">
-		<ion-button size="large" :disabled="disabled" @click="method">
+		<ion-button
+			type="submit"
+			size="large"
+			:disabled="disabled"
+			@click="onClick"
+		>
 			{{ page === 'Login' ? 'Login' : 'Sign In' }}
 			<ion-icon slot="end" :icon="arrowForward" />
 		</ion-button>
 		<div class="auth-submit-group-bottom">
-			<ion-button color="light" class="google">
+			<ion-button color="light" class="google" @click="googleSignIn">
 				<ion-icon slot="icon-only" :icon="logoGoogle" />
 			</ion-button>
 			<p>

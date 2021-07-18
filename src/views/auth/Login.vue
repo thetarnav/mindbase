@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { emailLogin } from '@/modules/auth'
 import runRecaptcha from '@/modules/recaptcha'
-import { arrowForward } from 'ionicons/icons'
 
 const email = ref(''),
 	password = ref(''),
@@ -28,7 +27,7 @@ const login = async () => {
 				<ion-title>Login</ion-title>
 			</ion-toolbar>
 		</ion-header>
-		<div class="container">
+		<form class="container" @submit.prevent="login">
 			<header class="header">
 				<h1>Welcome back!</h1>
 				<p>Login to your account to enter dashboard.</p>
@@ -57,8 +56,8 @@ const login = async () => {
 				</ion-text>
 				<p>Forgotten? hmm?</p>
 			</div>
-			<SubmitGroup />
-		</div>
+			<SubmitGroup :disabled="disabledSubmit" />
+		</form>
 	</ion-page>
 </template>
 

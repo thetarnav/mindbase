@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { emailSignIn } from '@/modules/auth'
 import runRecaptcha from '@/modules/recaptcha'
-import { arrowForward } from 'ionicons/icons'
 import { debounce } from 'lodash'
 import slugify from 'slugify'
 
@@ -79,7 +78,7 @@ const formSubmit = async () => {
 					<p class="mt-4">{{ message }}</p>
 				</ion-text>
 			</div>
-			<SubmitGroup />
+			<SubmitGroup :disabled="disabledSubmit" />
 		</form>
 	</ion-page>
 </template>

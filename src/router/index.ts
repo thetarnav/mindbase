@@ -1,3 +1,4 @@
+import { toggleBagdeAfterRouteChange } from '@/modules/recaptcha'
 import { createRouter, createWebHistory } from '@ionic/vue-router'
 import { RouteRecordRaw } from 'vue-router'
 import Tabs from '../views/Tabs.vue'
@@ -72,5 +73,7 @@ const router = createRouter({
 })
 
 router.beforeEach(authGuard)
+
+router.afterEach(toggleBagdeAfterRouteChange)
 
 export default router

@@ -10,3 +10,5 @@ import { setupRecaptcha } from './modules/recaptcha'
 
 setupRecaptcha.call(this)
 </script>
+
+<style lang="postcss"></style>
