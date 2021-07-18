@@ -8,7 +8,7 @@ import { logOut, username, email } from '@/modules/auth'
 		<ion-header>
 			<ion-toolbar>
 				<ion-buttons slot="start">
-					<ion-back-button />
+					<ion-back-button defaultHref="/tabs/home" />
 				</ion-buttons>
 				<ion-title>Account</ion-title>
 			</ion-toolbar>

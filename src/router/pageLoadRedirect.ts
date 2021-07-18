@@ -3,10 +3,9 @@ import router from '.'
 
 window.onload = async () => {
 	const isLoggedIn = !!(await checkUser()),
-		currentRoute = router.currentRoute.value.name
+		currentRoute = router.currentRoute.value.name,
+		inHelloPage = ['Login', 'SignUp', 'Hello'].includes(currentRoute as any)
 
-	if (!isLoggedIn && currentRoute !== 'Hello')
-		return router.push({ name: 'Hello' })
-	if (isLoggedIn && currentRoute !== 'Home')
-		return router.push({ name: 'Home' })
+	if (!isLoggedIn && !inHelloPage) return router.push({ name: 'Hello' })
+	if (isLoggedIn && inHelloPage) return router.push({ name: 'Home' })
 }
