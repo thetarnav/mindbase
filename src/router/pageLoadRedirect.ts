@@ -2,7 +2,7 @@ import { checkUser } from '@/modules/auth'
 import router from '.'
 
 window.onload = async () => {
-	const isLoggedIn = Boolean(await checkUser()),
+	const isLoggedIn = !!(await checkUser()),
 		currentRoute = router.currentRoute.value.name
 
 	if (!isLoggedIn && currentRoute !== 'Hello')

@@ -37,6 +37,7 @@ const login = async () => {
 					<ion-label position="floating">Enter your email</ion-label>
 					<ion-input
 						name="email"
+						autocomplete="email"
 						type="email"
 						:required="true"
 						v-model="email"
@@ -46,6 +47,7 @@ const login = async () => {
 					<ion-label position="floating">Password</ion-label>
 					<ion-input
 						name="password"
+						autocomplete="password"
 						type="password"
 						:required="true"
 						v-model="password"

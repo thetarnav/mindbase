@@ -51,6 +51,7 @@ const formSubmit = async () => {
 					<ion-input
 						name="username"
 						type="text"
+						:minlength="3"
 						:required="true"
 						v-model.trim="username"
 						@input="slugifyUsername"
