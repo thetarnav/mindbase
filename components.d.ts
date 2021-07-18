@@ -24,6 +24,8 @@ declare module 'vue' {
     IonText: typeof import('@ionic/vue')['IonText']
     IonTitle: typeof import('@ionic/vue')['IonTitle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
+    Submit: typeof import('./src/components/auth/Submit.vue')['default']
+    SubmitGroup: typeof import('./src/components/auth/SubmitGroup.vue')['default']
   }
 }
 

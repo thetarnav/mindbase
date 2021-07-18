@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+import { personOutline, pricetagsOutline, funnelOutline } from 'ionicons/icons'
+</script>
+
 <template>
 	<ion-page>
 		<ion-header>
@@ -24,7 +28,7 @@
 		<ion-content :fullscreen="true">
 			<ion-header collapse="condense">
 				<ion-toolbar>
-					<ion-title size="large">Tab 2</ion-title>
+					<ion-title size="large">Library</ion-title>
 				</ion-toolbar>
 			</ion-header>
 
@@ -32,7 +36,3 @@
 		</ion-content>
 	</ion-page>
 </template>
-
-<script lang="ts" setup>
-import { personOutline, pricetagsOutline, funnelOutline } from 'ionicons/icons'
-</script>

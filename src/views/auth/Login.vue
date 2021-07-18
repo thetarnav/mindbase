@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { emailLogin } from '@/modules/auth'
-import runRecaptcha, { toggleBadge } from '@/modules/recaptcha'
+import runRecaptcha from '@/modules/recaptcha'
 import { arrowForward } from 'ionicons/icons'
-import { onMounted, onUnmounted } from 'vue'
 
 const email = ref(''),
 	password = ref(''),
@@ -24,7 +23,7 @@ const login = async () => {
 		<ion-header>
 			<ion-toolbar>
 				<ion-buttons slot="start">
-					<ion-back-button />
+					<ion-back-button defaultHref="/hello" />
 				</ion-buttons>
 				<ion-title>Login</ion-title>
 			</ion-toolbar>
@@ -58,16 +57,7 @@ const login = async () => {
 				</ion-text>
 				<p>Forgotten? hmm?</p>
 			</div>
-			<div class="submit-group">
-				<ion-button size="large" :disabled="disabledSubmit" @click="login">
-					<ion-icon slot="end" :icon="arrowForward" />
-					Login
-				</ion-button>
-				<p>
-					You don't have an account? <br />
-					<router-link :to="{ name: 'SignUp' }">Sign Up here!</router-link>
-				</p>
-			</div>
+			<SubmitGroup />
 		</div>
 	</ion-page>
 </template>
@@ -85,12 +75,6 @@ const login = async () => {
 		}
 		ion-item::part(native) {
 			@apply rounded bg-gray-100 dark:bg-opacity-10;
-		}
-	}
-	.submit-group {
-		@apply w-full flex flex-col space-y-3;
-		> p {
-			@apply text-sm text-right text-gray-600;
 		}
 	}
 }

@@ -6,7 +6,7 @@ import authGuard from './authGuard'
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
-		redirect: '/tabs/home',
+		redirect: '/hello',
 	},
 	{
 		// not-found

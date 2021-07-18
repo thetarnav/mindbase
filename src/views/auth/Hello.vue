@@ -3,13 +3,15 @@ import { checkUser, googleSignIn } from '@/modules/auth'
 import { toggleBadge } from '@/modules/recaptcha'
 import router from '@/router'
 import { logoGoogle, mail } from 'ionicons/icons'
-import { onMounted } from 'vue'
 
-onMounted(async () => {
+;(async () => {
+	// When app first loades it navigates to Hello page
+	// But if the logged user cookie is present -> he will be redirected to Home
 	const alreadyLogged = await checkUser()
 	alreadyLogged && router.push({ name: 'Home' })
+	// Show Recaptcha badge
 	toggleBadge(true)
-})
+})()
 
 const slideOpts = {
 	speed: 400,

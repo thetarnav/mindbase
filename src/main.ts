@@ -9,6 +9,8 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
+import '@/router/pageLoadRedirect'
+
 import { IonicVue } from '@ionic/vue'
 import { VueReCaptcha } from 'vue-recaptcha-v3'
 

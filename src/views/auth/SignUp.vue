@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { emailSignIn } from '@/modules/auth'
-import runRecaptcha, { toggleBadge } from '@/modules/recaptcha'
+import runRecaptcha from '@/modules/recaptcha'
 import { arrowForward } from 'ionicons/icons'
 import { debounce } from 'lodash'
 import slugify from 'slugify'
-import { onMounted, onUnmounted } from 'vue'
 
 const username = ref(''),
 	email = ref(''),
@@ -80,20 +79,7 @@ const formSubmit = async () => {
 					<p class="mt-4">{{ message }}</p>
 				</ion-text>
 			</div>
-			<div class="submit-group">
-				<ion-button size="large" type="submit" :disabled="disabledSubmit">
-					<ion-icon slot="end" :icon="arrowForward" />
-					Sign In
-				</ion-button>
-				<ion-button size="large" @click="runRecaptcha">
-					<ion-icon slot="end" />
-					RECAPTCHA
-				</ion-button>
-				<p>
-					Already have an account? <br />
-					<router-link :to="{ name: 'Login' }">Log in here!</router-link>
-				</p>
-			</div>
+			<SubmitGroup />
 		</form>
 	</ion-page>
 </template>
@@ -108,12 +94,6 @@ const formSubmit = async () => {
 		@apply space-y-3;
 		ion-item::part(native) {
 			@apply rounded bg-blue-100 dark:bg-opacity-10;
-		}
-	}
-	.submit-group {
-		@apply w-full flex flex-col space-y-3;
-		> p {
-			@apply text-sm text-right text-gray-600;
 		}
 	}
 }
