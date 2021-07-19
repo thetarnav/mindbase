@@ -64,6 +64,11 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'Account',
 		component: () => import('../views/auth/Account.vue'),
 	},
+	{
+		path: '/item/:itemID',
+		name: 'Item',
+		component: () => import('../views/content/ItemDetails.vue'),
+	},
 ]
 
 const router = createRouter({

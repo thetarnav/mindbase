@@ -4,6 +4,7 @@ import {
 	homeOutline,
 	libraryOutline,
 	searchOutline,
+	addOutline,
 } from 'ionicons/icons'
 </script>
 
@@ -22,7 +23,15 @@ import {
 					<ion-label>Library</ion-label>
 				</ion-tab-button>
 
-				<ion-tab-button tab="messages" href="/tabs/messages">
+				<ion-tab-button tab="add-item" class="add-btn-tab">
+					<ion-icon :icon="addOutline" />
+				</ion-tab-button>
+
+				<ion-tab-button
+					tab="messages"
+					href="/tabs/messages"
+					:translucent="true"
+				>
 					<ion-icon :icon="notificationsOutline" />
 					<ion-label>Messages</ion-label>
 				</ion-tab-button>
@@ -35,3 +44,13 @@ import {
 		</ion-tabs>
 	</ion-page>
 </template>
+
+<style lang="postcss">
+ion-tab-bar {
+	.add-btn-tab {
+		ion-icon {
+			@apply bg-gray-200 dark:bg-gray-100 text-gray-900 rounded-full w-10 h-10;
+		}
+	}
+}
+</style>

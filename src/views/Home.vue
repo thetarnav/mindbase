@@ -9,12 +9,14 @@
 					</ion-button>
 				</ion-buttons>
 			</ion-toolbar>
-			<ion-toolbar>
-				<ion-searchbar />
-			</ion-toolbar>
 		</ion-header>
-		<ion-content class="ion-padding">
-			<h1>Home</h1>
+		<ion-content :fullscreen="true">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Library</ion-title>
+				</ion-toolbar>
+			</ion-header>
+			<Explorer />
 		</ion-content>
 	</ion-page>
 </template>

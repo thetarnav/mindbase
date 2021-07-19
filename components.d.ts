@@ -9,6 +9,8 @@ declare module 'vue' {
     IonButtons: typeof import('@ionic/vue')['IonButtons']
     IonChip: typeof import('@ionic/vue')['IonChip']
     IonContent: typeof import('@ionic/vue')['IonContent']
+    IonFab: typeof import('@ionic/vue')['IonFab']
+    IonFabButton: typeof import('@ionic/vue')['IonFabButton']
     IonHeader: typeof import('@ionic/vue')['IonHeader']
     IonIcon: typeof import('@ionic/vue')['IonIcon']
     IonImg: typeof import('@ionic/vue')['IonImg']

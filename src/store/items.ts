@@ -1,4 +1,4 @@
-interface ItemHead {
+export interface ItemHead {
 	id: string
 	title: string
 	thumbnail: string
@@ -21,13 +21,17 @@ const items = ref<ItemHead[]>([])
 	'Random search term',
 	'What the dog doin',
 	'Vue3 + Ionic + Typescript + TailwindCSS',
-	'Cookies are stored on the server',
+	'Cookies are stored on the computer',
 	'Every user needs an account',
 	'Każdy pies jechał koleją',
 	'About how Items came to make a Shape',
 	'Remember You are Item and to Shape You Shall Return',
 	'This is extremely useful',
 	'CSS Shadow Parts',
+	'The LCS Tribunal: Sneaky Meteos Doublelift',
 ].forEach(title => items.value.push(makeItem(title)))
 
 export const getItems = computed<ItemHead[]>(() => items.value)
+
+export const getItemDetails = (id: string): ItemHead | undefined =>
+	items.value.find(item => item.id === id)
