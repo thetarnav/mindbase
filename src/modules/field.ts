@@ -1,4 +1,6 @@
-type FieldType = 'text' | 'number' | 'boolean' | 'email'
+export type FieldType = 'text' | 'number' | 'boolean' | 'email'
+
+export type FieldEntry = Field<FieldType>
 
 interface FieldValue {
 	text: string
@@ -7,13 +9,19 @@ interface FieldValue {
 	email: string
 }
 
+const defaultValues: FieldValue = {
+	text: '',
+	number: 0,
+	boolean: false,
+	email: '',
+}
+
 interface FieldSettings {
 	text: {
 		oneLine: boolean
 	}
 	number: {
-		min?: number
-		max?: number
+		minmax?: [number, number]
 	}
 	email: { multiple: boolean }
 	boolean: undefined
@@ -29,16 +37,16 @@ export default class Field<T extends FieldType> {
 	value: FieldValue[T]
 	settings: FieldSettings[T]
 	isRequired: boolean
-	defaultValue?: T
+	defaultValue: FieldValue[T]
 
 	constructor(
 		id: string,
 		title: string,
 		type: T,
-		value: FieldValue[T],
 		settings: FieldSettings[T],
-		isRequired: boolean,
-		defaultValue?: T,
+		value: FieldValue[T] = defaultValues[type],
+		isRequired = false,
+		defaultValue = defaultValues[type],
 	) {
 		this.id = id
 		this.type = type

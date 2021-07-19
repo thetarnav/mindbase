@@ -1,3 +1,4 @@
+import Field, { FieldEntry } from '@/modules/field'
 import { random } from '@/utils/functions'
 import { loremIpsum } from 'lorem-ipsum'
 
@@ -6,9 +7,12 @@ export interface ItemHead {
 	thumbnail: string
 	title: string
 	description?: string
+	fields: FieldEntry[]
 }
 
-const randomID = () => random(0, 1000000, 'round').toString(),
+let lastID = 0
+
+const genID = () => `${lastID++}`,
 	randomSize = () => 350 + random(0, 10, 'round') * 10,
 	randomImg = () =>
 		`https://source.unsplash.com/${randomSize()}x${randomSize()}`
@@ -17,10 +21,26 @@ const items = ref<ItemHead[]>([])
 
 for (let i = 0; i < 30; i++) {
 	items.value.push({
-		id: randomID(),
+		id: genID(),
 		title: loremIpsum(),
 		thumbnail: randomImg(),
 		description: loremIpsum({ count: random(0, 2, 'round') }),
+		fields: [
+			new Field(
+				'test-field-1',
+				'Intro text',
+				'text',
+				{ oneLine: false },
+				loremIpsum(),
+			),
+			new Field(
+				'test-field-2',
+				'Number of pages',
+				'number',
+				{},
+				random(50, 500, 'round'),
+			),
+		],
 	})
 }
 
@@ -36,6 +56,7 @@ export function useItem(id: string) {
 		return {
 			itemExists: false,
 			title: '',
+			fields: [] as FieldEntry[],
 		}
 
 	const title = computed({
@@ -58,5 +79,6 @@ export function useItem(id: string) {
 		itemExists: true,
 		title,
 		description,
+		fields: details.fields,
 	}
 }
