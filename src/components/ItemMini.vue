@@ -7,6 +7,7 @@ const props = defineProps({
 	title: { type: String, default: 'Item Without a Title' },
 	img: { type: String as () => string | undefined, default: undefined },
 	id: { type: String, required: true },
+	desc: { type: String, default: undefined },
 })
 const { title, img, id } = toRefs(props),
 	router = useRouter()
@@ -16,18 +17,31 @@ const openDetails = () =>
 </script>
 
 <template>
-	<ion-item class="item-mini" @click="openDetails">
+	<ion-item
+		class="item-mini"
+		:button="true"
+		:detail="true"
+		@click="openDetails"
+	>
 		<ion-thumbnail slot="start">
 			<ion-img :src="img"></ion-img>
 		</ion-thumbnail>
 		<div class="details">
-			<h5>{{ title }}</h5>
-			<p>description...</p>
+			<h5 class="title">{{ title }}</h5>
+			<p v-if="desc" class="desc">{{ desc }}</p>
 		</div>
 	</ion-item>
 </template>
 
 <style lang="postcss">
 .item-mini {
+	@apply mb-2;
+	.title {
+		@add-mixin limit-lines 2;
+	}
+	.desc {
+		@add-mixin limit-lines 2;
+		@apply text-sm leading-tight text-gray-600 dark:text-gray-400;
+	}
 }
 </style>

@@ -11,11 +11,12 @@ import ItemMini from './ItemMini.vue'
 				<ion-label>Your Items</ion-label>
 			</ion-list-header>
 			<ItemMini
-				v-for="{ id, title, thumbnail } in getItems"
+				v-for="{ id, title, thumbnail, description } in getItems"
 				:key="id"
 				:title="title"
 				:img="thumbnail"
 				:id="id"
+				:desc="description"
 			/>
 		</ion-list>
 	</div>

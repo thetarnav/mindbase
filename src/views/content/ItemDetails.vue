@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getItemDetails } from '@/store/items'
+import { getItemDetails, useItem } from '@/store/items'
 import {} from 'ionicons/icons'
 import { useRoute, useRouter } from 'vue-router'
 import contenteditable from 'vue-contenteditable'
@@ -13,25 +13,35 @@ export default defineComponent({
 		const route = useRoute(),
 			router = useRouter()
 
-		const id = String(route.params.itemID),
-			details = getItemDetails(id)
-		if (!details) {
-			exit()
-			return {
-				details,
-				id,
-			}
-		}
+		const id = String(route.params.itemID)
+		const { title, itemExists, description } = useItem(id)
 
-		watch(
-			() => details.title,
-			title => {
-				console.log(title)
-			},
-		)
+		if (!itemExists) exit()
+		// 	details = getItemDetails(id)
+		// if (!details) {
+		// 	exit()
+		// 	return {
+		// 		details,
+		// 		id,
+		// 	}
+		// }
+
+		// watch(
+		// 	() => details.title,
+		// 	title => {
+		// 		console.log(title)
+		// 	},
+		// )
+		// return {
+		// 	details,
+		// 	id,
+		// }
+
 		return {
-			details,
+			title,
+			itemExists,
 			id,
+			description,
 		}
 	},
 })
@@ -39,12 +49,20 @@ export default defineComponent({
 
 <template>
 	<ion-page id="item-details">
-		<ion-content v-if="details" :fullscreen="true" class="ion-padding">
+		<ion-content v-if="itemExists" :fullscreen="true" class="ion-padding">
 			<ion-text>
 				<contenteditable
 					tag="h2"
 					:contenteditable="true"
-					v-model="details.title"
+					v-model="title"
+					:noNL="true"
+					:noHTML="true"
+				/>
+				<contenteditable
+					tag="p"
+					class="text-gray-600 dark:text-gray-400"
+					:contenteditable="true"
+					v-model="description"
 					:noNL="true"
 					:noHTML="true"
 				/>

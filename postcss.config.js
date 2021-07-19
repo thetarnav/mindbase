@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // PostCSS configuration
 module.exports = cfg => {
 	// import tokens as Sass variables
@@ -10,6 +11,9 @@ module.exports = cfg => {
 		parser: 'postcss-scss',
 		plugins: [
 			require('tailwindcss'),
+			require('postcss-mixins')({
+				mixinsDir: './src/styles',
+			}),
 			require('postcss-advanced-variables'),
 			require('postcss-map-get'),
 			require('postcss-nested'),
