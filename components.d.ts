@@ -3,14 +3,14 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Email: typeof import('./src/components/fields/Email.vue')['default']
     Explorer: typeof import('./src/components/Explorer.vue')['default']
+    Fields: typeof import('./src/components/shape/Fields.vue')['default']
     IonBackButton: typeof import('@ionic/vue')['IonBackButton']
     IonButton: typeof import('@ionic/vue')['IonButton']
     IonButtons: typeof import('@ionic/vue')['IonButtons']
     IonChip: typeof import('@ionic/vue')['IonChip']
     IonContent: typeof import('@ionic/vue')['IonContent']
-    IonFab: typeof import('@ionic/vue')['IonFab']
-    IonFabButton: typeof import('@ionic/vue')['IonFabButton']
     IonHeader: typeof import('@ionic/vue')['IonHeader']
     IonIcon: typeof import('@ionic/vue')['IonIcon']
     IonImg: typeof import('@ionic/vue')['IonImg']
@@ -22,8 +22,6 @@ declare module 'vue' {
     IonPage: typeof import('@ionic/vue')['IonPage']
     IonRouterOutlet: typeof import('@ionic/vue')['IonRouterOutlet']
     IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
-    IonSlide: typeof import('@ionic/vue')['IonSlide']
-    IonSlides: typeof import('@ionic/vue')['IonSlides']
     IonTabBar: typeof import('@ionic/vue')['IonTabBar']
     IonTabButton: typeof import('@ionic/vue')['IonTabButton']
     IonTabs: typeof import('@ionic/vue')['IonTabs']
@@ -34,8 +32,11 @@ declare module 'vue' {
     IonToggle: typeof import('@ionic/vue')['IonToggle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
     ItemMini: typeof import('./src/components/ItemMini.vue')['default']
-    Submit: typeof import('./src/components/auth/Submit.vue')['default']
+    Number: typeof import('./src/components/fields/Number.vue')['default']
+    PickFieldModal: typeof import('./src/components/modals/PickFieldModal.vue')['default']
     SubmitGroup: typeof import('./src/components/auth/SubmitGroup.vue')['default']
+    Text: typeof import('./src/components/fields/Text.vue')['default']
+    Toggle: typeof import('./src/components/fields/Toggle.vue')['default']
   }
 }
 

@@ -3,7 +3,7 @@ import { useItem } from '@/store/items'
 import {} from 'ionicons/icons'
 import { useRoute, useRouter } from 'vue-router'
 import contenteditable from 'vue-contenteditable'
-import Fields from './Fields.vue'
+import Fields from '@/components/shape/Fields.vue'
 
 const exit = () => router.push('/tabs/home')
 
@@ -19,7 +19,7 @@ if (!itemExists) exit()
 <template>
 	<ion-page id="item-details">
 		<ion-content v-if="itemExists" :fullscreen="true">
-			<ion-back-button defaultHref="/tabs/home" slot="fixed" />
+			<ion-back-button defaultHref="/tabs/home" slot="fixed" color="light" />
 			<header class="item-header ion-padding">
 				<contenteditable
 					tag="h2"
@@ -48,7 +48,7 @@ if (!itemExists) exit()
 	ion-back-button {
 		@apply bottom-6 left-8;
 		&::part(native) {
-			@apply bg-gray-200 dark:bg-gray-800;
+			@apply bg-gray-800 dark:bg-gray-200;
 		}
 	}
 	.item-header {

@@ -1,13 +1,28 @@
-import Field, { FieldEntry } from '@/modules/field'
+import Field, { FieldEntry, FieldType } from '@/modules/field'
 import { random } from '@/utils/functions'
 import { loremIpsum } from 'lorem-ipsum'
+import { Ref } from 'vue'
 
-export interface ItemHead {
+class Item {
+	private lastFieldID = 0
+
 	id: string
-	thumbnail: string
+	thumbnail?: string
 	title: string
-	description?: string
+	description: string
 	fields: FieldEntry[]
+
+	constructor(title: string, description = '', fields: FieldEntry[] = []) {
+		this.id = genID()
+		this.thumbnail = randomImg()
+		this.title = title
+		this.description = description
+		this.fields = fields
+	}
+
+	addField(type: FieldType) {
+		this.fields.push(new Field(`${this.lastFieldID++}`, type))
+	}
 }
 
 let lastID = 0
@@ -17,57 +32,53 @@ const genID = () => `${lastID++}`,
 	randomImg = () =>
 		`https://source.unsplash.com/${randomSize()}x${randomSize()}`
 
-const items = ref<ItemHead[]>([])
+const items: Ref<Item[]> = ref([])
 
 for (let i = 0; i < 30; i++) {
-	items.value.push({
-		id: genID(),
-		title: loremIpsum(),
-		thumbnail: randomImg(),
-		description: loremIpsum({ count: random(0, 2, 'round') }),
-		fields: [
+	items.value.push(
+		new Item(loremIpsum(), loremIpsum({ count: random(0, 2, 'round') }), [
 			new Field(
 				'test-field-1',
-				"Book's Author:",
 				'text',
+				"Book's Author:",
 				{ oneLine: true },
 				loremIpsum({ count: 2, units: 'words' }),
 			),
 			new Field(
 				'summary',
-				'Summary:',
 				'text',
+				'Summary:',
 				{ oneLine: false },
 				loremIpsum({ count: random(1, 3, 'round') }),
 			),
 			new Field(
 				'test-field-2',
-				'Number of pages:',
 				'number',
+				'Number of pages:',
 				{},
 				random(50, 500, 'round'),
 			),
 			new Field(
 				'email-test-field',
-				"Author's email:",
 				'email',
+				"Author's email:",
 				{ multiple: false },
 				loremIpsum({ count: 1, units: 'words' }) + '@gmail.com',
 			),
-			new Field('boolean-test-field', 'Is in store?', 'toggle', undefined),
-		],
-	})
+			new Field('boolean-test-field', 'toggle', 'Is in store?', undefined),
+		]),
+	)
 }
 
-export const getItems = computed<ItemHead[]>(() => items.value)
+export const getItems = computed<Item[]>(() => items.value)
 
-export const getItemDetails = (id: string): ItemHead | undefined =>
+export const getItemDetails = (id: string): Item | undefined =>
 	items.value.find(item => item.id === id)
 
 export function useItem(id: string) {
-	const details = getItemDetails(id)
+	const item = getItemDetails(id)
 
-	if (!details)
+	if (!item)
 		return {
 			itemExists: false,
 			title: '',
@@ -76,24 +87,25 @@ export function useItem(id: string) {
 
 	const title = computed({
 		set: v => {
-			details.title = v
+			item.title = v
 			console.log('new Title:', v)
 		},
-		get: () => details.title,
+		get: () => item.title,
 	})
 
 	const description = computed({
 		set: v => {
-			details.description = v
+			item.description = v
 			console.log('new Description:', v)
 		},
-		get: () => details.description,
+		get: () => item.description,
 	})
 
 	return {
 		itemExists: true,
 		title,
 		description,
-		fields: details.fields,
+		fields: item.fields,
+		addField: (type: FieldType) => item.addField.call(item, type),
 	}
 }

@@ -13,6 +13,7 @@ import '@/router/pageLoadRedirect'
 
 import { IonicVue } from '@ionic/vue'
 import { VueReCaptcha } from 'vue-recaptcha-v3'
+import Vue3TouchEvents from 'vue3-touch-events'
 
 // /* Tailwind */
 import './styles/tailwind.css'
@@ -42,6 +43,7 @@ const app = createApp(App)
 	.use(IonicVue)
 	.use(router)
 	.use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_KEY })
+	.use(Vue3TouchEvents)
 
 router.isReady().then(() => {
 	app.mount('#app')

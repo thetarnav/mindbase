@@ -2,24 +2,34 @@
 import { defineAsyncComponent, defineProps } from 'vue'
 import contenteditable from 'vue-contenteditable'
 import { useItem } from '@/store/items'
-import {} from 'ionicons/icons'
+import { addOutline } from 'ionicons/icons'
+import { modalController } from '@ionic/vue'
 
-const TextField = defineAsyncComponent(() => import('./fields/Text.vue'))
-const NumberField = defineAsyncComponent(() => import('./fields/Number.vue'))
-const EmailField = defineAsyncComponent(() => import('./fields/Email.vue'))
-const BooleanField = defineAsyncComponent(() => import('./fields/Boolean.vue'))
+const PickFieldModal = defineAsyncComponent(
+	() => import('@/components/modals/PickFieldModal.vue'),
+)
+const openPickFieldModal = async () => {
+	const modal = await modalController.create({
+		component: PickFieldModal,
+		componentProps: {
+			close: () => modalController.dismiss(),
+			addField,
+		},
+	})
+	modal.present()
+}
+
+const components = {
+	text: defineAsyncComponent(() => import('@/components/fields/Text.vue')),
+	number: defineAsyncComponent(() => import('@/components/fields/Number.vue')),
+	email: defineAsyncComponent(() => import('@/components/fields/Email.vue')),
+	toggle: defineAsyncComponent(() => import('@/components/fields/Toggle.vue')),
+}
 
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { fields } = useItem(props.id)
-
-const components = {
-	text: TextField,
-	number: NumberField,
-	email: EmailField,
-	toggle: BooleanField,
-}
+const { fields, addField } = useItem(props.id)
 </script>
 
 <template>
@@ -54,6 +64,15 @@ const components = {
 				:class="`${field.type}-field-input`"
 			/>
 		</ion-item>
+		<ion-button
+			@click="openPickFieldModal"
+			color="light"
+			expand="block"
+			class="add-field-btn"
+		>
+			<ion-icon :icon="addOutline" slot="start" />
+			Add new field
+		</ion-button>
 	</ion-list>
 </template>
 
@@ -67,10 +86,10 @@ const components = {
 	}
 	&.field-item-toggle {
 		&::part(native) {
-			@apply flex-row items-center justify-between;
+			@apply flex-row justify-between;
 		}
 		.toggle-field-input {
-			@apply ml-auto;
+			@apply ml-auto mt-0.5;
 		}
 	}
 
@@ -81,7 +100,7 @@ const components = {
 		@apply text-xs capitalize text-gray-600 dark:text-gray-500;
 	}
 
-	.field-item-input:not(.toggle-field-input) {
+	.field-item-input {
 		@apply bg-gray-100 dark:bg-gray-800 px-2 mt-3 rounded;
 		@apply font-medium text-gray-800 dark:text-gray-100;
 		padding-left: theme('spacing.2') !important;
@@ -97,5 +116,8 @@ const components = {
 			@apply align-middle;
 		}
 	}
+}
+.add-field-btn {
+	@apply my-6 mx-12;
 }
 </style>

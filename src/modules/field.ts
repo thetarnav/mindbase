@@ -27,6 +27,19 @@ export interface FieldSettings {
 	toggle: undefined
 }
 
+const defaultSettings = {
+	text: {
+		oneLine: true,
+	},
+	number: {
+		minmax: undefined,
+	},
+	email: {
+		multiple: false,
+	},
+	toggle: undefined,
+}
+
 export default class Field<T extends FieldType> {
 	/**
 	 * unique field name - shared between shape and item
@@ -41,9 +54,9 @@ export default class Field<T extends FieldType> {
 
 	constructor(
 		id: string,
-		title: string,
 		type: T,
-		settings: FieldSettings[T],
+		title = "New field's title",
+		settings: FieldSettings[T] = defaultSettings[type],
 		value: FieldValue[T] = defaultValues[type],
 		isRequired = false,
 		defaultValue = defaultValues[type],
