@@ -2,7 +2,7 @@
 import { defineAsyncComponent, defineProps } from 'vue'
 import contenteditable from 'vue-contenteditable'
 import { useItem } from '@/store/items'
-import { addOutline } from 'ionicons/icons'
+import { addOutline, trashOutline, settingsOutline } from 'ionicons/icons'
 import { modalController } from '@ionic/vue'
 
 const PickFieldModal = defineAsyncComponent(
@@ -29,7 +29,7 @@ const components = {
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { fields, addField } = useItem(props.id)
+const { fields, addField, removeField } = useItem(props.id)
 </script>
 
 <template>
@@ -37,33 +37,45 @@ const { fields, addField } = useItem(props.id)
 		<ion-list-header>
 			<ion-label>Item Fields:</ion-label>
 		</ion-list-header>
-		<ion-item
-			v-for="field in fields"
-			:key="field.id"
-			class="field-item"
-			:class="`field-item-${field.type}`"
-		>
-			<header>
-				<contenteditable
-					slot="start"
-					tag="h6"
-					class="title"
-					:contenteditable="true"
-					v-model="field.title"
-					:noNL="true"
-					:noHTML="true"
-				/>
-				<p class="field-type">{{ field.type }} Field</p>
-			</header>
-			<component
-				:is="components[field.type]"
-				:name="field.id"
-				v-model="field.value"
-				:settings="field.settings"
-				class="field-item-input"
-				:class="`${field.type}-field-input`"
-			/>
-		</ion-item>
+
+		<transition-group name="field-item--sliding" :duration="700">
+			<ion-item-sliding v-for="field in fields" :key="field.id">
+				<ion-item-options side="start" @ionSwipe="removeField?.(field)">
+					<ion-item-option color="danger">
+						<ion-icon slot="icon-only" :icon="trashOutline" />
+					</ion-item-option>
+				</ion-item-options>
+
+				<ion-item class="field-item" :class="`field-item-${field.type}`">
+					<header>
+						<contenteditable
+							tag="h6"
+							class="title"
+							contenteditable
+							v-model="field.title"
+							noNL
+							noHTML
+						/>
+						<p class="field-type">{{ field.type }} Field</p>
+					</header>
+					<component
+						:is="components[field.type]"
+						:name="field.id"
+						v-model="field.value"
+						:settings="field.settings"
+						class="field-item-input"
+						:class="`${field.type}-field-input`"
+					/>
+				</ion-item>
+
+				<ion-item-options side="end">
+					<ion-item-option>
+						<ion-icon slot="icon-only" :icon="settingsOutline" />
+					</ion-item-option>
+				</ion-item-options>
+			</ion-item-sliding>
+		</transition-group>
+
 		<ion-button
 			@click="openPickFieldModal"
 			color="light"
@@ -78,10 +90,14 @@ const { fields, addField } = useItem(props.id)
 
 <style lang="postcss">
 .item-fields-list {
+	@apply space-y-3;
+	/* >ion-item-sliding {
+		@apply 
+	} */
 }
 .field-item {
 	&::part(native) {
-		@apply mt-3 flex flex-col items-start py-2 border-b border-gray-300 dark:border-gray-700;
+		@apply pt-3 flex flex-col items-start py-2 border-b border-gray-300 dark:border-gray-700;
 		--inner-border-width: 0;
 	}
 	&.field-item-toggle {
@@ -114,6 +130,24 @@ const { fields, addField } = useItem(props.id)
 		}
 		> * {
 			@apply align-middle;
+		}
+	}
+
+	&--sliding {
+		&-leave-active {
+			@apply transition duration-500 relative;
+			transition-property: opacity, transform, margin-top;
+			.field-item {
+				@apply transition duration-700;
+				transition-property: margin-bottom;
+			}
+		}
+		&-leave-to {
+			@apply translate-x-20 opacity-0;
+			margin-top: 0 !important;
+			.field-item {
+				margin-bottom: -100% !important;
+			}
 		}
 	}
 }

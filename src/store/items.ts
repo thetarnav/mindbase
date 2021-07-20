@@ -23,6 +23,11 @@ class Item {
 	addField(type: FieldType) {
 		this.fields.push(new Field(`${this.lastFieldID++}`, type))
 	}
+
+	removeField(field: FieldEntry) {
+		const i = this.fields.indexOf(field)
+		this.fields.splice(i, 1)
+	}
 }
 
 let lastID = 0
@@ -107,5 +112,6 @@ export function useItem(id: string) {
 		description,
 		fields: item.fields,
 		addField: (type: FieldType) => item.addField.call(item, type),
+		removeField: (field: FieldEntry) => item.removeField.call(item, field),
 	}
 }

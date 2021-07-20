@@ -18,7 +18,7 @@ if (!itemExists) exit()
 
 <template>
 	<ion-page id="item-details">
-		<ion-content v-if="itemExists" :fullscreen="true">
+		<ion-content v-if="itemExists" fullscreen>
 			<ion-back-button defaultHref="/tabs/home" slot="fixed" color="light" />
 			<header class="item-header ion-padding">
 				<contenteditable

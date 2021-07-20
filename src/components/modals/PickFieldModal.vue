@@ -20,18 +20,18 @@ interface FieldThumbnail {
 const fieldTypes: Record<FieldType, FieldThumbnail> = {
 	text: {
 		name: 'Simple Text Field',
-		desc: 'Note names, descriptions, car models... in a simple text form.',
+		desc: 'Note the names, descriptions, car models... in a simple plain-text form.',
 	},
 	number: {
-		name: 'Numerical Field',
-		desc: 'For all your numerical values, like: length, size, number of book pages, etc.',
+		name: 'Number Field',
+		desc: 'For all your numerical values, like: length, size, number pages in a book, etc.',
 	},
 	toggle: {
 		name: 'True or False Toggle',
-		desc: 'Store the 1 and 0 states of your items, e.g: Is this product in store?',
+		desc: 'Store on/off states in your item, e.g: Is this product in store?',
 	},
 	email: {
-		name: 'Email Field',
+		name: 'Email',
 		desc: "Store people's emails. Single or multiple in the same field.",
 	},
 }
@@ -51,8 +51,8 @@ const fieldTypes: Record<FieldType, FieldThumbnail> = {
 			<ion-item
 				v-for="({ name, desc }, field) in fieldTypes"
 				:key="field"
-				:button="true"
-				:detail="true"
+				button
+				detail
 				class="field-thumbnail"
 				@click="addField(field)"
 			>

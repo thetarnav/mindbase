@@ -17,12 +17,7 @@ const openDetails = () =>
 </script>
 
 <template>
-	<ion-item
-		class="item-mini"
-		:button="true"
-		:detail="true"
-		@click="openDetails"
-	>
+	<ion-item class="item-mini" button detail @click="openDetails">
 		<ion-thumbnail slot="start">
 			<ion-img :src="img"></ion-img>
 		</ion-thumbnail>
