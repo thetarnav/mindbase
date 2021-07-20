@@ -1,3 +1,13 @@
 .ion-page {
 	background-color: var(--ion-background-color);
 }
+
+.field-input-error {
+	@apply text-sm text-yellow-500;
+	ion-icon {
+		@apply mb-0.5;
+	}
+	> * {
+		@apply align-middle;
+	}
+}

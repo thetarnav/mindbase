@@ -3,6 +3,7 @@ import { useItem } from '@/store/items'
 import {} from 'ionicons/icons'
 import { useRoute, useRouter } from 'vue-router'
 import contenteditable from 'vue-contenteditable'
+import Fields from './Fields.vue'
 
 const exit = () => router.push('/tabs/home')
 
@@ -10,16 +11,16 @@ const route = useRoute(),
 	router = useRouter()
 
 const id = String(route.params.itemID)
-const { title, itemExists, description, fields } = useItem(id)
+const { title, itemExists, description } = useItem(id)
 
 if (!itemExists) exit()
 </script>
 
 <template>
 	<ion-page id="item-details">
-		<ion-content v-if="itemExists" :fullscreen="true" class="ion-padding">
+		<ion-content v-if="itemExists" :fullscreen="true">
 			<ion-back-button defaultHref="/tabs/home" slot="fixed" />
-			<header class="item-header">
+			<header class="item-header ion-padding">
 				<contenteditable
 					tag="h2"
 					:contenteditable="true"
@@ -37,15 +38,7 @@ if (!itemExists) exit()
 				/>
 				<p>ID: {{ id }}</p>
 			</header>
-			<h5>Fields:</h5>
-			<ion-list class="fields">
-				<ion-item v-for="field in fields" :key="field.id">
-					<ion-label>{{ field.title }}:</ion-label>
-					<ion-text>
-						<p>{{ field.value }}</p>
-					</ion-text>
-				</ion-item>
-			</ion-list>
+			<Fields :id="id" />
 		</ion-content>
 	</ion-page>
 </template>
@@ -59,19 +52,14 @@ if (!itemExists) exit()
 		}
 	}
 	.item-header {
-		@apply pb-4 mb-4 border-b border-gray-500;
+		@apply pb-4 border-b border-gray-500;
 
 		.desc {
 			@apply my-4 text-gray-600 dark:text-gray-400;
 		}
 	}
-	.fields {
-		ion-item::part(native) {
-			@apply flex flex-col items-start my-1;
-		}
-		ion-label {
-			@apply font-bold;
-		}
+	> ion-content::part(scroll) {
+		@apply pb-24;
 	}
 }
 </style>

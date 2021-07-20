@@ -16,7 +16,7 @@ const defaultValues: FieldValue = {
 	email: '',
 }
 
-interface FieldSettings {
+export interface FieldSettings {
 	text: {
 		oneLine: boolean
 	}

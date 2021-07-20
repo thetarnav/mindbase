@@ -28,10 +28,17 @@ for (let i = 0; i < 30; i++) {
 		fields: [
 			new Field(
 				'test-field-1',
-				'Intro text',
+				'Book Author',
+				'text',
+				{ oneLine: true },
+				loremIpsum({ count: 2, units: 'words' }),
+			),
+			new Field(
+				'summary',
+				'Summary',
 				'text',
 				{ oneLine: false },
-				loremIpsum(),
+				loremIpsum({ count: random(1, 3, 'round') }),
 			),
 			new Field(
 				'test-field-2',
@@ -39,6 +46,13 @@ for (let i = 0; i < 30; i++) {
 				'number',
 				{},
 				random(50, 500, 'round'),
+			),
+			new Field(
+				'email-test-field',
+				"Author's email",
+				'email',
+				{ multiple: false },
+				loremIpsum({ count: 1, units: 'words' }) + '@gmail.com',
 			),
 		],
 	})

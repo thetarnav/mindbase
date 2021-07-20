@@ -19,6 +19,7 @@ module.exports = {
 		'@typescript-eslint/no-explicit-any': 'off',
 		'no-undef': 'off',
 		'no-empty': 'warn',
+		'@typescript-eslint/ban-ts-comment': 'off',
 	},
 	overrides: [
 		{
