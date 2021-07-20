@@ -31,6 +31,7 @@ declare module 'vue' {
     IonTextarea: typeof import('@ionic/vue')['IonTextarea']
     IonThumbnail: typeof import('@ionic/vue')['IonThumbnail']
     IonTitle: typeof import('@ionic/vue')['IonTitle']
+    IonToggle: typeof import('@ionic/vue')['IonToggle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
     ItemMini: typeof import('./src/components/ItemMini.vue')['default']
     Submit: typeof import('./src/components/auth/Submit.vue')['default']

@@ -28,32 +28,33 @@ for (let i = 0; i < 30; i++) {
 		fields: [
 			new Field(
 				'test-field-1',
-				'Book Author',
+				"Book's Author:",
 				'text',
 				{ oneLine: true },
 				loremIpsum({ count: 2, units: 'words' }),
 			),
 			new Field(
 				'summary',
-				'Summary',
+				'Summary:',
 				'text',
 				{ oneLine: false },
 				loremIpsum({ count: random(1, 3, 'round') }),
 			),
 			new Field(
 				'test-field-2',
-				'Number of pages',
+				'Number of pages:',
 				'number',
 				{},
 				random(50, 500, 'round'),
 			),
 			new Field(
 				'email-test-field',
-				"Author's email",
+				"Author's email:",
 				'email',
 				{ multiple: false },
 				loremIpsum({ count: 1, units: 'words' }) + '@gmail.com',
 			),
+			new Field('boolean-test-field', 'Is in store?', 'toggle', undefined),
 		],
 	})
 }

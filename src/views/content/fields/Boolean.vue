@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import type { FieldSettings } from '@/modules/field'
 import {} from 'ionicons/icons'
+
 import { defineEmit, defineProps } from 'vue'
 
 const props = defineProps({
 	name: { type: String, required: true },
-	modelValue: { type: Number, required: true },
-	settings: { type: Object as () => FieldSettings['number'], required: true },
+	modelValue: { type: Boolean, required: true },
+	settings: { type: Object as () => FieldSettings['toggle'], required: true },
 })
 const emit = defineEmit(['update:modelValue'])
 
@@ -17,10 +18,7 @@ const value = computed({
 </script>
 
 <template>
-	<ion-input :name="name" type="number" v-model="value" class="number-field" />
+	<ion-toggle v-model="value"></ion-toggle>
 </template>
 
-<style lang="postcss">
-.number-field {
-}
-</style>
+<style lang="postcss"></style>

@@ -33,8 +33,4 @@ const value = computed({
 	/>
 </template>
 
-<style lang="postcss">
-.text-field {
-	@apply mt-0;
-}
-</style>
+<style lang="postcss"></style>

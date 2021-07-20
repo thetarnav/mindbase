@@ -1,18 +1,18 @@
-export type FieldType = 'text' | 'number' | 'boolean' | 'email'
+export type FieldType = 'text' | 'number' | 'toggle' | 'email'
 
 export type FieldEntry = Field<FieldType>
 
 interface FieldValue {
 	text: string
 	number: number
-	boolean: boolean
+	toggle: boolean
 	email: string
 }
 
 const defaultValues: FieldValue = {
 	text: '',
 	number: 0,
-	boolean: false,
+	toggle: false,
 	email: '',
 }
 
@@ -24,7 +24,7 @@ export interface FieldSettings {
 		minmax?: [number, number]
 	}
 	email: { multiple: boolean }
-	boolean: undefined
+	toggle: undefined
 }
 
 export default class Field<T extends FieldType> {
