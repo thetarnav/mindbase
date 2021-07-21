@@ -2,8 +2,9 @@
 import { useItem } from '@/store/items'
 import {} from 'ionicons/icons'
 import { useRoute, useRouter } from 'vue-router'
-import contenteditable from 'vue-contenteditable'
 import Fields from '@/components/shape/Fields.vue'
+import ItemHeader from './ItemHeader.vue'
+import { IonContent } from '@ionic/vue'
 
 const exit = () => router.push('/tabs/home')
 
@@ -11,33 +12,26 @@ const route = useRoute(),
 	router = useRouter()
 
 const id = String(route.params.itemID)
-const { title, itemExists, description } = useItem(id)
+const { itemExists } = useItem(id)
 
 if (!itemExists) exit()
+
+// const contentComponent = ref<ComponentPublicInstance>()
+const headerComponent = ref<InstanceType<typeof ItemHeader>>()
+
+// const setContentOffset = offset
 </script>
 
 <template>
 	<ion-page id="item-details">
-		<ion-content v-if="itemExists" fullscreen>
+		<ItemHeader :id="id" ref="headerComponent" />
+		<ion-content
+			v-if="itemExists"
+			fullscreen
+			:scrollEvents="true"
+			@ionScroll="headerComponent?.contentScroll($event)"
+		>
 			<ion-back-button defaultHref="/tabs/home" slot="fixed" color="light" />
-			<header class="item-header ion-padding">
-				<contenteditable
-					tag="h2"
-					:contenteditable="true"
-					v-model="title"
-					:noNL="true"
-					:noHTML="true"
-				/>
-				<contenteditable
-					tag="p"
-					class="desc"
-					:contenteditable="true"
-					v-model="description"
-					:noNL="true"
-					:noHTML="true"
-				/>
-				<p>ID: {{ id }}</p>
-			</header>
 			<Fields :id="id" />
 		</ion-content>
 	</ion-page>
@@ -51,15 +45,16 @@ if (!itemExists) exit()
 			@apply bg-gray-800 dark:bg-gray-200;
 		}
 	}
-	.item-header {
-		@apply pb-4 border-b border-gray-500;
 
-		.desc {
-			@apply my-4 text-gray-600 dark:text-gray-400;
+	> ion-content {
+		@apply relative z-20;
+		&::part(scroll) {
+			@apply pb-24;
+			/* --offset-top: 300px; */
 		}
-	}
-	> ion-content::part(scroll) {
-		@apply pb-24;
+		&::part(background) {
+			@apply bg-transparent pointer-events-none;
+		}
 	}
 }
 </style>
