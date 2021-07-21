@@ -16,7 +16,7 @@ class Item {
 		this.id = genID()
 		this.thumbnail = randomImg()
 		this.title = title
-		this.description = description
+		this.description = description.slice(0, 200)
 		this.fields = fields
 	}
 
@@ -41,7 +41,7 @@ const items: Ref<Item[]> = ref([])
 
 for (let i = 0; i < 25; i++) {
 	items.value.push(
-		new Item(loremIpsum(), loremIpsum({ count: random(0, 2, 'round') }), [
+		new Item(loremIpsum(), loremIpsum({ count: random(0, 1, 'round') }), [
 			new Field(
 				'test-field-1',
 				'text',
@@ -100,8 +100,8 @@ export function useItem(id: string) {
 
 	const description = computed({
 		set: v => {
-			item.description = v
-			console.log('new Description:', v)
+			item.description = v.slice(0, 200)
+			console.log('new Description:', item.description)
 		},
 		get: () => item.description,
 	})
