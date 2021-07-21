@@ -13,11 +13,11 @@ const addField = (type: FieldType) => {
 	props.close()
 }
 
-interface FieldThumbnail {
+interface FieldCard {
 	name: string
 	desc: string
 }
-const fieldTypes: Record<FieldType, FieldThumbnail> = {
+const fieldTypes: Record<FieldType, FieldCard> = {
 	text: {
 		name: 'Simple Text Field',
 		desc: 'Note the names, descriptions, car models... in a simple plain-text form.',

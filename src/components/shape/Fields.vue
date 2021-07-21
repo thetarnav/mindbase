@@ -40,8 +40,9 @@ const { fields, addField, removeField } = useItem(props.id)
 
 		<transition-group name="field-item--sliding" :duration="700">
 			<ion-item-sliding v-for="field in fields" :key="field.id">
-				<ion-item-options side="start" @ionSwipe="removeField?.(field)">
-					<ion-item-option color="danger">
+				<ion-item-options side="start">
+					<!-- @ionSwipe="removeField?.(field)" -->
+					<ion-item-option color="danger" @click="removeField?.(field)">
 						<ion-icon slot="icon-only" :icon="trashOutline" />
 					</ion-item-option>
 				</ion-item-options>

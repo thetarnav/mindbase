@@ -39,7 +39,7 @@ const genID = () => `${lastID++}`,
 
 const items: Ref<Item[]> = ref([])
 
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 25; i++) {
 	items.value.push(
 		new Item(loremIpsum(), loremIpsum({ count: random(0, 2, 'round') }), [
 			new Field(
@@ -86,7 +86,7 @@ export function useItem(id: string) {
 	if (!item)
 		return {
 			itemExists: false,
-			title: '',
+			title: ref(''),
 			fields: [] as FieldEntry[],
 		}
 
