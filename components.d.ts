@@ -3,9 +3,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    Email: typeof import('./src/components/fields/Email.vue')['default']
     Explorer: typeof import('./src/components/Explorer.vue')['default']
-    Fields: typeof import('./src/components/shape/Fields.vue')['default']
     IonBackButton: typeof import('@ionic/vue')['IonBackButton']
     IonButton: typeof import('@ionic/vue')['IonButton']
     IonButtons: typeof import('@ionic/vue')['IonButtons']
@@ -22,10 +20,7 @@ declare module 'vue' {
     IonLabel: typeof import('@ionic/vue')['IonLabel']
     IonList: typeof import('@ionic/vue')['IonList']
     IonListHeader: typeof import('@ionic/vue')['IonListHeader']
-    IonMenuButton: typeof import('@ionic/vue')['IonMenuButton']
     IonPage: typeof import('@ionic/vue')['IonPage']
-    IonReorder: typeof import('@ionic/vue')['IonReorder']
-    IonReorderGroup: typeof import('@ionic/vue')['IonReorderGroup']
     IonRouterOutlet: typeof import('@ionic/vue')['IonRouterOutlet']
     IonSearchbar: typeof import('@ionic/vue')['IonSearchbar']
     IonSlide: typeof import('@ionic/vue')['IonSlide']
@@ -39,13 +34,6 @@ declare module 'vue' {
     IonTitle: typeof import('@ionic/vue')['IonTitle']
     IonToggle: typeof import('@ionic/vue')['IonToggle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
-    ItemHeader: typeof import('./src/components/shape/ItemHeader.vue')['default']
-    ItemMini: typeof import('./src/components/ItemMini.vue')['default']
-    Number: typeof import('./src/components/fields/Number.vue')['default']
-    PickFieldModal: typeof import('./src/components/modals/PickFieldModal.vue')['default']
-    SubmitGroup: typeof import('./src/components/auth/SubmitGroup.vue')['default']
-    Text: typeof import('./src/components/fields/Text.vue')['default']
-    Toggle: typeof import('./src/components/fields/Toggle.vue')['default']
   }
 }
 

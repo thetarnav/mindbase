@@ -19,7 +19,7 @@ const openDetails = () =>
 <template>
 	<ion-item class="item-mini" button detail @click="openDetails">
 		<ion-thumbnail slot="start">
-			<ion-img :src="img"></ion-img>
+			<ion-img :src="img" :alt="title"></ion-img>
 		</ion-thumbnail>
 		<div class="details">
 			<h5 class="title">{{ title }}</h5>

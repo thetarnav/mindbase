@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { emailLogin } from '@/modules/auth'
 import runRecaptcha from '@/modules/recaptcha'
+import SubmitGroup from './components/SubmitGroup.vue'
 
 const email = ref(''),
 	password = ref(''),

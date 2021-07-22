@@ -11,11 +11,11 @@
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
 		"baseUrl": ".",
-		"types": [],
 		"paths": {
 			"@/*": ["src/*"]
 		},
-		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+		"lib": ["esnext", "dom", "dom.iterable", "scripthost", "WebWorker"],
+		"types": ["vite-plugin-pwa/client"]
 	},
 	"include": [
 		"src/**/*.ts",

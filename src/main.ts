@@ -16,6 +16,8 @@ import { VueReCaptcha } from 'vue-recaptcha-v3'
 import Vue3TouchEvents from 'vue3-touch-events'
 // import VueClickAway from 'vue3-click-away'
 
+import './modules/serviceWorker'
+
 // /* Tailwind */
 import './styles/tailwind.css'
 

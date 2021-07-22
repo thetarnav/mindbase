@@ -3,6 +3,7 @@ import { emailSignIn } from '@/modules/auth'
 import runRecaptcha from '@/modules/recaptcha'
 import { debounce } from 'lodash'
 import slugify from 'slugify'
+import SubmitGroup from './components/SubmitGroup.vue'
 
 const username = ref(''),
 	email = ref(''),
