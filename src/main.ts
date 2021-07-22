@@ -1,4 +1,4 @@
-import '@/modules/firebase'
+import '@/services/firebase'
 
 // Global Composition API imports
 import 'vue-global-api/ref'

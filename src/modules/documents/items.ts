@@ -1,4 +1,4 @@
-import Field, { FieldEntry, FieldType } from '@/modules/field'
+import Field, { FieldEntry, FieldType } from '@/modules/fields/field'
 import { random } from '@/utils/functions'
 import { loremIpsum } from 'lorem-ipsum'
 import { Ref } from 'vue'

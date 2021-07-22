@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { getItems } from '@/store/items'
-import ItemMini from './ItemMini.vue'
+import { getItems } from '@/modules/documents/items'
+import ItemMini from '../modules/documents/components/ItemMini.vue'
 </script>
 
 <template>

@@ -1,12 +1,16 @@
 <script lang="ts" setup>
-import { useItem } from '@/store/items'
+import { useItem } from '@/modules/documents/items'
 import {
 	ellipsisVertical,
 	heartOutline,
 	shareSocialOutline,
+	trashOutline,
+	shapesOutline,
 } from 'ionicons/icons'
 import { defineProps, useContext } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
+import { actionSheetController } from '@ionic/vue'
+import type { AnimationBuilder } from '@ionic/vue'
 import contenteditable from 'vue-contenteditable'
 import { clamp, valToP } from '@/utils/functions'
 import { debounce } from 'lodash'
@@ -46,6 +50,70 @@ function calcCollapseMargin(e: CustomEvent) {
 
 	collapseM.value = Math.round((headerHeight - 64) * -p) + 'px'
 	collapseP.value = p
+}
+
+interface ActionSheetButton {
+	text?: string
+	role?: 'cancel' | 'destructive' | 'selected' | string
+	icon?: string
+	cssClass?: string | string[]
+	handler?: () => boolean | void | Promise<boolean | void>
+}
+
+interface ActionSheetOptions {
+	header?: string
+	subHeader?: string
+	cssClass?: string | string[]
+	buttons: (ActionSheetButton | string)[]
+	backdropDismiss?: boolean
+	translucent?: boolean
+	animated?: boolean
+	mode?: any
+	keyboardClose?: boolean
+	id?: string
+
+	enterAnimation?: AnimationBuilder
+	leaveAnimation?: AnimationBuilder
+}
+
+async function displayItemOptionsSheet() {
+	const actionSheetOptions: ActionSheetOptions = {
+		header: 'Document actions:',
+		cssClass: 'item-action-sheet',
+		buttons: [
+			{
+				text: 'Add to Favorites',
+				icon: heartOutline,
+				handler: () => {
+					console.log('Play clicked')
+				},
+			},
+			{
+				text: 'Share Document',
+				icon: shareSocialOutline,
+				handler: () => {
+					console.log('Share clicked')
+				},
+			},
+			{
+				text: 'View Shape',
+				icon: shapesOutline,
+			},
+			{
+				text: 'Delete Document',
+				role: 'destructive',
+				icon: trashOutline,
+				handler: () => {
+					console.log('Delete clicked')
+				},
+			},
+		],
+	}
+	const actionSheet = await actionSheetController.create(actionSheetOptions)
+	await actionSheet.present()
+
+	const { role } = await actionSheet.onDidDismiss()
+	console.log('onDidDismiss resolved with role', role)
 }
 </script>
 
@@ -87,13 +155,17 @@ function calcCollapseMargin(e: CustomEvent) {
 				/>
 			</div>
 			<div class="options">
-				<ion-button>
+				<ion-button
+					fill="clear"
+					color="dark"
+					@click="displayItemOptionsSheet"
+				>
 					<ion-icon slot="icon-only" :icon="ellipsisVertical" />
 				</ion-button>
-				<ion-button>
+				<ion-button fill="clear" color="dark">
 					<ion-icon slot="icon-only" :icon="heartOutline" />
 				</ion-button>
-				<ion-button>
+				<ion-button fill="clear" color="dark">
 					<ion-icon slot="icon-only" :icon="shareSocialOutline" />
 				</ion-button>
 			</div>
@@ -104,7 +176,7 @@ function calcCollapseMargin(e: CustomEvent) {
 		>
 			<h3 class="title-collapsed">{{ title }}</h3>
 			<ion-buttons slot="end">
-				<ion-button>
+				<ion-button @click="displayItemOptionsSheet">
 					<ion-icon slot="icon-only" :icon="ellipsisVertical" />
 				</ion-button>
 			</ion-buttons>
@@ -118,13 +190,11 @@ function calcCollapseMargin(e: CustomEvent) {
 	@apply border-b border-gray-300 dark:border-gray-700;
 
 	&--wrapper {
-		@apply flex items-stretch justify-between space-x-4 p-2 pl-4;
+		@apply flex items-stretch justify-between space-x-4 p-2 pl-4 pr-1;
 		.options {
-			@apply w-12 flex-shrink-0 flex flex-col justify-start items-center space-y-3;
+			@apply w-12 flex-shrink-0 flex flex-col justify-start items-center space-y-1;
 			ion-button {
-				&::part(native) {
-					@apply w-12 h-12 bg-transparent shadow-none;
-				}
+				@apply w-12 h-12 m-0;
 				ion-icon {
 					@apply min-w-[2rem];
 				}
@@ -186,6 +256,17 @@ function calcCollapseMargin(e: CustomEvent) {
 		.options {
 			opacity: calc(1 - var(--collapse-p) * 2);
 			transition: opacity 0.12s;
+		}
+	}
+}
+
+ion-action-sheet.item-action-sheet {
+	.action-sheet-group.sc-ion-action-sheet-md {
+		@apply py-6;
+
+		.action-sheet-destructive {
+			@apply text-red-400 dark:text-red-600;
+			--color: currentColor;
 		}
 	}
 }

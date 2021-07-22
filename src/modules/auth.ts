@@ -1,5 +1,5 @@
 import router from '@/router'
-import fb, { auth } from './firebase'
+import fb, { auth } from '../services/firebase'
 import LS from './localStorage'
 
 {

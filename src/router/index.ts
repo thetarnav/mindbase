@@ -1,7 +1,7 @@
 import { toggleBagdeAfterRouteChange } from '@/modules/recaptcha'
 import { createRouter, createWebHistory } from '@ionic/vue-router'
 import { RouteRecordRaw } from 'vue-router'
-import Tabs from '../views/Tabs.vue'
+import Tabs from '../views/tabs/_Tabs.vue'
 import authGuard from './authGuard'
 
 const routes: Array<RouteRecordRaw> = [
@@ -17,17 +17,17 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/hello',
 		name: 'Hello',
-		component: () => import('../views/auth/Hello.vue'),
+		component: () => import('../views/hello/_Hello.vue'),
 	},
 	{
 		path: '/login',
 		name: 'Login',
-		component: () => import('../views/auth/Login.vue'),
+		component: () => import('../views/hello/Login.vue'),
 	},
 	{
 		path: '/sign-up',
 		name: 'SignUp',
-		component: () => import('../views/auth/SignUp.vue'),
+		component: () => import('../views/hello/SignUp.vue'),
 	},
 	{
 		path: '/tabs/',
@@ -40,34 +40,34 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: 'home',
 				name: 'Home',
-				component: () => import('../views/Home.vue'),
+				component: () => import('../views/tabs/Home.vue'),
 			},
 			{
 				path: 'library',
 				name: 'Library',
-				component: () => import('../views/Library.vue'),
+				component: () => import('../views/tabs/Library.vue'),
 			},
 			{
 				path: 'messages',
 				name: 'Messages',
-				component: () => import('../views/Messages.vue'),
+				component: () => import('../views/tabs/Messages.vue'),
 			},
 			{
 				path: 'search',
 				name: 'Search',
-				component: () => import('../views/Search.vue'),
+				component: () => import('../views/tabs/Search.vue'),
 			},
 		],
 	},
 	{
 		path: '/account',
 		name: 'Account',
-		component: () => import('../views/auth/Account.vue'),
+		component: () => import('../views/Account.vue'),
 	},
 	{
 		path: '/item/:itemID',
 		name: 'Item',
-		component: () => import('../views/content/ItemDetails.vue'),
+		component: () => import('../views/Document.vue'),
 	},
 ]
 

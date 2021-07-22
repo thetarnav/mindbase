@@ -39,6 +39,7 @@ declare module 'vue' {
     IonTitle: typeof import('@ionic/vue')['IonTitle']
     IonToggle: typeof import('@ionic/vue')['IonToggle']
     IonToolbar: typeof import('@ionic/vue')['IonToolbar']
+    ItemHeader: typeof import('./src/components/shape/ItemHeader.vue')['default']
     ItemMini: typeof import('./src/components/ItemMini.vue')['default']
     Number: typeof import('./src/components/fields/Number.vue')['default']
     PickFieldModal: typeof import('./src/components/modals/PickFieldModal.vue')['default']

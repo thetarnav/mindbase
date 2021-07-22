@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useItem } from '@/store/items'
+import { useItem } from '@/modules/documents/items'
 import {} from 'ionicons/icons'
 import { useRoute, useRouter } from 'vue-router'
-import Fields from '@/components/shape/Fields.vue'
-import ItemHeader from './ItemHeader.vue'
+import Fields from '@/modules/fields/components/Fields.vue'
+import ItemHeader from '../modules/documents/components/ItemHeader.vue'
 import { IonContent } from '@ionic/vue'
 
 const exit = () => router.push('/tabs/home')
@@ -18,8 +18,6 @@ if (!itemExists) exit()
 
 // const contentComponent = ref<ComponentPublicInstance>()
 const headerComponent = ref<InstanceType<typeof ItemHeader>>()
-
-// const setContentOffset = offset
 </script>
 
 <template>

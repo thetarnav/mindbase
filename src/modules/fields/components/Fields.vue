@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, defineProps } from 'vue'
 import contenteditable from 'vue-contenteditable'
-import { useItem } from '@/store/items'
+import { useItem } from '@/modules/documents/items'
 import { addOutline, trashOutline, settingsOutline } from 'ionicons/icons'
 import { modalController } from '@ionic/vue'
 
 const PickFieldModal = defineAsyncComponent(
-	() => import('@/components/modals/PickFieldModal.vue'),
+	() => import('./PickFieldModal.vue'),
 )
 const openPickFieldModal = async () => {
 	const modal = await modalController.create({
@@ -20,10 +20,10 @@ const openPickFieldModal = async () => {
 }
 
 const components = {
-	text: defineAsyncComponent(() => import('@/components/fields/Text.vue')),
-	number: defineAsyncComponent(() => import('@/components/fields/Number.vue')),
-	email: defineAsyncComponent(() => import('@/components/fields/Email.vue')),
-	toggle: defineAsyncComponent(() => import('@/components/fields/Toggle.vue')),
+	text: defineAsyncComponent(() => import('./fields/Text.vue')),
+	number: defineAsyncComponent(() => import('./fields/Number.vue')),
+	email: defineAsyncComponent(() => import('./fields/Email.vue')),
+	toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
 }
 
 const props = defineProps({

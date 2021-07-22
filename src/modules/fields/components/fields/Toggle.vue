@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { FieldSettings } from '@/modules/field'
+import type { FieldSettings } from '@/modules/fields/field'
 import {} from 'ionicons/icons'
 
 import { defineEmit, defineProps } from 'vue'
