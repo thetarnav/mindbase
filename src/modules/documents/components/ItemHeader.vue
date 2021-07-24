@@ -4,16 +4,13 @@ import {
 	ellipsisVertical,
 	heartOutline,
 	shareSocialOutline,
-	trashOutline,
-	shapesOutline,
 } from 'ionicons/icons'
 import { defineProps, useContext } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
-import { actionSheetController } from '@ionic/vue'
-import type { AnimationBuilder } from '@ionic/vue'
 import contenteditable from 'vue-contenteditable'
 import { clamp, valToP } from '@/utils/functions'
 import { debounce } from 'lodash'
+import displayItemOptionsSheet from '../actionsSheet'
 
 const props = defineProps({
 	id: { type: String, required: true },
@@ -51,70 +48,6 @@ function calcCollapseMargin(e: CustomEvent) {
 	collapseM.value = Math.round((headerHeight - 64) * -p) + 'px'
 	collapseP.value = p
 }
-
-interface ActionSheetButton {
-	text?: string
-	role?: 'cancel' | 'destructive' | 'selected' | string
-	icon?: string
-	cssClass?: string | string[]
-	handler?: () => boolean | void | Promise<boolean | void>
-}
-
-interface ActionSheetOptions {
-	header?: string
-	subHeader?: string
-	cssClass?: string | string[]
-	buttons: (ActionSheetButton | string)[]
-	backdropDismiss?: boolean
-	translucent?: boolean
-	animated?: boolean
-	mode?: any
-	keyboardClose?: boolean
-	id?: string
-
-	enterAnimation?: AnimationBuilder
-	leaveAnimation?: AnimationBuilder
-}
-
-async function displayItemOptionsSheet() {
-	const actionSheetOptions: ActionSheetOptions = {
-		header: 'Document actions:',
-		cssClass: 'item-action-sheet',
-		buttons: [
-			{
-				text: 'Add to Favorites',
-				icon: heartOutline,
-				handler: () => {
-					console.log('Play clicked')
-				},
-			},
-			{
-				text: 'Share Document',
-				icon: shareSocialOutline,
-				handler: () => {
-					console.log('Share clicked')
-				},
-			},
-			{
-				text: 'View Shape',
-				icon: shapesOutline,
-			},
-			{
-				text: 'Delete Document',
-				role: 'destructive',
-				icon: trashOutline,
-				handler: () => {
-					console.log('Delete clicked')
-				},
-			},
-		],
-	}
-	const actionSheet = await actionSheetController.create(actionSheetOptions)
-	await actionSheet.present()
-
-	const { role } = await actionSheet.onDidDismiss()
-	console.log('onDidDismiss resolved with role', role)
-}
 </script>
 
 <template>
@@ -124,7 +57,17 @@ async function displayItemOptionsSheet() {
 				<h2 class="title">{{ title }}</h2>
 				<p class="desc">{{ desc }}</p>
 			</div>
-			<div class="options"></div>
+			<div class="options">
+				<ion-button>
+					<ion-icon slot="icon-only" :icon="ellipsisVertical" />
+				</ion-button>
+				<ion-button>
+					<ion-icon slot="icon-only" :icon="heartOutline" />
+				</ion-button>
+				<ion-button>
+					<ion-icon slot="icon-only" :icon="shareSocialOutline" />
+				</ion-button>
+			</div>
 		</div>
 	</ion-header>
 
