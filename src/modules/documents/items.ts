@@ -115,3 +115,5 @@ export function useItem(id: string) {
 		removeField: (field: FieldEntry) => item.removeField.call(item, field),
 	}
 }
+
+// export function useItemField(item:id)

@@ -24,7 +24,7 @@ export interface FieldSettings {
 		minmax?: [number, number]
 	}
 	email: { multiple: boolean }
-	toggle: undefined
+	toggle: Record<string, never>
 }
 
 const defaultSettings = {
@@ -37,7 +37,7 @@ const defaultSettings = {
 	email: {
 		multiple: false,
 	},
-	toggle: undefined,
+	toggle: {},
 }
 
 export default class Field<T extends FieldType> {
@@ -68,5 +68,13 @@ export default class Field<T extends FieldType> {
 		this.settings = settings
 		this.isRequired = isRequired
 		this.defaultValue = defaultValue
+	}
+
+	changeTitle(title: string): void {
+		this.title = title
+	}
+
+	changeValue(value: FieldValue[T]): void {
+		this.value = value
 	}
 }

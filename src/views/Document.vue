@@ -2,7 +2,7 @@
 import { useItem } from '@/modules/documents/items'
 import {} from 'ionicons/icons'
 import { useRoute, useRouter } from 'vue-router'
-import Fields from '@/modules/fields/components/Fields.vue'
+import Fields from '@/modules/fields/components/FieldsList.vue'
 import ItemHeader from '../modules/documents/components/ItemHeader.vue'
 import { IonContent } from '@ionic/vue'
 
