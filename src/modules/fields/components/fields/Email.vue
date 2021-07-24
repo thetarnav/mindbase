@@ -49,7 +49,7 @@ const value = computed({
 		:pattern="rgx"
 		v-model.trim="value"
 		:debounce="300"
-		class="email-field field-item-input"
+		class="field-input field-input--email"
 	/>
 	<p v-if="error" class="field-input-error">
 		<ion-icon :icon="alertCircleOutline"></ion-icon>

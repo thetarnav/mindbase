@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, defineProps } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import { modalController } from '@ionic/vue'
 import { addOutline, trashOutline, settingsOutline } from 'ionicons/icons'
 import { useItem } from '@/modules/documents/items'
@@ -23,16 +24,31 @@ const props = defineProps({
 	id: { type: String, required: true },
 })
 const { fields, addField, removeField } = useItem(props.id)
+
+const openedSettingsID = ref<string | null>(null)
+const listRef = ref<ComponentPublicInstance>()
+
+const openSettings = (fieldID: string) => {
+	openedSettingsID.value = fieldID
+	listRef.value?.$el.closeSlidingItems?.()
+}
+const closeSettings = (fieldID: string) => {
+	if (openedSettingsID.value === fieldID) openedSettingsID.value = null
+}
 </script>
 
 <template>
-	<ion-list class="item-fields-list">
+	<ion-list class="item-fields-list" ref="listRef">
 		<ion-list-header>
 			<ion-label>Item Fields:</ion-label>
 		</ion-list-header>
 
 		<transition-group name="field-item--sliding" :duration="700">
-			<ion-item-sliding v-for="field in fields" :key="field.id">
+			<ion-item-sliding
+				v-for="field in fields"
+				:key="field.id"
+				v-click-away="() => closeSettings(field.id)"
+			>
 				<ion-item-options side="start">
 					<!-- @ionSwipe="removeField?.(field)" -->
 					<ion-item-option color="danger" @click="removeField?.(field)">
@@ -40,10 +56,14 @@ const { fields, addField, removeField } = useItem(props.id)
 					</ion-item-option>
 				</ion-item-options>
 
-				<Field :field="field" />
+				<Field
+					class="field-item"
+					:field="field"
+					:settings-open="openedSettingsID === field.id"
+				/>
 
 				<ion-item-options side="end">
-					<ion-item-option>
+					<ion-item-option @click="openSettings(field.id)">
 						<ion-icon slot="icon-only" :icon="settingsOutline" />
 					</ion-item-option>
 				</ion-item-options>
@@ -71,5 +91,23 @@ const { fields, addField, removeField } = useItem(props.id)
 }
 .add-field-btn {
 	@apply my-6 mx-12;
+}
+
+.field-item--sliding {
+	&-leave-active {
+		@apply transition duration-500 relative;
+		transition-property: opacity, transform, margin-top;
+		.field-item {
+			@apply transition duration-700;
+			transition-property: margin-bottom;
+		}
+	}
+	&-leave-to {
+		@apply translate-x-20 opacity-0;
+		margin-top: 0 !important;
+		.field-item {
+			margin-bottom: -100% !important;
+		}
+	}
 }
 </style>

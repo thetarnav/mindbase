@@ -18,7 +18,10 @@ const value = computed({
 </script>
 
 <template>
-	<ion-toggle v-model="value"></ion-toggle>
+	<ion-toggle
+		v-model="value"
+		class="field-input field-input--toggle"
+	></ion-toggle>
 </template>
 
 <style lang="postcss"></style>

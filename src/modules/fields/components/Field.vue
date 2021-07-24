@@ -31,9 +31,12 @@ const value = computed({
 	<ion-item
 		v-if="field"
 		class="field-item"
-		:class="`field-item-${field.type}`"
+		:class="{
+			[`field-item--${field.type}`]: true,
+			'settings-open': settingsOpen,
+		}"
 	>
-		<header>
+		<header slot="start">
 			<contenteditable
 				tag="h6"
 				class="title"
@@ -49,25 +52,21 @@ const value = computed({
 			:name="field.id"
 			v-model="value"
 			:settings="field.settings"
-			class="field-item-input"
-			:class="`${field.type}-field-input`"
+			class="field-input"
+			:class="`field-input--${field.type}`"
 		/>
+		<footer slot="helper" class="settings">
+			<div class="settings-content"></div>
+		</footer>
 	</ion-item>
 </template>
 
 <style lang="postcss">
 .field-item {
+	background: var(--background);
 	&::part(native) {
-		@apply pt-3 flex flex-col items-start py-2 border-b border-gray-300 dark:border-gray-700;
+		@apply pt-3 flex flex-col items-start py-2;
 		--inner-border-width: 0;
-	}
-	&.field-item-toggle {
-		&::part(native) {
-			@apply flex-row justify-between;
-		}
-		.toggle-field-input {
-			@apply ml-auto mt-0.5;
-		}
 	}
 
 	.title {
@@ -77,7 +76,7 @@ const value = computed({
 		@apply text-xs capitalize text-gray-600 dark:text-gray-500;
 	}
 
-	.field-item-input {
+	.field-input {
 		@apply bg-gray-100 dark:bg-gray-800 px-2 mt-3 rounded;
 		@apply font-medium text-gray-800 dark:text-gray-100;
 		padding-left: theme('spacing.2') !important;
@@ -94,22 +93,20 @@ const value = computed({
 		}
 	}
 
-	&--sliding {
-		&-leave-active {
-			@apply transition duration-500 relative;
-			transition-property: opacity, transform, margin-top;
-			.field-item {
-				@apply transition duration-700;
-				transition-property: margin-bottom;
-			}
+	&--toggle {
+		&::part(native) {
+			@apply flex-row justify-between;
 		}
-		&-leave-to {
-			@apply translate-x-20 opacity-0;
-			margin-top: 0 !important;
-			.field-item {
-				margin-bottom: -100% !important;
-			}
+		.field-input {
+			@apply ml-auto mt-0.5;
 		}
+	}
+
+	.settings {
+		@apply w-full h-16;
+	}
+	&.settings-open .settings {
+		@apply bg-red-400;
 	}
 }
 </style>
