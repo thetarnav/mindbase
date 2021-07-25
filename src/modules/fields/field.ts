@@ -18,7 +18,7 @@ const defaultValues: FieldValue = {
 
 export interface FieldSettings {
 	text: {
-		oneLine: boolean
+		multiline: boolean
 	}
 	number: {
 		minmax?: [number, number]
@@ -29,7 +29,7 @@ export interface FieldSettings {
 
 const defaultSettings = {
 	text: {
-		oneLine: true,
+		multiline: true,
 	},
 	number: {
 		minmax: undefined,

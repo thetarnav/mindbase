@@ -29,7 +29,7 @@ const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
 
 const openSettings = (fieldID: string) => {
-	openedSettingsID.value = fieldID
+	openedSettingsID.value = openedSettingsID.value === fieldID ? null : fieldID
 	listRef.value?.$el.closeSlidingItems?.()
 }
 const closeSettings = (fieldID: string) => {

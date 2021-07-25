@@ -46,14 +46,14 @@ for (let i = 0; i < 25; i++) {
 				'test-field-1',
 				'text',
 				"Book's Author:",
-				{ oneLine: true },
+				{ multiline: false },
 				loremIpsum({ count: 2, units: 'words' }),
 			),
 			new Field(
 				'summary',
 				'text',
 				'Summary:',
-				{ oneLine: false },
+				{ multiline: true },
 				loremIpsum({ count: random(1, 3, 'round') }),
 			),
 			new Field(

@@ -52,11 +52,20 @@ const value = computed({
 			:name="field.id"
 			v-model="value"
 			:settings="field.settings"
+			:settings-teleport="`[data-teleport='${field.id}']`"
 			class="field-input"
 			:class="`field-input--${field.type}`"
 		/>
 		<footer slot="helper" class="settings">
-			<div class="settings-content"></div>
+			<collapse>
+				<div
+					v-show="settingsOpen"
+					class="settings-content"
+					:data-teleport="field.id"
+				>
+					<!-- <label>Settings</label> -->
+				</div>
+			</collapse>
 		</footer>
 	</ion-item>
 </template>
@@ -103,10 +112,13 @@ const value = computed({
 	}
 
 	.settings {
-		@apply w-full h-16;
-	}
-	&.settings-open .settings {
-		@apply bg-red-400;
+		@apply w-full pt-0;
+		.settings-content {
+			@apply w-full bg-gray-100 dark:bg-gray-800 rounded-b-md;
+			ion-item::part(native) {
+				--background: transparent;
+			}
+		}
 	}
 }
 </style>
