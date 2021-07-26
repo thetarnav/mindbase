@@ -28,7 +28,7 @@ const { fields, addField, removeField } = useItem(props.id)
 const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
 
-const openSettings = (fieldID: string) => {
+const toggleSettings = (fieldID: string) => {
 	openedSettingsID.value = openedSettingsID.value === fieldID ? null : fieldID
 	listRef.value?.$el.closeSlidingItems?.()
 }
@@ -44,30 +44,34 @@ const closeSettings = (fieldID: string) => {
 		</ion-list-header>
 
 		<transition-group name="field-item--sliding" :duration="700">
-			<ion-item-sliding
+			<!-- <ion-item-sliding
 				v-for="field in fields"
 				:key="field.id"
-				v-click-away="() => closeSettings(field.id)"
+				
 			>
 				<ion-item-options side="start">
-					<!-- @ionSwipe="removeField?.(field)" -->
 					<ion-item-option color="danger" @click="removeField?.(field)">
 						<ion-icon slot="icon-only" :icon="trashOutline" />
 					</ion-item-option>
-				</ion-item-options>
+				</ion-item-options> -->
 
-				<Field
-					class="field-item"
-					:field="field"
-					:settings-open="openedSettingsID === field.id"
-				/>
+			<Field
+				v-for="field in fields"
+				:key="field.id"
+				:field="field"
+				:settings-open="openedSettingsID === field.id"
+				v-touch:hold="() => toggleSettings(field.id)"
+				@toggle-options="() => toggleSettings(field.id)"
+				v-click-away="() => closeSettings(field.id)"
+				class="field-item"
+			/>
 
-				<ion-item-options side="end">
+			<!-- <ion-item-options side="end">
 					<ion-item-option @click="openSettings(field.id)">
 						<ion-icon slot="icon-only" :icon="settingsOutline" />
 					</ion-item-option>
 				</ion-item-options>
-			</ion-item-sliding>
+			</ion-item-sliding> -->
 		</transition-group>
 
 		<ion-button
