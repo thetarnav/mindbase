@@ -15,7 +15,6 @@ import { IonicVue } from '@ionic/vue'
 import { VueReCaptcha } from 'vue-recaptcha-v3'
 import Vue3TouchEvents from 'vue3-touch-events'
 import VueClickAway from 'vue3-click-away'
-import CollapseTransition from '@ivanv/vue-collapse-transition/src/CollapseTransition.vue'
 
 import './modules/serviceWorker'
 
@@ -49,7 +48,6 @@ const app = createApp(App)
 	.use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_KEY })
 	.use(Vue3TouchEvents)
 	.use(VueClickAway)
-	.component('collapse', CollapseTransition)
 
 router.isReady().then(() => {
 	app.mount('#app')

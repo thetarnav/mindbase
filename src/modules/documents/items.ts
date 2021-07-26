@@ -51,9 +51,9 @@ for (let i = 0; i < 25; i++) {
 			),
 			new Field(
 				'summary',
-				'text',
+				'rich',
 				'Summary:',
-				{ multiline: true },
+				undefined,
 				loremIpsum({ count: random(1, 3, 'round') }),
 			),
 			new Field(

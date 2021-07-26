@@ -29,7 +29,7 @@ const headerComponent = ref<InstanceType<typeof ItemHeader>>()
 			:scrollEvents="true"
 			@ionScroll="headerComponent?.contentScroll($event)"
 		>
-			<ion-back-button defaultHref="/tabs/home" slot="fixed" color="light" />
+			<!-- <ion-back-button defaultHref="/tabs/home" slot="fixed" color="light" /> -->
 			<Fields :id="id" />
 		</ion-content>
 	</ion-page>
@@ -37,12 +37,12 @@ const headerComponent = ref<InstanceType<typeof ItemHeader>>()
 
 <style lang="postcss">
 #item-details {
-	ion-back-button {
+	/* ion-back-button {
 		@apply bottom-6 left-8;
 		&::part(native) {
 			@apply bg-gray-800 dark:bg-gray-200;
 		}
-	}
+	} */
 
 	> ion-content {
 		@apply relative z-20;

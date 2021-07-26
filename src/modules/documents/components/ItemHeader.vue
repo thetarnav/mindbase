@@ -22,7 +22,7 @@ const headerComponent = ref<ComponentPublicInstance>()
 const collapseM = ref('0px'),
 	collapseP = ref(0)
 
-const contentScroll = debounce(calcCollapseMargin, 40, { maxWait: 80 })
+const contentScroll = debounce(calcCollapseMargin, 30, { maxWait: 60 })
 useContext().expose({
 	contentScroll, // debounced function is exposed to the parent element, to be called by ion-contents scroll event
 })
@@ -78,6 +78,9 @@ function calcCollapseMargin(e: CustomEvent) {
 			'--collapse-p': collapseP,
 		}"
 	>
+		<!-- <ion-buttons slot="start">
+			<ion-back-button default-href="/tabs/home"></ion-back-button>
+		</ion-buttons> -->
 		<div class="item-header--wrapper">
 			<div class="content">
 				<contenteditable
@@ -117,6 +120,9 @@ function calcCollapseMargin(e: CustomEvent) {
 			class="collapsed-content"
 			:class="{ enabled: collapseP > 0.1 }"
 		>
+			<ion-buttons slot="start">
+				<ion-back-button default-href="/tabs/home"></ion-back-button>
+			</ion-buttons>
 			<h3 class="title-collapsed">{{ title }}</h3>
 			<ion-buttons slot="end">
 				<ion-button @click="displayItemOptionsSheet">
@@ -172,7 +178,7 @@ function calcCollapseMargin(e: CustomEvent) {
 		}
 
 		.collapsed-content {
-			@apply absolute -z-1 h-16 top-0 inset-x-0 pl-4 flex items-center;
+			@apply absolute -z-1 h-16 top-0 inset-x-0 flex items-center;
 			--background: transparent;
 			transform: translateY(calc((1 - var(--collapse-p)) * 3rem));
 			opacity: calc(var(--collapse-p) * 2 - 0.5);

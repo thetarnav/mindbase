@@ -17,7 +17,7 @@ const value = computed({
 </script>
 
 <template>
-	<ion-input :name="name" type="number" v-model="value" class="number-field" />
+	<ion-input :name="name" type="number" v-model="value" class="field-input" />
 </template>
 
 <style lang="postcss">

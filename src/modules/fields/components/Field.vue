@@ -3,12 +3,14 @@ import {} from 'ionicons/icons'
 import { defineAsyncComponent, defineProps } from 'vue'
 import type { FieldEntry } from '../field'
 import contenteditable from 'vue-contenteditable'
+import CollapseTransition from '@ivanv/vue-collapse-transition/src/CollapseTransition.vue'
 
 const components = {
 	text: defineAsyncComponent(() => import('./fields/Text.vue')),
 	number: defineAsyncComponent(() => import('./fields/Number.vue')),
 	email: defineAsyncComponent(() => import('./fields/Email.vue')),
 	toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
+	rich: defineAsyncComponent(() => import('./fields/RichText.vue')),
 }
 
 const props = defineProps({
@@ -53,11 +55,9 @@ const value = computed({
 			v-model="value"
 			:settings="field.settings"
 			:settings-teleport="`[data-teleport='${field.id}']`"
-			class="field-input"
-			:class="`field-input--${field.type}`"
 		/>
 		<footer slot="helper" class="settings">
-			<collapse>
+			<CollapseTransition>
 				<div
 					v-show="settingsOpen"
 					class="settings-content"
@@ -65,7 +65,7 @@ const value = computed({
 				>
 					<!-- <label>Settings</label> -->
 				</div>
-			</collapse>
+			</CollapseTransition>
 		</footer>
 	</ion-item>
 </template>

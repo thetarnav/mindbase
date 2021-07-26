@@ -34,6 +34,10 @@ const fieldTypes: Record<FieldType, FieldCard> = {
 		name: 'Email',
 		desc: "Store people's emails. Single or multiple in the same field.",
 	},
+	rich: {
+		name: 'Rich Text Editor',
+		desc: 'Write extensive paragraphs of formated text. For blogs, articles, or fancy descriptions.',
+	},
 }
 </script>
 

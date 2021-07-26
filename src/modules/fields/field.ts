@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'number' | 'toggle' | 'email'
+export type FieldType = 'text' | 'number' | 'toggle' | 'email' | 'rich'
 
 export type FieldEntry = Field<FieldType>
 
@@ -7,6 +7,7 @@ interface FieldValue {
 	number: number
 	toggle: boolean
 	email: string
+	rich: string
 }
 
 const defaultValues: FieldValue = {
@@ -14,6 +15,7 @@ const defaultValues: FieldValue = {
 	number: 0,
 	toggle: false,
 	email: '',
+	rich: 'Content of your Rich Text Field.',
 }
 
 export interface FieldSettings {
@@ -25,6 +27,7 @@ export interface FieldSettings {
 	}
 	email: { multiple: boolean }
 	toggle: Record<string, never>
+	rich: Record<string, never>
 }
 
 const defaultSettings = {
@@ -38,6 +41,7 @@ const defaultSettings = {
 		multiple: false,
 	},
 	toggle: {},
+	rich: {},
 }
 
 export default class Field<T extends FieldType> {
@@ -55,7 +59,7 @@ export default class Field<T extends FieldType> {
 	constructor(
 		id: string,
 		type: T,
-		title = "New field's title",
+		title = 'Title of new field.',
 		settings: FieldSettings[T] = defaultSettings[type],
 		value: FieldValue[T] = defaultValues[type],
 		isRequired = false,
