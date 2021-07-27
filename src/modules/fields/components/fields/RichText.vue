@@ -5,7 +5,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { defineEmit, defineProps } from 'vue'
+import { defineEmit, defineProps, watch } from 'vue'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Typography from '@tiptap/extension-typography'
@@ -15,12 +15,14 @@ import Paragraph from '@tiptap/extension-paragraph'
 const props = defineProps({
 	name: { type: String, required: true },
 	modelValue: { type: String, required: true },
+	disabled: { type: Boolean, default: false },
 })
 
 const emit = defineEmit(['update:modelValue'])
 
 const editor = useEditor({
 	content: props.modelValue,
+	editable: !props.disabled,
 	extensions: [
 		StarterKit.configure({
 			heading: {
@@ -42,6 +44,12 @@ const editor = useEditor({
 		editorFocused.value = false
 	},
 })
+
+watch(
+	() => props.disabled,
+	() => editor.value?.setEditable(!props.disabled),
+)
+
 const editorFocused = ref(false),
 	fixedMenuFocused = ref(false)
 
@@ -134,5 +142,9 @@ const menuButtons: Record<string, MenuButton> = {
 			}
 		}
 	}
+}
+
+.field-settings-open .field-input--rich {
+	@apply opacity-50;
 }
 </style>

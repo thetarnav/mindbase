@@ -20,6 +20,7 @@ const value = computed({
 <template>
 	<ion-toggle
 		v-model="value"
+		:disabled="$attrs.disabled"
 		class="field-input field-input--toggle"
 	></ion-toggle>
 </template>

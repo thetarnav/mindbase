@@ -1,8 +1,14 @@
 <script lang="ts" setup>
+import {
+	addOutline,
+	ellipsisHorizontal,
+	trashOutline,
+	reorderTwoOutline,
+	closeOutline,
+} from 'ionicons/icons'
 import { defineAsyncComponent, defineProps } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { modalController } from '@ionic/vue'
-import { addOutline, trashOutline, settingsOutline } from 'ionicons/icons'
 import { useItem } from '@/modules/documents/items'
 import Field from './Field.vue'
 
@@ -44,34 +50,42 @@ const closeSettings = (fieldID: string) => {
 		</ion-list-header>
 
 		<transition-group name="field-item--sliding" :duration="700">
-			<!-- <ion-item-sliding
-				v-for="field in fields"
-				:key="field.id"
-				
-			>
-				<ion-item-options side="start">
-					<ion-item-option color="danger" @click="removeField?.(field)">
-						<ion-icon slot="icon-only" :icon="trashOutline" />
-					</ion-item-option>
-				</ion-item-options> -->
-
 			<Field
 				v-for="field in fields"
 				:key="field.id"
 				:field="field"
 				:settings-open="openedSettingsID === field.id"
 				v-touch:hold="() => toggleSettings(field.id)"
-				@toggle-options="() => toggleSettings(field.id)"
 				v-click-away="() => closeSettings(field.id)"
-				class="field-item"
-			/>
-
-			<!-- <ion-item-options side="end">
-					<ion-item-option @click="openSettings(field.id)">
-						<ion-icon slot="icon-only" :icon="settingsOutline" />
-					</ion-item-option>
-				</ion-item-options>
-			</ion-item-sliding> -->
+			>
+				<template v-slot:actions>
+					<ion-button
+						fill="clear"
+						color="danger"
+						@click="removeField?.(field)"
+					>
+						<ion-icon slot="icon-only" :icon="trashOutline" />
+					</ion-button>
+					<ion-button fill="clear" color="dark">
+						<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
+					</ion-button>
+					<ion-button
+						fill="clear"
+						color="dark"
+						class="open-options-btn"
+						@click="() => toggleSettings(field.id)"
+					>
+						<ion-icon
+							slot="icon-only"
+							:icon="
+								openedSettingsID === field.id
+									? closeOutline
+									: ellipsisHorizontal
+							"
+						/>
+					</ion-button>
+				</template>
+			</Field>
 		</transition-group>
 
 		<ion-button
@@ -99,10 +113,10 @@ const closeSettings = (fieldID: string) => {
 
 .field-item--sliding {
 	&-leave-active {
-		@apply transition duration-500 relative;
+		@apply transition duration-700 ease-in-out relative;
 		transition-property: opacity, transform, margin-top;
 		.field-item {
-			@apply transition duration-700;
+			@apply transition duration-1000 ease-in-out;
 			transition-property: margin-bottom;
 		}
 	}

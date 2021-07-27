@@ -28,6 +28,8 @@ const settingsValues = computed({
 		:name="name"
 		type="text"
 		v-model="value"
+		:disabled="$attrs.disabled"
+		placeholder="Type the content of your text field."
 		class="field-input"
 	/>
 	<ion-textarea
@@ -35,6 +37,8 @@ const settingsValues = computed({
 		:autoGrow="true"
 		:name="name"
 		v-model="value"
+		:disabled="$attrs.disabled"
+		placeholder="Type the content of your text field."
 		class="field-input"
 	/>
 	<teleport :to="settingsTeleport">

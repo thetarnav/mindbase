@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { ellipsisHorizontal } from 'ionicons/icons'
-import { defineAsyncComponent, defineEmit, defineProps } from 'vue'
+import {} from 'ionicons/icons'
+import { defineAsyncComponent, defineProps } from 'vue'
 import type { FieldEntry } from '../field'
 import contenteditable from 'vue-contenteditable'
-import CollapseTransition from '@ivanv/vue-collapse-transition/src/CollapseTransition.vue'
+import CollapseTransition from '@/components/CollapseTransition.vue'
 
 const components = {
 	text: defineAsyncComponent(() => import('./fields/Text.vue')),
@@ -17,7 +17,6 @@ const props = defineProps({
 	field: { type: Object as () => FieldEntry, reqired: true },
 	settingsOpen: { type: Boolean, default: false },
 })
-const emit = defineEmit(['toggleOptions'])
 
 const title = computed<string>({
 	get: () => props.field?.title ?? '',
@@ -31,29 +30,21 @@ const value = computed({
 </script>
 
 <template>
-	<div class="field-item--wrapper">
-		<ion-button
-			fill="clear"
-			color="medium"
-			class="field-options-btn"
-			@click="emit('toggleOptions')"
-		>
-			<ion-icon slot="icon-only" :icon="ellipsisHorizontal" />
-		</ion-button>
+	<div
+		v-if="field"
+		class="field-item--wrapper"
+		:class="{ 'field-settings-open': settingsOpen }"
+	>
+		<div class="field-item--actions">
+			<slot name="actions"></slot>
+		</div>
 
-		<ion-item
-			v-if="field"
-			class="field-item"
-			:class="{
-				[`field-item--${field.type}`]: true,
-				'settings-open': settingsOpen,
-			}"
-		>
+		<div class="field-item" :class="`field-item--${field.type}`">
 			<header slot="start">
 				<contenteditable
 					tag="h6"
 					class="title"
-					contenteditable
+					:contenteditable="settingsOpen"
 					v-model="title"
 					noNL
 					noHTML
@@ -67,37 +58,34 @@ const value = computed({
 				v-model="value"
 				:settings="field.settings"
 				:settings-teleport="`[data-teleport='${field.id}']`"
+				:disabled="settingsOpen"
 			/>
-
-			<footer slot="helper" class="settings">
-				<CollapseTransition>
-					<div
-						v-show="settingsOpen"
-						class="settings-content"
-						:data-teleport="field.id"
-					>
-						<!-- <label>Settings</label> -->
-					</div>
-				</CollapseTransition>
-			</footer>
-		</ion-item>
+		</div>
+		<footer slot="helper" class="field-item--settings">
+			<CollapseTransition>
+				<div
+					v-show="settingsOpen"
+					class="settings-content"
+					:data-teleport="field.id"
+				>
+					<!-- <label>Settings</label> -->
+				</div>
+			</CollapseTransition>
+		</footer>
 	</div>
 </template>
 
 <style lang="postcss">
 .field-item {
-	&--wrapper {
-		@apply relative;
+	@apply p-4 flex flex-col items-stretch;
 
-		.field-options-btn {
-			@apply absolute z-10 top-2 right-2;
-		}
+	&--wrapper {
+		@apply relative overflow-hidden;
 	}
 
 	background: var(--background);
 
 	&::part(native) {
-		@apply pt-3 flex flex-col items-start py-2;
 		--inner-border-width: 0;
 	}
 
@@ -126,22 +114,41 @@ const value = computed({
 	}
 
 	&--toggle {
-		&::part(native) {
-			@apply flex-row justify-between pr-16;
-		}
+		@apply flex-row justify-between pr-24;
 		.field-input {
 			@apply ml-auto mt-0.5;
 		}
 	}
+}
 
-	.settings {
-		@apply w-full pt-0;
-		.settings-content {
-			@apply w-full bg-gray-100 dark:bg-gray-800 rounded-b-md;
-			ion-item::part(native) {
-				--background: transparent;
-			}
+.field-item--settings {
+	@apply w-full pt-0;
+	.settings-content {
+		@apply w-full bg-gray-100 dark:bg-gray-800 rounded-b-md;
+		ion-item::part(native) {
+			--background: transparent;
 		}
+	}
+}
+
+.field-item--actions {
+	@apply absolute top-3 right-3 p-1 flex;
+	@apply transition-colors rounded;
+	> * {
+		@apply m-0 transition-opacity;
+
+		&:not(.open-options-btn) {
+			@apply opacity-0 pointer-events-none;
+		}
+		&.open-options-btn {
+			@apply opacity-50;
+		}
+	}
+}
+.field-settings-open .field-item--actions {
+	@apply z-10 bg-gray-100 bg-opacity-50;
+	> * {
+		@apply opacity-100 pointer-events-auto;
 	}
 }
 </style>

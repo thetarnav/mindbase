@@ -3,6 +3,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    CollapseTransition: typeof import('./src/components/CollapseTransition.vue')['default']
     Explorer: typeof import('./src/components/Explorer.vue')['default']
     IonBackButton: typeof import('@ionic/vue')['IonBackButton']
     IonButton: typeof import('@ionic/vue')['IonButton']

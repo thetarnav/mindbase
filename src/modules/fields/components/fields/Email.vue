@@ -54,7 +54,13 @@ const settingsValues = computed({
 		autocorrect="on"
 		:pattern="rgx"
 		v-model.trim="value"
+		:disabled="$attrs.disabled"
 		:debounce="300"
+		:placeholder="
+			settings.multiple
+				? 'jane@gmail.com john@gmail.com ...'
+				: 'example@gmail.com'
+		"
 		class="field-input field-input--email"
 	/>
 	<p v-if="error" class="field-input-error">
