@@ -67,7 +67,7 @@ for (let i = 0; i < 25; i++) {
 				'email-test-field',
 				'email',
 				"Author's email:",
-				{ multiple: false },
+				{ multiple: true },
 				loremIpsum({ count: 1, units: 'words' }) + '@gmail.com',
 			),
 			new Field('boolean-test-field', 'toggle', 'Is in store?', undefined),

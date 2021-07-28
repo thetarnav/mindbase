@@ -8,7 +8,7 @@ import CollapseTransition from '@/components/CollapseTransition.vue'
 const components = {
 	text: defineAsyncComponent(() => import('./fields/Text.vue')),
 	number: defineAsyncComponent(() => import('./fields/Number.vue')),
-	email: defineAsyncComponent(() => import('./fields/Email.vue')),
+	email: defineAsyncComponent(() => import('./fields/Email/index.vue')),
 	toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
 	rich: defineAsyncComponent(() => import('./fields/RichText.vue')),
 }
@@ -54,10 +54,10 @@ const value = computed({
 
 			<component
 				:is="components[field.type]"
-				:name="field.id"
 				v-model="value"
 				:settings="field.settings"
 				:settings-teleport="`[data-teleport='${field.id}']`"
+				:name="field.id"
 				:disabled="settingsOpen"
 			/>
 		</div>
