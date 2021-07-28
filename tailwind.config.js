@@ -43,5 +43,5 @@ module.exports = {
 		margin: ['last', 'first'],
 		borderRadius: ['last', 'first'],
 	},
-	plugins: [],
+	plugins: [require('@vueform/slider/tailwind')],
 }

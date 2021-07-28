@@ -27,6 +27,11 @@ const value = computed({
 	get: () => props.field?.value ?? '',
 	set: v => props.field?.changeValue(v),
 })
+
+const settings = computed({
+	get: () => props.field?.settings ?? {},
+	set: v => props.field?.changeSettings(v),
+})
 </script>
 
 <template>
@@ -55,7 +60,7 @@ const value = computed({
 			<component
 				:is="components[field.type]"
 				v-model="value"
-				:settings="field.settings"
+				v-model:settings="settings"
 				:settings-teleport="`[data-teleport='${field.id}']`"
 				:name="field.id"
 				:disabled="settingsOpen"
@@ -146,7 +151,7 @@ const value = computed({
 	}
 }
 .field-settings-open .field-item--actions {
-	@apply z-10 bg-gray-100 bg-opacity-50;
+	@apply z-10 bg-gray-100 dark:bg-gray-800 bg-opacity-50;
 	> * {
 		@apply opacity-100 pointer-events-auto;
 	}

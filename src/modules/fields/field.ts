@@ -23,19 +23,19 @@ export interface FieldSettings {
 		multiline: boolean
 	}
 	number: {
-		minmax?: [number, number]
+		minmax: [number, number] | [null, null]
 	}
 	email: { multiple: boolean }
 	toggle: Record<string, never>
 	rich: Record<string, never>
 }
 
-const defaultSettings = {
+const defaultSettings: FieldSettings = {
 	text: {
 		multiline: true,
 	},
 	number: {
-		minmax: undefined,
+		minmax: [null, null],
 	},
 	email: {
 		multiple: false,
@@ -60,8 +60,8 @@ export default class Field<T extends FieldType> {
 		id: string,
 		type: T,
 		title = 'Title of new field.',
-		settings: FieldSettings[T] = defaultSettings[type],
 		value: FieldValue[T] = defaultValues[type],
+		settings: FieldSettings[T] = defaultSettings[type],
 		isRequired = false,
 		defaultValue = defaultValues[type],
 	) {
@@ -80,5 +80,9 @@ export default class Field<T extends FieldType> {
 
 	changeValue(value: FieldValue[T]): void {
 		this.value = value
+	}
+
+	changeSettings(settings: FieldSettings[T]): void {
+		this.settings = settings
 	}
 }
