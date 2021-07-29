@@ -51,7 +51,7 @@ for (let i = 0; i < 25; i++) {
 			),
 			new Field(
 				'summary',
-				'rich',
+				'rich_text',
 				'Summary:',
 				loremIpsum({ count: random(1, 3, 'round') }),
 			),
@@ -62,6 +62,7 @@ for (let i = 0; i < 25; i++) {
 				random(50, 500, 'round'),
 				{ minmax: [0, 1000] },
 			),
+			new Field('phone-field', 'phone', 'Contact phone number:'),
 			new Field(
 				'email-test-field',
 				'email',

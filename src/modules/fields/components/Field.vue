@@ -7,10 +7,11 @@ import CollapseTransition from '@/components/CollapseTransition.vue'
 
 const components = {
 	text: defineAsyncComponent(() => import('./fields/Text.vue')),
+	rich_text: defineAsyncComponent(() => import('./fields/RichText.vue')),
 	number: defineAsyncComponent(() => import('./fields/Number.vue')),
-	email: defineAsyncComponent(() => import('./fields/Email/index.vue')),
 	toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
-	rich: defineAsyncComponent(() => import('./fields/RichText.vue')),
+	email: defineAsyncComponent(() => import('./fields/Email/index.vue')),
+	phone: defineAsyncComponent(() => import('./fields/Phone.vue')),
 }
 
 const props = defineProps({

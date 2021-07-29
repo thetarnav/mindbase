@@ -1,21 +1,32 @@
-export type FieldType = 'text' | 'number' | 'toggle' | 'email' | 'rich'
+export type FieldType =
+	| 'text'
+	| 'number'
+	| 'toggle'
+	| 'email'
+	| 'rich_text'
+	| 'phone'
 
 export type FieldEntry = Field<FieldType>
 
-interface FieldValue {
+export interface FieldValue {
 	text: string
+	rich_text: string
 	number: number
 	toggle: boolean
 	email: string
-	rich: string
+	phone: {
+		name: string
+		number: string
+	}[]
 }
 
 const defaultValues: FieldValue = {
 	text: '',
+	rich_text: 'Content of your Rich Text Field.',
 	number: 0,
 	toggle: false,
 	email: '',
-	rich: 'Content of your Rich Text Field.',
+	phone: [{ name: 'Primary', number: '' }],
 }
 
 export interface FieldSettings {
@@ -27,13 +38,17 @@ export interface FieldSettings {
 	}
 	email: { multiple: boolean }
 	toggle: Record<string, never>
-	rich: Record<string, never>
+	rich_text: Record<string, never>
+	phone: {
+		multiple: boolean
+	}
 }
 
 const defaultSettings: FieldSettings = {
 	text: {
 		multiline: true,
 	},
+	rich_text: {},
 	number: {
 		minmax: [null, null],
 	},
@@ -41,7 +56,9 @@ const defaultSettings: FieldSettings = {
 		multiple: false,
 	},
 	toggle: {},
-	rich: {},
+	phone: {
+		multiple: false,
+	},
 }
 
 export default class Field<T extends FieldType> {
