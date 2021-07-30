@@ -50,8 +50,4 @@ const settingsValues = computed({
    </teleport>
 </template>
 
-<style lang="postcss">
-.settings-item {
-   /* @apply flex items-center space-x-4; */
-}
-</style>
+<style lang="postcss"></style>
