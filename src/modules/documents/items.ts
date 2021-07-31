@@ -45,7 +45,7 @@ for (let i = 0; i < 25; i++) {
 			new Field(
 				'test-field-1',
 				'text',
-				"Book's Author:",
+				'Book Author:',
 				loremIpsum({ count: 2, units: 'words' }),
 				{ multiline: false },
 			),
@@ -65,7 +65,7 @@ for (let i = 0; i < 25; i++) {
 			new Field(
 				'email-test-field',
 				'email',
-				"Author's email:",
+				'Author email:',
 				loremIpsum({ count: 1, units: 'words' }) + '@gmail.com',
 				{ multiple: true },
 			),
