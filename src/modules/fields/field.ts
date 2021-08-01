@@ -5,6 +5,7 @@ export type FieldType =
    | 'email'
    | 'rich_text'
    | 'phone'
+   | 'date'
 
 export type FieldEntry = Field<FieldType>
 
@@ -20,6 +21,7 @@ export interface FieldValue {
            label: string
            number: string
         }[]
+   date: Date | { start: Date; end: Date }
 }
 
 const defaultValues: FieldValue = {
@@ -29,30 +31,16 @@ const defaultValues: FieldValue = {
    toggle: false,
    email: '',
    phone: '',
+   date: new Date(),
 }
 
-export interface FieldSettings {
-   text: {
-      multiline: boolean
-   }
-   number: {
-      minmax: [number, number] | [null, null]
-   }
-   email: { multiple: boolean }
-   toggle: Record<string, never>
-   rich_text: Record<string, never>
-   phone: {
-      multiple: boolean
-   }
-}
-
-const defaultSettings: FieldSettings = {
+const defaultSettings = {
    text: {
       multiline: true,
    },
    rich_text: {},
    number: {
-      minmax: [null, null],
+      minmax: [null, null] as [number, number] | [null, null],
    },
    email: {
       multiple: false,
@@ -61,7 +49,13 @@ const defaultSettings: FieldSettings = {
    phone: {
       multiple: false,
    },
+   date: {
+      range: false,
+      multiple: false,
+      mode: 'date' as 'date' | 'time' | 'dateTime',
+   },
 }
+export type FieldSettings = typeof defaultSettings
 
 export default class Field<T extends FieldType> {
    /**

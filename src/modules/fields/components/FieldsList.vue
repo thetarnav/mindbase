@@ -41,6 +41,18 @@ const toggleSettings = (fieldID: string) => {
 const closeSettings = (fieldID: string) => {
    if (openedSettingsID.value === fieldID) openedSettingsID.value = null
 }
+
+const onClickAway = (fieldID: string, e: TouchEvent) => {
+   // Close Settings only if clicked on not-permitted element
+   const { path } = e as any
+   const foundPremitted = path.some((node: HTMLElement | Document | Window) => {
+      if (node === document || node === window || !(node as any)?.classList)
+         return false
+      const el = node as HTMLElement
+      return el.classList.contains('select-alert') ? true : false
+   })
+   !foundPremitted && closeSettings(fieldID)
+}
 </script>
 
 <template>
@@ -56,7 +68,10 @@ const closeSettings = (fieldID: string) => {
             :field="field"
             :settings-open="openedSettingsID === field.id"
             v-touch:hold="() => toggleSettings(field.id)"
-            v-click-away="() => closeSettings(field.id)"
+            v-click-away="
+               // @ts-ignore
+               e => onClickAway(field.id, e)
+            "
          >
             <template v-slot:actions>
                <ion-button

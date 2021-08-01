@@ -12,6 +12,7 @@ const components = {
    toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
    email: defineAsyncComponent(() => import('./fields/Email/index.vue')),
    phone: defineAsyncComponent(() => import('./fields/Phone.vue')),
+   date: defineAsyncComponent(() => import('./fields/Date.vue')),
 }
 
 const props = defineProps({
@@ -86,7 +87,7 @@ const settings = computed({
    @apply px-4 py-6 flex flex-col items-stretch;
 
    &--wrapper {
-      @apply relative overflow-hidden;
+      @apply relative;
    }
 
    background: var(--background);
@@ -135,6 +136,11 @@ const settings = computed({
       @apply w-full bg-gray-100 dark:bg-gray-800 rounded-b-md;
       ion-item::part(native) {
          --background: transparent;
+      }
+   }
+   ion-label {
+      i {
+         @apply text-sm text-gray-400;
       }
    }
 }

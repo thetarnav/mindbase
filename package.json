@@ -28,6 +28,7 @@
     "postcss-mixins": "^8.1.0",
     "register-service-worker": "^1.7.2",
     "slugify": "^1.6.0",
+    "v-calendar": "^3.0.0-alpha.5",
     "vue": "3.0.11",
     "vue-contenteditable": "^3.0.4",
     "vue-global-api": "^0.2.4",
