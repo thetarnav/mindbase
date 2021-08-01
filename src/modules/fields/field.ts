@@ -17,7 +17,7 @@ export interface FieldValue {
    phone:
       | string
       | {
-           name: string
+           label: string
            number: string
         }[]
 }

@@ -9,6 +9,7 @@ import type { FieldSettings, FieldValue } from '@/modules/fields/field'
 import { defineEmit, defineProps, nextTick } from 'vue'
 import { IonReorderGroup } from '@ionic/vue'
 import { addOutline, closeOutline, reorderTwoOutline } from 'ionicons/icons'
+import CollapseTransition from '@/components/CollapseTransition.vue'
 import { AsYouType } from 'libphonenumber-js'
 import { debounce } from 'lodash'
 import { getRandom } from '@/utils/functions'
@@ -34,7 +35,7 @@ const defaultCountryCode = 'US'
 
 interface Value {
    id: number
-   name: string
+   label: string
    number: string
    compact: string
    code: string
@@ -48,7 +49,7 @@ const value = ref<Value[]>([])
 {
    const rawList = Array.isArray(props.modelValue)
       ? props.modelValue
-      : [{ name: 'Primary', number: props.modelValue }]
+      : [{ label: 'Primary', number: props.modelValue }]
    rawList.forEach(phone => {
       const id = lastID++
       value.value.push({
@@ -72,7 +73,7 @@ watch(value, () => emitValue(), {
 const emitValue = debounce(() => {
    if (props.settings.multiple) {
       const parsedValues = value.value.map(phone => ({
-         name: phone.name,
+         label: phone.label.trim() ?? 'Phone',
          number: phone.compact,
       }))
       emit('update:modelValue', parsedValues)
@@ -120,10 +121,10 @@ const handlePhoneInput = (e: Event, id: number) => {
 }
 
 const addNumber = () => {
-   const name = getRandom(['Mobile', 'Work', 'Secondary', 'Second', 'Home'])
+   const label = getRandom(['Mobile', 'Work', 'Secondary', 'Second', 'Home'])
    value.value.push({
       id: lastID++,
-      name,
+      label,
       number: '',
       compact: '',
       code: defaultCountryCode,
@@ -164,9 +165,16 @@ const reorderDisabled = computed(
       :class="{ 'settings-open': settingsOpen }"
    >
       <div v-for="phone in value" :key="phone.id" class="phone-item">
-         <ion-label v-if="settings.multiple">
-            {{ phone.name }}
-         </ion-label>
+         <label v-if="settings.multiple && !settingsOpen">
+            {{ phone.label }}
+         </label>
+         <ion-input
+            v-if="settings.multiple && settingsOpen"
+            v-model="phone.label"
+            placeholder="Type the phone label"
+            :maxlength="30"
+         />
+         <!-- @input="log" -->
          <div class="input-group">
             <div class="country-code field-input">
                <span>
@@ -174,7 +182,7 @@ const reorderDisabled = computed(
                </span>
             </div>
             <input
-               :name="phone.name"
+               :name="phone.label"
                :disabled="settingsOpen"
                v-model="phone.number"
                @input="handlePhoneInput($event, phone.id)"
@@ -199,18 +207,24 @@ const reorderDisabled = computed(
       </div>
    </ion-reorder-group>
 
-   <ion-button
-      v-if="settings.multiple"
-      :disabled="settingsOpen"
-      size="small"
-      color="light"
-      class="add-phone-btn"
-      @click="addNumber"
-   >
-      <ion-icon :icon="addOutline" slot="start" />{{
-         value.length > 0 ? 'Add Another Number' : 'Add Number'
-      }}
-   </ion-button>
+   <CollapseTransition>
+      <div
+         v-if="settings.multiple"
+         v-show="settingsOpen"
+         class="add-phone-wrapper"
+      >
+         <ion-button
+            size="small"
+            color="light"
+            class="add-phone-btn"
+            @click="addNumber"
+         >
+            <ion-icon :icon="addOutline" slot="start" />{{
+               value.length > 0 ? 'Add Another Number' : 'Add Number'
+            }}
+         </ion-button>
+      </div>
+   </CollapseTransition>
 
    <teleport :to="settingsTeleport">
       <ion-item class="settings-item">
@@ -228,10 +242,21 @@ const reorderDisabled = computed(
 
 .phone-item {
    /* @apply flex items-center space-x-4; */
-   @apply space-y-1;
+   @apply flex flex-col items-start space-y-1;
 
-   > ion-label {
-      @apply text-sm text-gray-600 dark:text-gray-400;
+   > label,
+   ion-input {
+      @apply text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap;
+      @apply overflow-hidden min-w-[4rem] max-w-[8rem] block p-0.5;
+   }
+   ion-input {
+      @apply ring-1 ring-gray-200 dark:ring-gray-800 rounded box-border;
+      @apply focus-within:ring-gray-500;
+      $p: theme('spacing[0.5]');
+      --padding-top: $p;
+      --padding-end: $p;
+      --padding-bottom: $p;
+      --padding-start: $p;
    }
 }
 .input-group {
@@ -270,6 +295,6 @@ const reorderDisabled = computed(
    }
 }
 .add-phone-btn {
-   @apply mt-6 self-start;
+   @apply mt-6;
 }
 </style>

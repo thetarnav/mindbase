@@ -50,8 +50,8 @@ const settings = computed({
             <contenteditable
                tag="h6"
                class="title"
-               :contenteditable="settingsOpen"
                v-model="title"
+               :contenteditable="settingsOpen"
                noNL
                noHTML
             />
