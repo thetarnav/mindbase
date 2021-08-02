@@ -17,7 +17,7 @@ export const itemCollapseTransition = async (
 
 	await createAnimation()
 		.addElement(child)
-		.duration(500)
+		.duration(400)
 		.fromTo('marginBottom', '0', -height + 'px')
 		.fromTo('transform', 'translateX(0px)', 'translateX(100px)')
 		.fromTo('opacity', '1', '0')

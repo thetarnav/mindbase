@@ -58,9 +58,9 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 
 <template>
 	<ion-list class="item-fields-list" ref="listRef">
-		<ion-list-header>
+		<!-- <ion-list-header>
 			<ion-label>Item Fields:</ion-label>
-		</ion-list-header>
+		</ion-list-header> -->
 
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<Field
@@ -118,7 +118,7 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 
 <style lang="postcss">
 .item-fields-list {
-	@apply divide-y divide-gray-200 dark:divide-gray-600 pb-12;
+	@apply divide-y divide-gray-200 dark:divide-gray-700 pb-12;
 }
 .add-field-btn {
 	@apply my-6 mx-12;

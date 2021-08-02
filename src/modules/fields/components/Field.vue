@@ -55,7 +55,7 @@ const settings = computed({
 					noNL
 					noHTML
 				/>
-				<p class="field-type">{{ field.type }} Field</p>
+				<!-- <p class="field-type">{{ field.type }} Field</p> -->
 			</header>
 
 			<component
@@ -100,7 +100,7 @@ const settings = computed({
 	}
 
 	.title {
-		@apply pr-4 my-0 py-1;
+		@apply pr-4 my-0 py-1 text-gray-700 dark:text-gray-400;
 	}
 	.field-type {
 		@apply text-xs capitalize text-gray-600 dark:text-gray-500;

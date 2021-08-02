@@ -10,6 +10,7 @@ import type { FieldSettings, FieldValue } from '../../field'
 import { defineEmit, defineProps } from 'vue'
 import { debouncedWatch } from '@vueuse/core'
 import { capitalize } from '@/utils/functions'
+import copy from '@/modules/clipboard'
 
 const props = defineProps({
 	modelValue: { type: String, required: true },
@@ -65,21 +66,31 @@ const showInputs = computed(
 </script>
 
 <template>
-	<p v-if="!showInputs" class="display-name">{{ modelValue }}</p>
-	<div v-else class="input-group" ref="inputGroup">
-		<ion-item>
-			<ion-label position="floating">First name</ion-label>
-			<ion-input v-model="value.first" name="name" type="text" />
-		</ion-item>
-		<ion-item>
-			<ion-label position="floating">Middle name</ion-label>
-			<ion-input v-model="value.middle" name="middle name" type="text" />
-		</ion-item>
-		<ion-item class="last">
-			<ion-label position="floating">Last name</ion-label>
-			<ion-input v-model="value.last" name="last name" type="text" />
-		</ion-item>
-	</div>
+	<CollapseTransition>
+		<p
+			v-show="!showInputs"
+			class="display-name"
+			v-touch="() => copy(modelValue)"
+		>
+			{{ modelValue }}
+		</p>
+	</CollapseTransition>
+	<CollapseTransition>
+		<div v-show="showInputs" class="input-group" ref="inputGroup">
+			<ion-item>
+				<ion-label position="floating">First name</ion-label>
+				<ion-input v-model="value.first" name="name" type="text" />
+			</ion-item>
+			<ion-item>
+				<ion-label position="floating">Middle name</ion-label>
+				<ion-input v-model="value.middle" name="middle name" type="text" />
+			</ion-item>
+			<ion-item class="last">
+				<ion-label position="floating">Last name</ion-label>
+				<ion-input v-model="value.last" name="last name" type="text" />
+			</ion-item>
+		</div>
+	</CollapseTransition>
 </template>
 
 <style lang="postcss" scoped>
@@ -89,8 +100,12 @@ const showInputs = computed(
 	> ion-item {
 		--padding-top: 0px;
 		--padding-bottom: 0px;
-		--padding-end: 0px;
-		--padding-start: 0px;
+		--padding-end: theme('spacing.3');
+		--padding-start: theme('spacing.3');
+		--background: theme('colors.gray.800');
+		&::part(native) {
+			@apply h-16 rounded-md;
+		}
 
 		ion-label {
 			@apply text-gray-600 dark:text-gray-400;
@@ -106,6 +121,7 @@ const showInputs = computed(
 }
 
 .display-name {
-	@apply text-xl text-gray-900 dark:text-gray-100 font-medium;
+	@apply self-start;
+	@apply text-xl text-gray-900 dark:text-gray-100 font-medium select-none;
 }
 </style>

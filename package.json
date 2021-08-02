@@ -21,6 +21,7 @@
     "@tiptap/vue-3": "^2.0.0-beta.46",
     "@vueform/slider": "^2.0.3",
     "@vueuse/core": "^5.2.0",
+    "copy-to-clipboard-ultralight": "^1.0.12",
     "firebase": "^8.8.0",
     "libphonenumber-js": "^1.9.22",
     "lodash.debounce": "^4.0.8",

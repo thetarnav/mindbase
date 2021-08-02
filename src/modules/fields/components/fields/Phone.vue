@@ -8,10 +8,16 @@ export default {
 import type { FieldSettings, FieldValue } from '@/modules/fields/field'
 import { defineEmit, defineProps, nextTick } from 'vue'
 import { IonReorderGroup } from '@ionic/vue'
-import { addOutline, closeOutline, reorderTwoOutline } from 'ionicons/icons'
+import {
+	addOutline,
+	closeOutline,
+	reorderTwoOutline,
+	callOutline,
+} from 'ionicons/icons'
 import { AsYouType } from 'libphonenumber-js'
 import { debounce } from 'lodash'
 import { getRandom } from '@/utils/functions'
+import copy from '@/modules/clipboard'
 
 const props = defineProps({
 	modelValue: {
@@ -134,6 +140,12 @@ const removeNumber = (id: number) => {
 	const index = value.value.findIndex(p => p.id === id)
 	value.value.splice(index, 1)
 }
+const handleNumberTap = (phoneID: number) => {
+	if (props.settingsOpen) return
+	const phone = value.value.find(p => p.id === phoneID)
+	phone && copy(phone.compact)
+}
+const call = (number: string) => window.open(`tel:${number}`)
 
 watch(
 	() => props.settings.multiple,
@@ -187,14 +199,24 @@ const reorderDisabled = computed(
 				</div>
 				<input
 					:name="phone.label"
-					:disabled="settingsOpen"
+					:disabled="!settingsOpen"
 					v-model="phone.number"
 					@input="handlePhoneInput($event, phone.id)"
 					placeholder="(000) 000-0000"
 					type="tel"
 					inputmode="tel"
 					class="field-input field-input--phone"
+					v-touch="() => handleNumberTap(phone.id)"
 				/>
+
+				<ion-button
+					v-if="!settingsOpen && phone.compact.length > 6"
+					fill="clear"
+					color="medium"
+					@click="call(phone.compact)"
+				>
+					<ion-icon slot="icon-only" :icon="callOutline" />
+				</ion-button>
 				<ion-reorder slot="end" :class="{ disabled: reorderDisabled }">
 					<ion-icon :icon="reorderTwoOutline"></ion-icon>
 				</ion-reorder>
@@ -279,20 +301,14 @@ const reorderDisabled = computed(
 }
 
 .country-code {
-	@apply flex h-12 w-12;
+	@apply flex h-12 w-12 pointer-events-none;
 	span {
 		@apply m-auto;
 	}
 }
-.settings-open .country-code {
-	@apply opacity-60;
-}
 
 .field-input--phone {
 	@apply mt-0 py-2 px-3 w-44 h-12 text-lg;
-	&:disabled {
-		@apply opacity-60;
-	}
 }
 .add-phone-btn {
 	@apply mt-6;
