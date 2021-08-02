@@ -46,6 +46,10 @@ const fieldTypes: Record<FieldType, FieldCard> = {
 		name: 'Date & Time Filed',
 		desc: 'When did something happen? When did it end? At what time you scheduled the event, etc...',
 	},
+	person: {
+		name: 'Person Full Name',
+		desc: "Write down someone's full name, e.g. Kathleen Hopkins (Kathy)",
+	},
 }
 </script>
 

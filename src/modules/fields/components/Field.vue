@@ -2,8 +2,6 @@
 import {} from 'ionicons/icons'
 import { defineAsyncComponent, defineProps } from 'vue'
 import type { FieldEntry } from '../field'
-import contenteditable from 'vue-contenteditable'
-import CollapseTransition from '@/components/CollapseTransition.vue'
 
 const components = {
 	text: defineAsyncComponent(() => import('./fields/Text.vue')),
@@ -13,6 +11,7 @@ const components = {
 	email: defineAsyncComponent(() => import('./fields/Email/index.vue')),
 	phone: defineAsyncComponent(() => import('./fields/Phone.vue')),
 	date: defineAsyncComponent(() => import('./fields/Date.vue')),
+	person: defineAsyncComponent(() => import('./fields/Person.vue')),
 }
 
 const props = defineProps({
@@ -90,7 +89,7 @@ const settings = computed({
 		@apply relative;
 	}
 
-	background: var(--background);
+	/* background: var(--background); */
 
 	&::part(native) {
 		--inner-border-width: 0;

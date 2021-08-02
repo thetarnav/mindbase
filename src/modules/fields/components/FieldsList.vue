@@ -62,11 +62,7 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 			<ion-label>Item Fields:</ion-label>
 		</ion-list-header>
 
-		<transition-group
-			name="collapse"
-			:css="false"
-			@leave="itemCollapseTransition"
-		>
+		<transition-group :css="false" @leave="itemCollapseTransition">
 			<Field
 				v-for="field in fields"
 				:key="field.id"
@@ -126,22 +122,5 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 }
 .add-field-btn {
 	@apply my-6 mx-12;
-}
-
-.collapse {
-	&-leave-active {
-		@apply transition duration-700 ease-in-out relative;
-		transition-property: opacity, transform;
-		.field-item {
-			@apply transition duration-1000 ease-in-out;
-			transition-property: margin-bottom;
-		}
-	}
-	&-leave-to {
-		@apply translate-x-20 opacity-0;
-		.field-item {
-			margin-bottom: -100% !important;
-		}
-	}
 }
 </style>

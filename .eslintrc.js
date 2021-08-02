@@ -21,6 +21,7 @@ module.exports = {
 		'@typescript-eslint/no-extra-semi': 'off',
 		'no-undef': 'off',
 		'no-empty': 'warn',
+		'no-mixed-spaces-and-tabs': 'warn',
 	},
 	overrides: [
 		{
