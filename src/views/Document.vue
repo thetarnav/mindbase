@@ -47,7 +47,7 @@ const headerComponent = ref<InstanceType<typeof ItemHeader>>()
 	> ion-content {
 		@apply relative z-20;
 		&::part(scroll) {
-			@apply pb-24;
+			/* @apply pb-24; */
 			/* --offset-top: 300px; */
 		}
 		&::part(background) {
