@@ -17,7 +17,7 @@ import { VueReCaptcha } from 'vue-recaptcha-v3'
 import Vue3TouchEvents from 'vue3-touch-events'
 import VueClickAway from 'vue3-click-away'
 
-import './modules/serviceWorker'
+// import './modules/serviceWorker'
 
 // /* Tailwind */
 import './styles/tailwind.css'
@@ -44,12 +44,12 @@ import './styles/variables.css'
 import './styles/main.css'
 
 const app = createApp(App)
-   .use(IonicVue)
-   .use(router)
-   .use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_KEY })
-   .use(Vue3TouchEvents)
-   .use(VueClickAway)
+	.use(IonicVue)
+	.use(router)
+	.use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_KEY })
+	.use(Vue3TouchEvents)
+	.use(VueClickAway)
 
 router.isReady().then(() => {
-   app.mount('#app')
+	app.mount('#app')
 })
