@@ -67,7 +67,7 @@ export async function emailSignIn(
 		if (!user) return auth.signOut()
 		const { uid } = user
 
-		console.log('Logged In:', email, uid)
+		console.log('Logged In:', user)
 		state.uid = uid
 		state.email = email
 		state.username = username
@@ -113,7 +113,7 @@ export async function emailLogin(
 		// Reset login attempts count on successful login
 		LS.set('loginAttempts', 0)
 
-		console.log('Logged In:', email, uid)
+		console.log('Logged In:', user)
 		state.email = email
 		state.uid = uid
 		router.push({ name: 'Home' })
