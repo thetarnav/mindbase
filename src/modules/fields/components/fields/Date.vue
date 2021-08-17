@@ -1,8 +1,6 @@
 <script lang="ts">
 /* eslint-disable vue/no-mutating-props */
-export default {
-	inheritAttrs: false,
-}
+export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
