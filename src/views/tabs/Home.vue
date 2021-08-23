@@ -16,13 +16,14 @@
 					<ion-title size="large">Library</ion-title>
 				</ion-toolbar>
 			</ion-header>
-			<Explorer />
+			<Explorer category="recent" />
 		</ion-content>
 	</ion-page>
 </template>
 
 <script lang="ts" setup>
 import { personOutline } from 'ionicons/icons'
+import Explorer from '@/components/Explorer.vue'
 </script>
 
 <style lang="postcss">

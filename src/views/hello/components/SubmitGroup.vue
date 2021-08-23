@@ -9,7 +9,7 @@ const props = defineProps({
 	disabled: { type: Boolean, default: false },
 })
 const { method, disabled } = toRefs(props)
-const onClick = () => method.value?.()
+const onClick = () => method?.value?.()
 
 const page = useRoute().name
 </script>

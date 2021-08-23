@@ -1,23 +1,3 @@
-<script lang="ts" setup>
-import { emailLogin } from '@/modules/auth'
-import runRecaptcha from '@/modules/recaptcha'
-import SubmitGroup from './components/SubmitGroup.vue'
-
-const email = ref(''),
-	password = ref(''),
-	message = ref('')
-
-// Disable submit if fields are empty
-const disabledSubmit = computed<boolean>(() =>
-	[email.value, password.value].includes(''),
-)
-
-const login = async () => {
-	runRecaptcha('login')
-	const result = await emailLogin(email.value, password.value)
-	message.value = (result as any) ?? ''
-}
-</script>
 <template>
 	<ion-page id="login-page">
 		<ion-header>
@@ -63,6 +43,27 @@ const login = async () => {
 		</form>
 	</ion-page>
 </template>
+
+<script lang="ts" setup>
+import { emailLogin } from '@/modules/auth'
+import runRecaptcha from '@/modules/recaptcha'
+import SubmitGroup from './components/SubmitGroup.vue'
+
+const email = ref(''),
+	password = ref(''),
+	message = ref('')
+
+// Disable submit if fields are empty
+const disabledSubmit = computed<boolean>(() =>
+	[email.value, password.value].includes(''),
+)
+
+const login = async () => {
+	runRecaptcha('login')
+	const result = await emailLogin(email.value, password.value)
+	message.value = (result as any) ?? ''
+}
+</script>
 
 <style lang="postcss">
 #login-page {

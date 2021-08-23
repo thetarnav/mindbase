@@ -1,33 +1,3 @@
-<script lang="ts" setup>
-import { emailSignIn } from '@/modules/auth'
-import runRecaptcha from '@/modules/recaptcha'
-import { debounce } from 'lodash'
-import slugify from 'slugify'
-import SubmitGroup from './components/SubmitGroup.vue'
-
-const username = ref(''),
-	email = ref(''),
-	password = ref(''),
-	message = ref('')
-
-// Disable submit if fields are empty
-const disabledSubmit = computed<boolean>(() =>
-	[username.value, email.value, password.value].includes(''),
-)
-
-// Username input will be lazy slugified to work in URL
-const slugifyUsername = debounce(
-	() => (username.value = slugify(username.value)),
-	100,
-	{ maxWait: 250 },
-)
-
-const formSubmit = async () => {
-	runRecaptcha('sign-in')
-	const result = await emailSignIn(email.value, password.value, username.value)
-	message.value = (result as any) ?? ''
-}
-</script>
 <template>
 	<ion-page id="sign-up-page">
 		<ion-header>
@@ -84,6 +54,37 @@ const formSubmit = async () => {
 		</form>
 	</ion-page>
 </template>
+
+<script lang="ts" setup>
+import { emailSignIn } from '@/modules/auth'
+import runRecaptcha from '@/modules/recaptcha'
+import { debounce } from 'lodash'
+import slugify from 'slugify'
+import SubmitGroup from './components/SubmitGroup.vue'
+
+const username = ref(''),
+	email = ref(''),
+	password = ref(''),
+	message = ref('')
+
+// Disable submit if fields are empty
+const disabledSubmit = computed<boolean>(() =>
+	[username.value, email.value, password.value].includes(''),
+)
+
+// Username input will be lazy slugified to work in URL
+const slugifyUsername = debounce(
+	() => (username.value = slugify(username.value)),
+	100,
+	{ maxWait: 250 },
+)
+
+const formSubmit = async () => {
+	runRecaptcha('sign-in')
+	const result = await emailSignIn(email.value, password.value, username.value)
+	message.value = (result as any) ?? ''
+}
+</script>
 
 <style lang="postcss">
 #sign-up-page {

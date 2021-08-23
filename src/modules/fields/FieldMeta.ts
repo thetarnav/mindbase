@@ -1,38 +1,42 @@
 import { nanoid } from 'nanoid'
-import { FieldType } from './field'
+import { defaultSettings, FieldSettings, FieldType } from './field'
 
-export interface FieldMetaData {
+export type FieldGeneral = FieldPublic<FieldType>
+
+interface FieldPublic<T extends FieldType> {
+	readonly type: T
 	readonly id: string
-	readonly type: FieldType
-	readonly title: string
-	readonly isRequired: boolean
-
-	setTitle: (title: string) => void
+	title: string
+	settings: FieldSettings[T]
 }
 
-export default class FieldMeta implements FieldMetaData {
-	readonly id: string
-
+export default abstract class Field<T extends FieldType>
+	implements FieldPublic<T>
+{
 	constructor(
-		public readonly type: FieldType,
-		id?: string,
+		public readonly type: T,
+		public readonly id: string = nanoid(),
 		private _title: string = '',
-		public readonly isRequired = false,
-	) {
-		this.id = id ?? nanoid()
-	}
+		private _settings: FieldSettings[T] = defaultSettings[type],
+	) {}
 
 	get title(): string {
 		return this._title
 	}
-
-	setTitle(title: string): void {
+	set title(title: string) {
 		this._title = title
+	}
+
+	get settings(): FieldSettings[T] {
+		return this._settings
+	}
+	set settings(settings: FieldSettings[T]) {
+		Object.assign(this._settings, settings)
 	}
 }
 
-class PhoneField extends FieldMeta {
-	constructor(id?: string, title?: string, isRequired?: boolean) {
-		super('phone', id, title, isRequired)
+class PhoneField extends Field<'phone'> {
+	constructor(id?: string, title?: string) {
+		super('phone', id, title)
 	}
 }

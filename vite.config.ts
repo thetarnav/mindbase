@@ -9,7 +9,6 @@ export default defineConfig({
 	plugins: [
 		vue(),
 		ViteComponents({
-			globalComponentsDeclaration: true,
 			customComponentResolvers: [
 				name => {
 					if (name.startsWith('Ion'))

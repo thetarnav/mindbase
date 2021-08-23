@@ -1,7 +1,3 @@
-<script lang="ts" setup>
-import { personOutline, pricetagsOutline, funnelOutline } from 'ionicons/icons'
-</script>
-
 <template>
 	<ion-page>
 		<ion-header>
@@ -28,7 +24,12 @@ import { personOutline, pricetagsOutline, funnelOutline } from 'ionicons/icons'
 					<ion-title size="large">Library</ion-title>
 				</ion-toolbar>
 			</ion-header>
-			<Explorer />
+			<Explorer category="all" />
 		</ion-content>
 	</ion-page>
 </template>
+
+<script lang="ts" setup>
+import { personOutline, pricetagsOutline, funnelOutline } from 'ionicons/icons'
+import Explorer from '@/components/Explorer.vue'
+</script>

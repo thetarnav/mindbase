@@ -1,21 +1,20 @@
 <script lang="ts" setup>
-import { useItem } from '@/modules/documents/items'
 import {
 	ellipsisVertical,
 	heartOutline,
 	shareSocialOutline,
 } from 'ionicons/icons'
-import { defineProps, useContext } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import contenteditable from 'vue-contenteditable'
 import { clamp, valToP } from '@/utils/functions'
 import { debounce } from 'lodash'
 import displayItemOptionsSheet from '../actionsSheet'
+import DOCUMENT from '../useDocument'
 
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { title, description: desc } = useItem(props.id)
+const { title, description: desc } = DOCUMENT.instance
 
 const headerComponent = ref<ComponentPublicInstance>()
 
@@ -23,7 +22,7 @@ const collapseM = ref('0px'),
 	collapseP = ref(0)
 
 const contentScroll = debounce(calcCollapseMargin, 30, { maxWait: 60 })
-useContext().expose({
+defineExpose({
 	contentScroll, // debounced function is exposed to the parent element, to be called by ion-contents scroll event
 })
 

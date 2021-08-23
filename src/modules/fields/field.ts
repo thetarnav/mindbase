@@ -37,7 +37,7 @@ const defaultValues: FieldValue = {
 	person: '',
 }
 
-const defaultSettings = {
+export const defaultSettings = {
 	text: {
 		multiline: true,
 	},

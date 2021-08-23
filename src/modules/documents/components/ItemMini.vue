@@ -2,6 +2,7 @@
 import {} from 'ionicons/icons'
 import { defineProps, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
+import DOC from '../useDocument'
 
 const props = defineProps({
 	title: { type: String, default: 'Item Without a Title' },
@@ -9,11 +10,13 @@ const props = defineProps({
 	id: { type: String, required: true },
 	desc: { type: String, default: undefined },
 })
-const { title, img, id } = toRefs(props),
+const { title, img } = toRefs(props),
 	router = useRouter()
 
-const openDetails = () =>
-	router.push({ name: 'Item', params: { itemID: id.value } })
+const openDetails = () => {
+	DOC.fetch(props.id)
+	router.push({ name: 'Item', params: { itemID: props.id } })
+}
 </script>
 
 <template>
