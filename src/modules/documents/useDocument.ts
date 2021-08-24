@@ -1,7 +1,8 @@
 import { DeepReadonly, readonly, watchEffect } from 'vue'
 import { getItemDetails } from '../apiSimulator'
 import { FieldEntry, FieldType } from '../fields/field'
-import FieldController, { FieldGeneral } from '../fields/FieldMeta'
+import { createField } from '../fields/fieldFactory'
+import { AnyFieldController } from '../fields/FieldController'
 
 export interface DocumentMeta {
 	id: string
@@ -10,7 +11,7 @@ export interface DocumentMeta {
 	thumbnail?: string
 }
 
-type DocumentContent = Array<string | FieldGeneral>
+type DocumentContent = Array<string | AnyFieldController>
 
 interface StateDocExists {
 	id: string
@@ -27,6 +28,10 @@ type State = StateDocExists | StateDocNotExists
 async function getDocumentDetails(id: string): Promise<StateDocExists> {
 	try {
 		const res = await getItemDetails(id)
+		const content = res.fields.map(f =>
+			createField(f.type, f.id, f.title, f.settings, f.value),
+		)
+
 		return {
 			id,
 			meta: {
@@ -35,7 +40,7 @@ async function getDocumentDetails(id: string): Promise<StateDocExists> {
 				thumbnail: res.thumbnail,
 				description: res.description,
 			},
-			content: [],
+			content,
 		}
 	} catch (error) {
 		return Promise.reject('Get Document Failed: ' + error)
@@ -69,19 +74,19 @@ export default class DOCUMENT {
 		this.exists.value = false
 		this.fetching.value = true
 
-		let success: boolean
+		let succeeded: boolean
 		try {
 			const state = await getDocumentDetails(id)
 			this.instance.setState(state)
-			success = true
+			succeeded = true
 		} catch (error) {
 			console.log(error)
-			success = false
+			succeeded = false
 		}
 
 		this.fetching.value = false
-		this.exists.value = success
-		return success
+		this.exists.value = succeeded
+		return succeeded
 	}
 	static clear(): void {
 		this.instance.setState(getClearState())
@@ -123,9 +128,7 @@ export default class DOCUMENT {
 		get: () => this._state.meta?.description ?? '',
 	})
 
-	content = computed<DocumentContent>(() => {
-		return []
-	})
+	content = computed<DocumentContent>(() => this._state.content ?? [])
 
 	addField(type: FieldType): void {
 		console.log('addField', type)
@@ -139,31 +142,3 @@ watchEffect(() => {
 	DOCUMENT.instance.title.value
 	DOCUMENT.instance.description.value
 })
-
-// const exampleContent = [
-// 	"<p>To jest zwykły text</p>",
-// 	{
-// 		id: "F83hRsYv90",
-// 		type: "text",
-// 		name: "Tytuł książki",
-// 		settings: {
-// 			required: true,
-// 			multiline: true,
-// 			rich: false
-// 		},
-// 		value: 'Harry Potter\nI kamień filozoficzny'
-// 	},
-// 	`<p>Text może być <b>dowolnie formtowany</b></p><br/>
-// 	<h3>I rozciągać się na kilka linii</h3>`,
-// 	{
-// 		id: "3v3Ux43DF4g",
-// 		type: "number",
-// 		name: "Ilość kartek",
-// 		settings: {
-// 			required: false,
-// 			min: 0,
-// 			max: 1000
-// 		},
-// 		value: 562
-// 	}
-// ]

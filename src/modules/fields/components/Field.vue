@@ -6,7 +6,7 @@ import type { FieldEntry } from '../field'
 const components = {
 	text: defineAsyncComponent(() => import('../fields/text/TextField.vue')),
 	rich_text: defineAsyncComponent(() => import('./fields/RichText.vue')),
-	number: defineAsyncComponent(() => import('./fields/Number.vue')),
+	number: defineAsyncComponent(() => import('../fields/number/Number.vue')),
 	toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
 	email: defineAsyncComponent(() => import('./fields/Email/index.vue')),
 	phone: defineAsyncComponent(() => import('./fields/Phone.vue')),

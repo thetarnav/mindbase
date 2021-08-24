@@ -26,15 +26,16 @@ export function createNewField<T extends FieldType>(
 export function createField<T extends FieldType>(
 	type: T,
 	id: string,
-	name: string,
-	settings: FieldSettings[T],
-	value: FieldValue[T],
+	name?: string,
+	settings?: FieldSettings[T],
+	value?: FieldValue[T],
 ): ControllersDictionary[T] {
 	const controller = new (getControllerClass(type))(
 		id,
 		name,
 		// @ts-ignore
 		settings,
+		value,
 	) as ControllersDictionary[T]
 	return controller
 }

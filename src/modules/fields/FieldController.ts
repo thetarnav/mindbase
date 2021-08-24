@@ -7,7 +7,7 @@ import {
 	FieldValue,
 } from './field'
 
-export type FieldGeneral = FieldPublic<FieldType>
+export type AnyFieldController = FieldPublic<FieldType>
 
 interface FieldPublic<T extends FieldType> {
 	readonly type: T
