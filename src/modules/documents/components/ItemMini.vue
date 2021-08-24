@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { defineProps, toRefs } from 'vue'
+import { toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import DOC from '../useDocument'
 

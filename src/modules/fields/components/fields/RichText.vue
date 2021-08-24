@@ -3,7 +3,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import { defineEmit, defineProps, watch } from 'vue'
+import { watch } from 'vue'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Typography from '@tiptap/extension-typography'
@@ -16,7 +16,7 @@ const props = defineProps({
 	disabled: { type: Boolean, default: false },
 })
 
-const emit = defineEmit(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 const editor = useEditor({
 	content: props.modelValue,

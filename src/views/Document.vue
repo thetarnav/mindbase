@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { useRoute, useRouter } from 'vue-router'
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router'
 import Fields from '@/modules/fields/components/FieldsList.vue'
 import ItemHeader from '../modules/documents/components/ItemHeader.vue'
 import { IonContent } from '@ionic/vue'
@@ -10,10 +10,15 @@ const route = useRoute(),
 	router = useRouter()
 
 const id = String(route.params.itemID)
-const docState = DOCUMENT.instance.state
 
 // Go back to home if fetched document doesn't exists
-!docState.exists && !DOCUMENT.fetching.value && router.push('/tabs/home')
+if (!DOCUMENT.exists.value && !DOCUMENT.fetching.value)
+	router.push('/tabs/home')
+
+// Clear the document instance state, as it's not gonna be used anymore
+onBeforeRouteLeave(() => {
+	DOCUMENT.clear()
+})
 
 // const contentComponent = ref<ComponentPublicInstance>()
 const headerComponent = ref<InstanceType<typeof ItemHeader>>()
@@ -21,7 +26,7 @@ const headerComponent = ref<InstanceType<typeof ItemHeader>>()
 
 <template>
 	<ion-page id="item-details">
-		<ItemHeader :id="id" ref="headerComponent" />
+		<ItemHeader ref="headerComponent" />
 		<ion-content
 			fullscreen
 			:scrollEvents="true"

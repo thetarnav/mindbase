@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { FieldType } from '@/modules/fields/field'
 import {} from 'ionicons/icons'
-import { defineProps } from 'vue'
 
 const props = defineProps({
 	close: { type: Function, required: true },

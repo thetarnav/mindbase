@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineEmit, defineProps, watch } from 'vue'
+import { watch } from 'vue'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import Placeholder from '@tiptap/extension-placeholder'
 import Document from '@tiptap/extension-document'
@@ -11,7 +11,7 @@ const props = defineProps({
 	modelValue: { type: String, required: true },
 	disabled: { type: Boolean, default: false },
 })
-const emit = defineEmit(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 const editor = useEditor({
 	content: props.modelValue,

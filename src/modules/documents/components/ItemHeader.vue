@@ -11,9 +11,6 @@ import { debounce } from 'lodash'
 import displayItemOptionsSheet from '../actionsSheet'
 import DOCUMENT from '../useDocument'
 
-const props = defineProps({
-	id: { type: String, required: true },
-})
 const { title, description: desc } = DOCUMENT.instance
 
 const headerComponent = ref<ComponentPublicInstance>()

@@ -6,12 +6,12 @@ import {
 	reorderTwoOutline,
 	closeOutline,
 } from 'ionicons/icons'
-import { defineAsyncComponent, defineProps } from 'vue'
+import { defineAsyncComponent } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import { modalController } from '@ionic/vue'
-import { useItem } from '@/modules/documents/items'
 import Field from './Field.vue'
 import { itemCollapseTransition } from '@/utils/transitions'
+import DOCUMENT from '@/modules/documents/useDocument'
 
 const PickFieldModal = defineAsyncComponent(
 	() => import('./PickFieldModal.vue'),
@@ -30,7 +30,7 @@ const openPickFieldModal = async () => {
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { fields, addField, removeField } = useItem(props.id)
+const { addField, removeField, content } = DOCUMENT.instance
 
 const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
@@ -64,7 +64,7 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<Field
-				v-for="field in fields"
+				v-for="field in content"
 				:key="field.id"
 				:field="field"
 				:settings-open="openedSettingsID === field.id"

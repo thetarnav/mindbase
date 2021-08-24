@@ -5,7 +5,6 @@ export default { inheritAttrs: false }
 
 <script lang="ts" setup>
 import type { FieldSettings, FieldValue } from '@/modules/fields/field'
-import { defineEmit, defineProps } from 'vue'
 import { IonSelect, IonSelectOption } from '@ionic/vue'
 import { DatePicker } from 'v-calendar'
 
@@ -23,7 +22,7 @@ interface Emits {
 	(name: 'update:modelValue', payload: FieldValue['date']): void
 	(name: 'update:settings', payload: FieldSettings['date']): void
 }
-const rawEmit = defineEmit(['update:modelValue', 'update:settings'])
+const rawEmit = defineEmits(['update:modelValue', 'update:settings'])
 const emit = rawEmit as Emits
 
 const value = computed({

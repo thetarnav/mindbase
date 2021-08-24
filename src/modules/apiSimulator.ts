@@ -164,10 +164,9 @@ export async function getItems(
 	}))
 }
 
-export async function getItemDetails(
-	id: string,
-): Promise<DummyItem | undefined> {
+export async function getItemDetails(id: string): Promise<DummyItem> {
 	await wait(random(100, 1500, 'ceil'))
 	const doc = allItems.value.find(item => item.id === id)
+	if (!doc) return Promise.reject(`There is no document with this ID: ${id}`)
 	return cloneDeep(doc)
 }

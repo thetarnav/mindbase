@@ -4,7 +4,7 @@ export default { inheritAttrs: false }
 
 <script lang="ts" setup>
 import type { FieldSettings } from '@/modules/fields/field'
-import { defineEmit, defineProps, watch } from 'vue'
+import { watch } from 'vue'
 import Slider from '@vueform/slider'
 
 const props = defineProps({
@@ -14,7 +14,7 @@ const props = defineProps({
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
-const emit = defineEmit(['update:modelValue', 'update:settings'])
+const emit = defineEmits(['update:modelValue', 'update:settings'])
 
 const value = computed({
 	get: () => props.modelValue,

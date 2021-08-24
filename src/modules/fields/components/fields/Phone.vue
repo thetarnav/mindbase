@@ -4,7 +4,7 @@ export default { inheritAttrs: false }
 
 <script lang="ts" setup>
 import type { FieldSettings, FieldValue } from '@/modules/fields/field'
-import { defineEmit, defineProps, nextTick } from 'vue'
+import { nextTick } from 'vue'
 import { IonReorderGroup } from '@ionic/vue'
 import {
 	addOutline,
@@ -31,7 +31,7 @@ interface Emits {
 	(name: 'update:modelValue', payload: FieldValue['phone']): void
 	(name: 'update:settings', payload: FieldSettings['phone']): void
 }
-const rawEmit = defineEmit(['update:modelValue', 'update:settings'])
+const rawEmit = defineEmits(['update:modelValue', 'update:settings'])
 const emit = rawEmit as Emits
 
 const defaultCountryCode = 'US'

@@ -1,30 +1,38 @@
 import { nanoid } from 'nanoid'
-import { defaultSettings, FieldSettings, FieldType } from './field'
+import {
+	defaultSettings,
+	defaultValues,
+	FieldSettings,
+	FieldType,
+	FieldValue,
+} from './field'
 
 export type FieldGeneral = FieldPublic<FieldType>
 
 interface FieldPublic<T extends FieldType> {
 	readonly type: T
 	readonly id: string
-	title: string
+	name: string
 	settings: FieldSettings[T]
+	value: FieldValue[T]
 }
 
-export default abstract class Field<T extends FieldType>
+export default abstract class FieldController<T extends FieldType>
 	implements FieldPublic<T>
 {
 	constructor(
 		public readonly type: T,
 		public readonly id: string = nanoid(),
-		private _title: string = '',
-		private _settings: FieldSettings[T] = defaultSettings[type],
+		public _name: string = '',
+		public _settings: FieldSettings[T] = defaultSettings[type],
+		public _value: FieldValue[T] = defaultValues[type],
 	) {}
 
-	get title(): string {
-		return this._title
+	get name(): string {
+		return this._name
 	}
-	set title(title: string) {
-		this._title = title
+	set name(name: string) {
+		this._name = name
 	}
 
 	get settings(): FieldSettings[T] {
@@ -33,10 +41,13 @@ export default abstract class Field<T extends FieldType>
 	set settings(settings: FieldSettings[T]) {
 		Object.assign(this._settings, settings)
 	}
-}
 
-class PhoneField extends Field<'phone'> {
-	constructor(id?: string, title?: string) {
-		super('phone', id, title)
+	// TODO: getter function returning raw value (for the api)
+
+	get value(): FieldValue[T] {
+		return this._value
+	}
+	set value(v: FieldValue[T]) {
+		this._value = v
 	}
 }

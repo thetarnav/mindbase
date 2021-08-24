@@ -1,7 +1,7 @@
-import { DeepReadonly, readonly } from 'vue'
+import { DeepReadonly, readonly, watchEffect } from 'vue'
 import { getItemDetails } from '../apiSimulator'
 import { FieldEntry, FieldType } from '../fields/field'
-import Field, { FieldGeneral } from '../fields/FieldMeta'
+import FieldController, { FieldGeneral } from '../fields/FieldMeta'
 
 export interface DocumentMeta {
 	id: string
@@ -12,88 +12,119 @@ export interface DocumentMeta {
 
 type DocumentContent = Array<string | FieldGeneral>
 
-interface DocumentDetails extends DocumentMeta {
+interface StateDocExists {
+	id: string
+	meta: DocumentMeta
 	content: DocumentContent
 }
+interface StateDocNotExists {
+	id: null
+	meta: null
+	content: null
+}
+type State = StateDocExists | StateDocNotExists
 
-type State =
-	| {
-			exists: true
-			id: string
-			document: DocumentDetails
-	  }
-	| {
-			exists: false
-			id: null
-			document: null
-	  }
-
-async function getDocumentDetails(id: string): Promise<DocumentDetails | null> {
-	const res = await getItemDetails(id)
-	if (!res) return null
-
-	return {
-		id: res.id,
-		title: res.title,
-		thumbnail: res.thumbnail,
-		description: res.description,
-		content: [],
+async function getDocumentDetails(id: string): Promise<StateDocExists> {
+	try {
+		const res = await getItemDetails(id)
+		return {
+			id,
+			meta: {
+				id,
+				title: res.title,
+				thumbnail: res.thumbnail,
+				description: res.description,
+			},
+			content: [],
+		}
+	} catch (error) {
+		return Promise.reject('Get Document Failed: ' + error)
 	}
 }
 
-const initialState: State = { exists: false, id: null, document: null }
+const getClearState = (): State => ({
+	id: null,
+	meta: null,
+	content: null,
+})
 
 export default class DOCUMENT {
 	private static _instance: DOCUMENT
 	static fetching = ref(false)
+	static exists = ref(false)
 
 	private readonly _state: State
+	readonly state: DeepReadonly<State>
 
 	private constructor() {
-		this._state = reactive(initialState)
+		this._state = reactive<State>(getClearState())
+		this.state = readonly(this._state)
 	}
 	static get instance(): DOCUMENT {
-		return DOCUMENT._instance ?? new DOCUMENT()
+		if (!DOCUMENT._instance) DOCUMENT._instance = new DOCUMENT()
+		return DOCUMENT._instance
 	}
 
 	static async fetch(id: string): Promise<boolean> {
+		this.exists.value = false
 		this.fetching.value = true
-		const details = await getDocumentDetails(id)
+
+		let success: boolean
+		try {
+			const state = await getDocumentDetails(id)
+			this.instance.setState(state)
+			success = true
+		} catch (error) {
+			console.log(error)
+			success = false
+		}
+
 		this.fetching.value = false
-		details &&
-			Object.assign(this.instance._state, {
-				exists: true,
-				id: details.id,
-				document: details,
-			})
-		return Boolean(details)
+		this.exists.value = success
+		return success
 	}
 	static clear(): void {
-		Object.assign(this.instance._state, initialState)
+		this.instance.setState(getClearState())
+		this.exists.value = false
+
+		// clear again if called during fetching
+		// so that the fetched state will be cleared immediately
+		if (this.fetching.value) {
+			const stop = watch(this.fetching, () => {
+				this.clear()
+				stop()
+			})
+			return
+		}
+		this.fetching.value = false
 	}
 
-	get state(): DeepReadonly<State> {
-		return readonly(this._state)
+	private setState(newState: Partial<DeepReadonly<State>>): void {
+		Object.assign(this._state, newState)
 	}
 
 	title = computed<string>({
 		set: v => {
-			const { document } = this._state
-			if (!document || document.title === v) return
+			const { meta } = this._state
+			if (!meta || meta.title === v) return
 			console.log('set Title:', v)
-			document.title = v
+			meta.title = v
 		},
-		get: () => this._state.document?.title ?? '',
+		get: () => this._state.meta?.title ?? '',
 	})
 
 	description = computed<string>({
 		set: v => {
-			const { document } = this._state
-			if (!document || document.description === v) return
+			const { meta } = this._state
+			if (!meta || meta.description === v) return
 			console.log('set Description:', v)
-			document.description = v
+			meta.description = v
 		},
-		get: () => this._state.document?.description ?? '',
+		get: () => this._state.meta?.description ?? '',
+	})
+
+	content = computed<DocumentContent>(() => {
+		return []
 	})
 
 	addField(type: FieldType): void {
@@ -103,6 +134,11 @@ export default class DOCUMENT {
 		console.log('addField', field)
 	}
 }
+
+watchEffect(() => {
+	DOCUMENT.instance.title.value
+	DOCUMENT.instance.description.value
+})
 
 // const exampleContent = [
 // 	"<p>To jest zwykły text</p>",

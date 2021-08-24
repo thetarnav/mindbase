@@ -5,7 +5,6 @@ export default { inheritAttrs: false }
 
 <script lang="ts" setup>
 import type { FieldSettings, FieldValue } from '../../field'
-import { defineEmit, defineProps } from 'vue'
 import { debouncedWatch } from '@vueuse/core'
 import { capitalize } from '@/utils/functions'
 import copy from '@/modules/clipboard'
@@ -20,7 +19,7 @@ interface Emits {
 	(name: 'update:modelValue', payload: FieldValue['person']): void
 	(name: 'update:settings', payload: FieldSettings['person']): void
 }
-const rawEmit = defineEmit(['update:modelValue', 'update:settings'])
+const rawEmit = defineEmits(['update:modelValue', 'update:settings'])
 const emit = rawEmit as Emits
 
 interface Person {

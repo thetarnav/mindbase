@@ -1,63 +1,61 @@
-export type FieldType =
-	| 'text'
-	| 'number'
-	| 'toggle'
-	| 'email'
-	| 'rich_text'
-	| 'phone'
-	| 'date'
-	| 'person'
+export type FieldType = 'text' | 'number'
+// | 'toggle'
+// | 'email'
+// | 'rich_text'
+// | 'phone'
+// | 'date'
+// | 'person'
 
 export type FieldEntry = Field<FieldType>
 
 export interface FieldValue {
 	text: string
-	rich_text: string
+	// rich_text: string
 	number: number
-	toggle: boolean
-	email: string
-	phone:
-		| string
-		| {
-				label: string
-				number: string
-		  }[]
-	date: Date | { start: Date; end: Date }
-	person: string
+	// toggle: boolean
+	// email: string
+	// phone:
+	// 	| string
+	// 	| {
+	// 			label: string
+	// 			number: string
+	// 	  }[]
+	// date: Date | { start: Date; end: Date }
+	// person: string
 }
 
-const defaultValues: FieldValue = {
+export const defaultValues: FieldValue = {
 	text: '',
-	rich_text: 'Content of your Rich Text Field.',
+	// rich_text: 'Content of your Rich Text Field.',
 	number: 0,
-	toggle: false,
-	email: '',
-	phone: '',
-	date: new Date(),
-	person: '',
+	// toggle: false,
+	// email: '',
+	// phone: '',
+	// date: new Date(),
+	// person: '',
 }
 
 export const defaultSettings = {
 	text: {
 		multiline: true,
 	},
-	rich_text: {},
+	// rich_text: {},
 	number: {
 		minmax: [null, null] as [number, number] | [null, null],
 	},
-	email: {
-		multiple: false,
-	},
-	toggle: {},
-	phone: {
-		multiple: false,
-	},
-	date: {
-		range: false,
-		multiple: false,
-		mode: 'date' as 'date' | 'time' | 'dateTime',
-	},
-	person: {},
+	// email: {
+	// 	multiple: false,
+	// },
+	// toggle: {},
+	// phone: {
+	// 	multiple: false,
+	// },
+	// date: {
+	// 	range: false,
+	// 	multiple: false,
+	// 	mode: 'date' as 'date' | 'time' | 'dateTime',
+	// },
+	// person: {},
 }
 export type FieldSettings = typeof defaultSettings
 

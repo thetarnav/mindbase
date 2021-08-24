@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { arrowForward, logoGoogle } from 'ionicons/icons'
-import { defineProps, toRefs } from 'vue'
+import { toRefs } from 'vue'
 import { useRoute } from 'vue-router'
 import { googleSignIn } from '@/modules/auth'
 

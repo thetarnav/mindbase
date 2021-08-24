@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { defineAsyncComponent, defineProps } from 'vue'
+import { defineAsyncComponent } from 'vue'
 import type { FieldEntry } from '../field'
 
 const components = {
-	text: defineAsyncComponent(() => import('./fields/Text.vue')),
+	text: defineAsyncComponent(() => import('../fields/text/TextField.vue')),
 	rich_text: defineAsyncComponent(() => import('./fields/RichText.vue')),
 	number: defineAsyncComponent(() => import('./fields/Number.vue')),
 	toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
