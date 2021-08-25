@@ -1,4 +1,4 @@
-import { FieldSettings, FieldType, FieldValue } from './field'
+import { FieldSettings, FieldType, FieldValue } from './types'
 import NumberFieldController from './fields/number/numberFieldController'
 import TextFieldController from './fields/text/textFieldController'
 
@@ -10,10 +10,12 @@ type FieldControllerGeneric<T extends FieldType> = InstanceType<
 	typeof fieldControllersMap[T]
 >
 
-const componentPaths: Record<FieldType, string> = {
-	text: './fields/text/TextField.vue',
-	number: './fields/number/Number.vue',
+const componentImport: Record<FieldType, ComponentImport> = {
+	text: () => import('./fields/text/TextField.vue'),
+	number: () => import('./fields/number/NumberField.vue'),
 }
+
+type ComponentImport = () => Promise<typeof import('*.vue')>
 
 export function createNewFieldController<T extends FieldType>(
 	type: T,
@@ -41,5 +43,5 @@ export function createFieldController<T extends FieldType>(
 	return controller
 }
 
-export const getFieldComponentPath = (type: FieldType): string =>
-	componentPaths[type]
+export const getFieldComponentImport = (type: FieldType): ComponentImport =>
+	componentImport[type]

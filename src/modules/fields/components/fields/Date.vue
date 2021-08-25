@@ -4,7 +4,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings, FieldValue } from '@/modules/fields/field'
+import type { FieldSettings, FieldValue } from '@/modules/fields/types'
 import { IonSelect, IonSelectOption } from '@ionic/vue'
 import { DatePicker } from 'v-calendar'
 

@@ -3,7 +3,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings, FieldValue } from '@/modules/fields/field'
+import type { FieldSettings, FieldValue } from '@/modules/fields/types'
 import { nextTick } from 'vue'
 import { IonReorderGroup } from '@ionic/vue'
 import {

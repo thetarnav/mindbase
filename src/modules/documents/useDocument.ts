@@ -1,6 +1,6 @@
 import { DeepReadonly, readonly, watchEffect } from 'vue'
 import { getItemDetails } from '../apiSimulator'
-import { FieldEntry, FieldType } from '../fields/field'
+import { FieldType } from '../fields/types'
 import { createFieldController } from '../fields/fieldFactory'
 import { AnyFieldController } from '../fields/FieldController'
 
@@ -28,8 +28,8 @@ type State = StateDocExists | StateDocNotExists
 async function getDocumentDetails(id: string): Promise<StateDocExists> {
 	try {
 		const res = await getItemDetails(id)
-		const content = res.fields.map(f =>
-			createFieldController(f.type, f.id, f.title, f.settings, f.value),
+		const content = res.fields.map(i =>
+			createFieldController(i.type, i.id, i.name, i.settings, i.value),
 		)
 
 		return {
@@ -133,8 +133,8 @@ export default class DOCUMENT {
 	addField(type: FieldType): void {
 		console.log('addField', type)
 	}
-	removeField(field: FieldEntry): void {
-		console.log('addField', field)
+	removeField(id: string): void {
+		console.log('remove field', id)
 	}
 }
 

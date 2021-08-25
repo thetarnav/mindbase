@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { FieldType } from '@/modules/fields/field'
+import type { FieldType } from '@/modules/fields/types'
 import {} from 'ionicons/icons'
 
 const props = defineProps({

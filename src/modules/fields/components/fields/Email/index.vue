@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { watch } from 'vue'
-import type { FieldSettings } from '@/modules/fields/field'
+import type { FieldSettings } from '@/modules/fields/types'
 import { alertCircleOutline } from 'ionicons/icons'
 import EmailSingle from './EmailSingle.vue'
 import EmailMultiple from './EmailMultiple.vue'

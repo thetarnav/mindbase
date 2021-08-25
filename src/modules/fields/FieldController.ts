@@ -1,15 +1,10 @@
 import { nanoid } from 'nanoid'
-import {
-	defaultSettings,
-	defaultValues,
-	FieldSettings,
-	FieldType,
-	FieldValue,
-} from './field'
+import { InjectionKey } from 'vue'
+import { FieldSettings, FieldType, FieldValue } from './types'
 
-export type AnyFieldController = FieldPublic<FieldType>
+export type AnyFieldController = FieldControllerPublic<FieldType>
 
-interface FieldPublic<T extends FieldType> {
+export interface FieldControllerPublic<T extends FieldType> {
 	readonly type: T
 	readonly id: string
 	name: string
@@ -17,15 +12,20 @@ interface FieldPublic<T extends FieldType> {
 	value: FieldValue[T]
 }
 
+export type FieldControllerGeneral = FieldControllerPublic<FieldType>
+
+export const FieldControllerKey: InjectionKey<FieldControllerGeneral> =
+	Symbol('FieldController')
+
 export default abstract class FieldController<T extends FieldType>
-	implements FieldPublic<T>
+	implements FieldControllerPublic<T>
 {
 	constructor(
 		public readonly type: T,
 		public readonly id: string = nanoid(),
 		public _name: string = '',
-		public _settings: FieldSettings[T] = defaultSettings[type],
-		public _value: FieldValue[T] = defaultValues[type],
+		public _settings: FieldSettings[T],
+		public _value: FieldValue[T],
 	) {}
 
 	get name(): string {

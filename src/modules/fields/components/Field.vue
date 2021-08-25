@@ -1,32 +1,25 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { defineAsyncComponent } from 'vue'
-import type { FieldEntry } from '../field'
-import { getFieldComponentPath } from '../fieldFactory'
+import { defineAsyncComponent, provide } from 'vue'
+import { FieldControllerGeneral, FieldControllerKey } from '../FieldController'
+import { getFieldComponentImport } from '../fieldFactory'
 
 const props = defineProps({
-	field: { type: Object as () => FieldEntry, required: true },
+	field: { type: Object as () => FieldControllerGeneral, required: true },
 	settingsOpen: { type: Boolean, default: false },
 })
 
 const fieldComponent = defineAsyncComponent(
-	() => import(getFieldComponentPath(props.field.type)),
+	getFieldComponentImport(props.field.type),
 )
 
-const title = computed<string>({
-	get: () => props.field?.title ?? '',
-	set: v => props.field?.changeTitle(v),
+const name = computed<string>({
+	get: () => props.field.name,
+	// eslint-disable-next-line vue/no-mutating-props
+	set: v => (props.field.name = v),
 })
 
-const value = computed({
-	get: () => props.field?.value ?? '',
-	set: v => props.field?.changeValue(v),
-})
-
-const settings = computed({
-	get: () => props.field?.settings ?? {},
-	set: v => props.field?.changeSettings(v),
-})
+provide(FieldControllerKey, props.field)
 </script>
 
 <template>
@@ -44,7 +37,7 @@ const settings = computed({
 				<contenteditable
 					tag="h6"
 					class="title"
-					v-model="title"
+					v-model="name"
 					:contenteditable="settingsOpen"
 					noNL
 					noHTML
@@ -54,10 +47,7 @@ const settings = computed({
 
 			<component
 				:is="fieldComponent"
-				v-model="value"
-				v-model:settings="settings"
 				:settings-teleport="`[data-teleport='${field.id}']`"
-				:name="field.id"
 				:settings-open="settingsOpen"
 			/>
 		</div>

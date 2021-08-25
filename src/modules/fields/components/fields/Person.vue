@@ -4,7 +4,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings, FieldValue } from '../../field'
+import type { FieldSettings, FieldValue } from '../../types'
 import { debouncedWatch } from '@vueuse/core'
 import { capitalize } from '@/utils/functions'
 import copy from '@/modules/clipboard'

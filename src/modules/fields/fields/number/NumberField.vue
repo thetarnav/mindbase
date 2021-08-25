@@ -3,30 +3,24 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings } from '@/modules/fields/field'
+import type { FieldSettings } from '@/modules/fields/types'
 import { watch } from 'vue'
 import Slider from '@vueform/slider'
+import injectController from '../../injectController'
 
 const props = defineProps({
-	name: { type: String, required: true },
-	modelValue: { type: Number, required: true },
-	settings: { type: Object as () => FieldSettings['number'], required: true },
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
-const emit = defineEmits(['update:modelValue', 'update:settings'])
 
-const value = computed({
-	get: () => props.modelValue,
-	set: v => emit('update:modelValue', Number(v)),
-})
+const { controller, value, settings } = injectController('number')
 
 const isSliderEnabled = computed(
-	() => !props.settings.minmax.some(v => v === null),
+	() => !settings.value.minmax.some(v => v === null),
 )
 
-const min = ref(String(props.settings.minmax[0] ?? ''))
-const max = ref(String(props.settings.minmax[1] ?? ''))
+const min = ref(String(settings.value.minmax[0] ?? ''))
+const max = ref(String(settings.value.minmax[1] ?? ''))
 
 watch(min, () => MinMaxChanged('min'))
 watch(max, () => MinMaxChanged('max'))
@@ -53,11 +47,8 @@ function MinMaxChanged(editing: 'min' | 'max') {
 	emitSettings({ minmax })
 }
 
-const emitSettings = (settings: FieldSettings['number']) => {
-	emit('update:settings', {
-		...props.settings,
-		...settings,
-	})
+const emitSettings = (newSettings: FieldSettings['number']) => {
+	settings.value = newSettings
 }
 </script>
 
@@ -99,7 +90,6 @@ const emitSettings = (settings: FieldSettings['number']) => {
 	/>
 	<ion-input
 		v-else
-		:name="name"
 		type="number"
 		v-model="value"
 		:disabled="settingsOpen"
