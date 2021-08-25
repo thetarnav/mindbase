@@ -1,7 +1,7 @@
 import { DeepReadonly, readonly, watchEffect } from 'vue'
 import { getItemDetails } from '../apiSimulator'
 import { FieldEntry, FieldType } from '../fields/field'
-import { createField } from '../fields/fieldFactory'
+import { createFieldController } from '../fields/fieldFactory'
 import { AnyFieldController } from '../fields/FieldController'
 
 export interface DocumentMeta {
@@ -29,7 +29,7 @@ async function getDocumentDetails(id: string): Promise<StateDocExists> {
 	try {
 		const res = await getItemDetails(id)
 		const content = res.fields.map(f =>
-			createField(f.type, f.id, f.title, f.settings, f.value),
+			createFieldController(f.type, f.id, f.title, f.settings, f.value),
 		)
 
 		return {

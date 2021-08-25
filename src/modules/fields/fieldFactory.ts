@@ -2,40 +2,44 @@ import { FieldSettings, FieldType, FieldValue } from './field'
 import NumberFieldController from './fields/number/numberFieldController'
 import TextFieldController from './fields/text/textFieldController'
 
-const controllersDictionary = {
+const fieldControllersMap = {
 	text: TextFieldController,
 	number: NumberFieldController,
 }
+type FieldControllerGeneric<T extends FieldType> = InstanceType<
+	typeof fieldControllersMap[T]
+>
 
-type ControllersDictionary = {
-	text: TextFieldController
-	number: NumberFieldController
+const componentPaths: Record<FieldType, string> = {
+	text: './fields/text/TextField.vue',
+	number: './fields/number/Number.vue',
 }
 
-const getControllerClass = <T extends FieldType>(type: T) =>
-	controllersDictionary[type]
-
-export function createNewField<T extends FieldType>(
+export function createNewFieldController<T extends FieldType>(
 	type: T,
-): ControllersDictionary[T] {
-	const controller = new (getControllerClass(
-		type,
-	))() as ControllersDictionary[T]
+): FieldControllerGeneric<T> {
+	const controller = new fieldControllersMap[
+		type
+	]() as FieldControllerGeneric<T>
 	return controller
 }
-export function createField<T extends FieldType>(
+
+export function createFieldController<T extends FieldType>(
 	type: T,
 	id: string,
 	name?: string,
 	settings?: FieldSettings[T],
 	value?: FieldValue[T],
-): ControllersDictionary[T] {
-	const controller = new (getControllerClass(type))(
+): FieldControllerGeneric<T> {
+	const controller = new fieldControllersMap[type](
 		id,
 		name,
 		// @ts-ignore
 		settings,
 		value,
-	) as ControllersDictionary[T]
+	) as FieldControllerGeneric<T>
 	return controller
 }
+
+export const getFieldComponentPath = (type: FieldType): string =>
+	componentPaths[type]

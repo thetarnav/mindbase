@@ -2,22 +2,16 @@
 import {} from 'ionicons/icons'
 import { defineAsyncComponent } from 'vue'
 import type { FieldEntry } from '../field'
-
-const components = {
-	text: defineAsyncComponent(() => import('../fields/text/TextField.vue')),
-	rich_text: defineAsyncComponent(() => import('./fields/RichText.vue')),
-	number: defineAsyncComponent(() => import('../fields/number/Number.vue')),
-	toggle: defineAsyncComponent(() => import('./fields/Toggle.vue')),
-	email: defineAsyncComponent(() => import('./fields/Email/index.vue')),
-	phone: defineAsyncComponent(() => import('./fields/Phone.vue')),
-	date: defineAsyncComponent(() => import('./fields/Date.vue')),
-	person: defineAsyncComponent(() => import('./fields/Person.vue')),
-}
+import { getFieldComponentPath } from '../fieldFactory'
 
 const props = defineProps({
-	field: { type: Object as () => FieldEntry, reqired: true },
+	field: { type: Object as () => FieldEntry, required: true },
 	settingsOpen: { type: Boolean, default: false },
 })
+
+const fieldComponent = defineAsyncComponent(
+	() => import(getFieldComponentPath(props.field.type)),
+)
 
 const title = computed<string>({
 	get: () => props.field?.title ?? '',
@@ -59,7 +53,7 @@ const settings = computed({
 			</header>
 
 			<component
-				:is="components[field.type]"
+				:is="fieldComponent"
 				v-model="value"
 				v-model:settings="settings"
 				:settings-teleport="`[data-teleport='${field.id}']`"
