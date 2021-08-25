@@ -15,6 +15,10 @@ const id = String(route.params.itemID)
 if (!DOCUMENT.exists.value && !DOCUMENT.fetching.value)
 	router.push('/tabs/home')
 
+const showContent = computed(
+	() => DOCUMENT.exists.value && !DOCUMENT.fetching.value,
+)
+
 // Clear the document instance state, as it's not gonna be used anymore
 onBeforeRouteLeave(() => {
 	DOCUMENT.clear()
@@ -33,7 +37,7 @@ const headerComponent = ref<InstanceType<typeof ItemHeader>>()
 			@ionScroll="headerComponent?.contentScroll($event)"
 		>
 			<!-- <ion-back-button defaultHref="/tabs/home" slot="fixed" color="light" /> -->
-			<Fields :id="id" />
+			<Fields v-if="showContent" :id="id" />
 		</ion-content>
 	</ion-page>
 </template>

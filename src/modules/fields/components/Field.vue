@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
+import { nanoid } from 'nanoid'
 import { defineAsyncComponent, provide } from 'vue'
 import { FieldControllerGeneral, FieldControllerKey } from '../FieldController'
 import { getFieldComponentImport } from '../fieldFactory'
@@ -18,6 +19,8 @@ const name = computed<string>({
 	// eslint-disable-next-line vue/no-mutating-props
 	set: v => (props.field.name = v),
 })
+
+const dataTeleport = nanoid()
 
 provide(FieldControllerKey, props.field)
 </script>
@@ -47,7 +50,7 @@ provide(FieldControllerKey, props.field)
 
 			<component
 				:is="fieldComponent"
-				:settings-teleport="`[data-teleport='${field.id}']`"
+				:settings-teleport="`[data-teleport='${dataTeleport}']`"
 				:settings-open="settingsOpen"
 			/>
 		</div>
@@ -56,7 +59,7 @@ provide(FieldControllerKey, props.field)
 				<div
 					v-show="settingsOpen"
 					class="settings-content"
-					:data-teleport="field.id"
+					:data-teleport="dataTeleport"
 				>
 					<!-- <label>Settings</label> -->
 				</div>
