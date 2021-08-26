@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash'
 import { loremIpsum } from 'lorem-ipsum'
 import { nanoid } from 'nanoid'
 import { Ref } from 'vue'
-import { FieldSettings, FieldType, FieldValue } from './fields/types'
+import { FieldSettings, FieldType, RawFieldValues } from './fields/types'
 
 const randomSize = () => 350 + random(0, 10, 'round') * 10,
 	randomImg = () =>
@@ -14,7 +14,7 @@ interface DummyField<T extends FieldType> {
 	id: string
 	name: string
 	settings: FieldSettings[T]
-	value: FieldValue[T]
+	value: RawFieldValues[T]
 }
 
 class DummyItem {

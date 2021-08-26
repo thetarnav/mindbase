@@ -1,18 +1,23 @@
-import { FieldSettings, FieldType, FieldValue } from './types'
-import NumberFieldController from './fields/number/numberFieldController'
-import TextFieldController from './fields/text/textFieldController'
+import { FieldSettings, FieldType, RawFieldValues } from './types'
+import NumberFieldController from './fields/number/NumberFieldController'
+import TextFieldController from './fields/text/TextFieldController'
+import PhoneFieldController from './fields/phone/PhoneFieldController'
 
 const fieldControllersMap = {
 	text: TextFieldController,
 	number: NumberFieldController,
+	phone: PhoneFieldController,
 }
-type FieldControllerGeneric<T extends FieldType> = InstanceType<
+export type FieldControllerGeneric<T extends FieldType> = InstanceType<
 	typeof fieldControllersMap[T]
 >
 
+export type FieldControllerGeneral = FieldControllerGeneric<FieldType>
+
 const componentImport: Record<FieldType, ComponentImport> = {
-	text: () => import('./fields/text/TextField.vue'),
-	number: () => import('./fields/number/NumberField.vue'),
+	text: () => import('./fields/text/TextField.vue') as any,
+	number: () => import('./fields/number/NumberField.vue') as any,
+	phone: () => import('./fields/phone/PhoneField.vue') as any,
 }
 
 type ComponentImport = () => Promise<typeof import('*.vue')>
@@ -31,7 +36,7 @@ export function createFieldController<T extends FieldType>(
 	id: string,
 	name?: string,
 	settings?: FieldSettings[T],
-	value?: FieldValue[T],
+	value?: RawFieldValues[T],
 ): FieldControllerGeneric<T> {
 	const controller = new fieldControllersMap[type](
 		id,

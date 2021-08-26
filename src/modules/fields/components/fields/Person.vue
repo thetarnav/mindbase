@@ -4,7 +4,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings, FieldValue } from '../../types'
+import type { FieldSettings, FieldValues } from '../../types'
 import { debouncedWatch } from '@vueuse/core'
 import { capitalize } from '@/utils/functions'
 import copy from '@/modules/clipboard'
@@ -16,7 +16,7 @@ const props = defineProps({
 })
 
 interface Emits {
-	(name: 'update:modelValue', payload: FieldValue['person']): void
+	(name: 'update:modelValue', payload: FieldValues['person']): void
 	(name: 'update:settings', payload: FieldSettings['person']): void
 }
 const rawEmit = defineEmits(['update:modelValue', 'update:settings'])

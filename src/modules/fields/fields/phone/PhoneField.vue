@@ -3,7 +3,6 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings, FieldValue } from '@/modules/fields/types'
 import { nextTick } from 'vue'
 import { IonReorderGroup } from '@ionic/vue'
 import {
@@ -13,77 +12,18 @@ import {
 	callOutline,
 } from 'ionicons/icons'
 import { AsYouType } from 'libphonenumber-js'
-import { debounce } from 'lodash'
 import { getRandom } from '@/utils/functions'
 import copy from '@/modules/clipboard'
+import { injectController } from '../../injectController'
 
 const props = defineProps({
-	modelValue: {
-		type: [Array as () => FieldValue['phone'], String],
-		required: true,
-	},
-	settings: { type: Object as () => FieldSettings['phone'], required: true },
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
 
-interface Emits {
-	(name: 'update:modelValue', payload: FieldValue['phone']): void
-	(name: 'update:settings', payload: FieldSettings['phone']): void
-}
-const rawEmit = defineEmits(['update:modelValue', 'update:settings'])
-const emit = rawEmit as Emits
+const { value, settings } = injectController('phone')
 
 const defaultCountryCode = 'US'
-
-interface Value {
-	id: number
-	label: string
-	number: string
-	compact: string
-	code: string
-}
-
-let lastID = 0
-const value = ref<Value[]>([])
-/**
- * Prepare initial value by maping modelValue prop
- */
-{
-	const rawList = Array.isArray(props.modelValue)
-		? props.modelValue
-		: [{ label: 'Primary', number: props.modelValue }]
-	rawList.forEach(phone => {
-		const id = lastID++
-		value.value.push({
-			...phone,
-			id,
-			code: defaultCountryCode,
-			compact: phone.number,
-		})
-		updateValue(id)
-	})
-}
-
-watch(value, () => emitValue(), {
-	deep: true,
-})
-
-/**
- * **DEB**
- * Emits change of phone values to parent component.
- */
-const emitValue = debounce(() => {
-	if (props.settings.multiple) {
-		const parsedValues = value.value.map(phone => ({
-			label: phone.label.trim() ?? 'Phone',
-			number: phone.compact,
-		}))
-		emit('update:modelValue', parsedValues)
-	} else {
-		emit('update:modelValue', value.value[0]?.compact ?? '')
-	}
-}, 500)
 
 /**
  * Updates local phone values

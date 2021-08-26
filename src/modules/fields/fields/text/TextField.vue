@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import injectController from '../../injectController'
+import { injectController } from '../../injectController'
 
 const props = defineProps({
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
 
-const { controller, value, settings } = injectController('text')
+const { value, settings } = injectController('text')
 </script>
 
 <template>

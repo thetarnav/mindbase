@@ -3,24 +3,23 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings } from '@/modules/fields/types'
 import { watch } from 'vue'
 import Slider from '@vueform/slider'
-import injectController from '../../injectController'
+import { injectController } from '../../injectController'
 
 const props = defineProps({
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
 
-const { controller, value, settings } = injectController('number')
+const { value, settings } = injectController('number')
 
-const isSliderEnabled = computed(
-	() => !settings.value.minmax.some(v => v === null),
-)
+console.log('initial', value)
 
-const min = ref(String(settings.value.minmax[0] ?? ''))
-const max = ref(String(settings.value.minmax[1] ?? ''))
+const isSliderEnabled = computed(() => !settings.minmax.some(v => v === null))
+
+const min = ref(String(settings.minmax[0] ?? ''))
+const max = ref(String(settings.minmax[1] ?? ''))
 
 watch(min, () => MinMaxChanged('min'))
 watch(max, () => MinMaxChanged('max'))
@@ -28,12 +27,12 @@ watch(max, () => MinMaxChanged('max'))
 function MinMaxChanged(editing: 'min' | 'max') {
 	// Both min and max must be filled to emit update
 	if ([min.value, max.value].includes(''))
-		return emitSettings({ minmax: [null, null] })
+		return (settings.minmax = [null, null])
 
 	const minmax: [number, number] = [Number(min.value), Number(max.value)]
 	// prevent NaN values
 	if (isNaN(minmax[0]) || isNaN(minmax[1]))
-		return emitSettings({ minmax: [null, null] })
+		return (settings.minmax = [null, null])
 
 	// keep "min" smaller than "max"
 	if (editing === 'min' && minmax[0] >= minmax[1]) {
@@ -44,11 +43,7 @@ function MinMaxChanged(editing: 'min' | 'max') {
 		min.value = String(minmax[0])
 	}
 
-	emitSettings({ minmax })
-}
-
-const emitSettings = (newSettings: FieldSettings['number']) => {
-	settings.value = newSettings
+	settings.minmax = minmax
 }
 </script>
 

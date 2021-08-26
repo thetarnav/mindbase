@@ -1,25 +1,41 @@
-import { inject } from 'vue'
-import { FieldControllerKey, FieldControllerPublic } from './FieldController'
-import { createNewFieldController } from './fieldFactory'
+import { inject, InjectionKey, provide } from 'vue'
+import DOCUMENT from '../documents/useDocument'
+import { FieldControllerPublicGeneral } from './FieldController'
+import {
+	createNewFieldController,
+	FieldControllerGeneric,
+} from './fieldFactory'
 import { FieldType } from './types'
 
-export default function injectController<T extends FieldType>(type: T) {
-	const controller =
-		inject<FieldControllerPublic<T>>(FieldControllerKey) ??
-		(createNewFieldController(type) as FieldControllerPublic<T>)
+interface InjectControllerReturn<T extends FieldType> {
+	controller: FieldControllerGeneric<T>
+	value: FieldControllerGeneric<T>['value']
+	settings: FieldControllerGeneric<T>['settings']
+}
 
-	const value = computed({
-		set: v => (controller.value = v),
-		get: () => controller.value,
-	})
-	const settings = computed({
-		set: v => (controller.settings = v),
-		get: () => controller.settings,
-	})
+const FieldControllerKey: InjectionKey<FieldControllerPublicGeneral> =
+	Symbol('FieldController')
+
+export function provideController<T extends FieldType>(
+	type: T,
+	id: string,
+): FieldControllerGeneric<T> | null {
+	const controller = DOCUMENT.instance.getController(id)
+	provide(FieldControllerKey, controller)
+
+	return controller as FieldControllerGeneric<T>
+}
+
+export function injectController<T extends FieldType>(
+	type: T,
+): InjectControllerReturn<T> {
+	const controller =
+		inject<FieldControllerGeneric<T>>(FieldControllerKey) ??
+		(createNewFieldController(type) as FieldControllerGeneric<T>)
 
 	return {
 		controller,
-		value,
-		settings,
+		value: controller.value,
+		settings: controller.settings,
 	}
 }

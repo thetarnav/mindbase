@@ -30,7 +30,7 @@ const openPickFieldModal = async () => {
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { addField, removeField, content } = DOCUMENT.instance
+const { addField, removeField, fields } = DOCUMENT.instance
 
 const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
@@ -64,9 +64,10 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<Field
-				v-for="field in content"
+				v-for="field in fields"
 				:key="field.id"
-				:field="field"
+				:id="field.id"
+				:type="field.type"
 				:settings-open="openedSettingsID === field.id"
 				v-touch:hold="() => toggleSettings(field.id)"
 				v-click-away="
@@ -78,7 +79,7 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 					<ion-button
 						fill="clear"
 						color="danger"
-						@click="removeField?.(field)"
+						@click="removeField(field.id)"
 					>
 						<ion-icon slot="icon-only" :icon="trashOutline" />
 					</ion-button>

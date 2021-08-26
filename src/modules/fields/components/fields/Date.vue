@@ -4,13 +4,13 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import type { FieldSettings, FieldValue } from '@/modules/fields/types'
+import type { FieldSettings, FieldValues } from '@/modules/fields/types'
 import { IonSelect, IonSelectOption } from '@ionic/vue'
 import { DatePicker } from 'v-calendar'
 
 const props = defineProps({
 	modelValue: {
-		type: Object as () => FieldValue['date'],
+		type: Object as () => FieldValues['date'],
 		required: true,
 	},
 	settings: { type: Object as () => FieldSettings['date'], required: true },
@@ -19,7 +19,7 @@ const props = defineProps({
 })
 
 interface Emits {
-	(name: 'update:modelValue', payload: FieldValue['date']): void
+	(name: 'update:modelValue', payload: FieldValues['date']): void
 	(name: 'update:settings', payload: FieldSettings['date']): void
 }
 const rawEmit = defineEmits(['update:modelValue', 'update:settings'])

@@ -11,46 +11,59 @@ export interface DocumentMeta {
 	thumbnail?: string
 }
 
-type DocumentContent = Array<string | AnyFieldController>
-
-interface StateDocExists {
+interface ContentMeta {
 	id: string
-	meta: DocumentMeta
-	content: DocumentContent
+	type: FieldType
 }
-interface StateDocNotExists {
-	id: null
-	meta: null
-	content: null
-}
-type State = StateDocExists | StateDocNotExists
 
-async function getDocumentDetails(id: string): Promise<StateDocExists> {
+interface ReactiveDocState {
+	meta: DocumentMeta | null
+	fields: ContentMeta[]
+}
+
+type NonNullDocState = OmitNullable<ReactiveDocState>
+
+interface DocumentDetails extends NonNullDocState {
+	controllers: Record<string, AnyFieldController>
+}
+
+async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 	try {
 		const res = await getItemDetails(id)
-		const content = res.fields.map(i =>
-			createFieldController(i.type, i.id, i.name, i.settings, i.value),
-		)
+		const contentList = res.fields.map(i => ({
+			id: i.id,
+			type: i.type,
+		}))
+		const controllers: Record<string, AnyFieldController> = {}
+
+		res.fields.forEach(i => {
+			controllers[i.id] = createFieldController(
+				i.type,
+				i.id,
+				i.name,
+				i.settings,
+				i.value,
+			)
+		})
 
 		return {
-			id,
 			meta: {
 				id,
 				title: res.title,
 				thumbnail: res.thumbnail,
 				description: res.description,
 			},
-			content,
+			fields: contentList,
+			controllers,
 		}
 	} catch (error) {
 		return Promise.reject('Get Document Failed: ' + error)
 	}
 }
 
-const getClearState = (): State => ({
-	id: null,
+const getClearState = (): ReactiveDocState => ({
 	meta: null,
-	content: null,
+	fields: [],
 })
 
 export default class DOCUMENT {
@@ -58,12 +71,14 @@ export default class DOCUMENT {
 	static fetching = ref(false)
 	static exists = ref(false)
 
-	private readonly _state: State
-	readonly state: DeepReadonly<State>
+	private readonly _state: ReactiveDocState
+	private _controllers: Record<string, AnyFieldController>
+	readonly state: DeepReadonly<ReactiveDocState>
 
 	private constructor() {
-		this._state = reactive<State>(getClearState())
+		this._state = reactive<ReactiveDocState>(getClearState())
 		this.state = readonly(this._state)
+		this._controllers = {}
 	}
 	static get instance(): DOCUMENT {
 		if (!DOCUMENT._instance) DOCUMENT._instance = new DOCUMENT()
@@ -78,6 +93,7 @@ export default class DOCUMENT {
 		try {
 			const state = await getDocumentDetails(id)
 			this.instance.setState(state)
+			this.instance.setControllers(state.controllers)
 			succeeded = true
 		} catch (error) {
 			console.log(error)
@@ -90,6 +106,7 @@ export default class DOCUMENT {
 	}
 	static clear(): void {
 		this.instance.setState(getClearState())
+		this.instance.setControllers(null)
 		this.exists.value = false
 
 		// clear again if called during fetching
@@ -104,9 +121,21 @@ export default class DOCUMENT {
 		this.fetching.value = false
 	}
 
-	private setState(newState: Partial<DeepReadonly<State>>): void {
+	private setState(newState: Partial<DeepReadonly<ReactiveDocState>>): void {
 		Object.assign(this._state, newState)
 	}
+
+	private setControllers(
+		controllers: Record<string, AnyFieldController> | null,
+	): void {
+		this._controllers = controllers ?? {}
+	}
+
+	getController(id: string): AnyFieldController | null {
+		return this._controllers[id] || null
+	}
+
+	fields = computed<ContentMeta[]>(() => this._state.fields)
 
 	title = computed<string>({
 		set: v => {
@@ -128,7 +157,7 @@ export default class DOCUMENT {
 		get: () => this._state.meta?.description ?? '',
 	})
 
-	content = computed<DocumentContent>(() => this._state.content ?? [])
+	// content = computed<DocumentContent>(() => this._state.content ?? [])
 
 	addField(type: FieldType): void {
 		console.log('addField', type)

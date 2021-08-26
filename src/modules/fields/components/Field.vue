@@ -1,33 +1,27 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
 import { nanoid } from 'nanoid'
-import { defineAsyncComponent, provide } from 'vue'
-import { FieldControllerGeneral, FieldControllerKey } from '../FieldController'
+import { defineAsyncComponent } from 'vue'
 import { getFieldComponentImport } from '../fieldFactory'
+import { provideController } from '../injectController'
+import { FieldType } from '../types'
 
 const props = defineProps({
-	field: { type: Object as () => FieldControllerGeneral, required: true },
+	id: { type: String, required: true },
+	type: { type: String as () => FieldType, required: true },
 	settingsOpen: { type: Boolean, default: false },
 })
 
-const fieldComponent = defineAsyncComponent(
-	getFieldComponentImport(props.field.type),
-)
+const fieldComponent = defineAsyncComponent(getFieldComponentImport(props.type))
 
-const name = computed<string>({
-	get: () => props.field.name,
-	// eslint-disable-next-line vue/no-mutating-props
-	set: v => (props.field.name = v),
-})
-
+const conroller = provideController(props.type, props.id)
+const name = ref(conroller?.name ?? '')
 const dataTeleport = nanoid()
-
-provide(FieldControllerKey, props.field)
 </script>
 
 <template>
 	<div
-		v-if="field"
+		v-if="conroller"
 		class="field-item--wrapper"
 		:class="{ 'field-settings-open': settingsOpen }"
 	>
@@ -35,7 +29,7 @@ provide(FieldControllerKey, props.field)
 			<slot name="actions"></slot>
 		</div>
 
-		<div class="field-item" :class="`field-item--${field.type}`">
+		<div class="field-item" :class="`field-item--${type}`">
 			<header>
 				<contenteditable
 					tag="h6"

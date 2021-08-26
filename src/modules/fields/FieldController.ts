@@ -1,53 +1,51 @@
 import { nanoid } from 'nanoid'
-import { InjectionKey } from 'vue'
-import { FieldSettings, FieldType, FieldValue } from './types'
+import { watchEffect } from 'vue'
+import {
+	ClientFieldValues,
+	FieldSettings,
+	FieldType,
+	RawFieldValues,
+} from './types'
 
 export type AnyFieldController = FieldControllerPublic<FieldType>
 
 export interface FieldControllerPublic<T extends FieldType> {
 	readonly type: T
-	readonly id: string
-	name: string
-	settings: FieldSettings[T]
-	value: FieldValue[T]
+	getRawValue: () => RawFieldValues[T]
 }
 
-export type FieldControllerGeneral = FieldControllerPublic<FieldType>
-
-export const FieldControllerKey: InjectionKey<FieldControllerGeneral> =
-	Symbol('FieldController')
+export type FieldControllerPublicGeneral = FieldControllerPublic<FieldType>
 
 export default abstract class FieldController<T extends FieldType>
 	implements FieldControllerPublic<T>
 {
+	public name: string
+	public value: ClientFieldValues[T]
+	public settings: FieldSettings[T]
+
 	constructor(
 		public readonly type: T,
 		public readonly id: string = nanoid(),
-		public _name: string = '',
-		public _settings: FieldSettings[T],
-		public _value: FieldValue[T],
-	) {}
+		name = '',
+		settings: FieldSettings[T],
+		value: ClientFieldValues[T],
+	) {
+		this.name = name
+		this.value = value as any
+		this.settings = settings as any
 
-	get name(): string {
-		return this._name
-	}
-	set name(name: string) {
-		this._name = name
-	}
-
-	get settings(): FieldSettings[T] {
-		return this._settings
-	}
-	set settings(settings: FieldSettings[T]) {
-		Object.assign(this._settings, settings)
+		watchEffect(() => {
+			console.log('new name:', this.name)
+		})
+		watchEffect(() => {
+			console.log('new value:', this.value)
+		})
+		watchEffect(() => {
+			console.log('new settings:', this.settings)
+		})
 	}
 
-	// TODO: getter function returning raw value (for the api)
-
-	get value(): FieldValue[T] {
-		return this._value
-	}
-	set value(v: FieldValue[T]) {
-		this._value = v
+	getRawValue(): RawFieldValues[T] {
+		return this.value
 	}
 }
