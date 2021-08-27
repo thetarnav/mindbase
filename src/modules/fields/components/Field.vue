@@ -14,14 +14,13 @@ const props = defineProps({
 
 const fieldComponent = defineAsyncComponent(getFieldComponentImport(props.type))
 
-const conroller = provideController(props.type, props.id)
-const name = ref(conroller?.name ?? '')
+const { controller, name } = provideController(props.type, props.id)
 const dataTeleport = nanoid()
 </script>
 
 <template>
 	<div
-		v-if="conroller"
+		v-if="controller"
 		class="field-item--wrapper"
 		:class="{ 'field-settings-open': settingsOpen }"
 	>
