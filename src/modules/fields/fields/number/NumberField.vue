@@ -7,14 +7,12 @@ import { watch } from 'vue'
 import Slider from '@vueform/slider'
 import { injectController } from '../../injectController'
 
-const props = defineProps({
+defineProps({
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
 
 const { value, settings } = injectController('number')
-
-console.log('initial', value)
 
 const isSliderEnabled = computed(() => !settings.minmax.some(v => v === null))
 
@@ -30,6 +28,7 @@ function MinMaxChanged(editing: 'min' | 'max') {
 		return (settings.minmax = [null, null])
 
 	const minmax: [number, number] = [Number(min.value), Number(max.value)]
+
 	// prevent NaN values
 	if (isNaN(minmax[0]) || isNaN(minmax[1]))
 		return (settings.minmax = [null, null])

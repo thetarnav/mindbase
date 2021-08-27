@@ -61,6 +61,15 @@ for (let i = 0; i < 15; i++) {
 				},
 				value: 235,
 			},
+			{
+				type: 'phone',
+				id: 'wqertbj',
+				name: 'My contacts',
+				settings: {
+					multiple: false,
+				},
+				value: [],
+			},
 		]),
 	)
 }

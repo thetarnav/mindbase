@@ -8,7 +8,6 @@ export type PhoneFieldValue = {
 export type PhoneFieldValueClient = PhoneItem[]
 
 interface PhoneItem {
-	id: number
 	label: string
 	number: string
 	compact: string
@@ -30,11 +29,10 @@ export default class PhoneFieldController extends FieldController<'phone'> {
 		settings = defaultSettings,
 		value: PhoneFieldValue = [],
 	) {
-		let lastID = 0
+		// Parse raw value from api to form wanted by the local component
 		const localValue: PhoneFieldValueClient = value.map(v => ({
 			label: v.label ?? '',
 			number: v.number,
-			id: lastID++,
 			code: 'US',
 			compact: v.number,
 		}))

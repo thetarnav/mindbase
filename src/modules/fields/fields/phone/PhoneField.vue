@@ -3,7 +3,7 @@ export default { inheritAttrs: false }
 </script>
 
 <script lang="ts" setup>
-import { nextTick } from 'vue'
+import { ComponentPublicInstance, nextTick } from 'vue'
 import { IonReorderGroup } from '@ionic/vue'
 import {
 	addOutline,
@@ -15,6 +15,7 @@ import { AsYouType } from 'libphonenumber-js'
 import { getRandom } from '@/utils/functions'
 import copy from '@/modules/clipboard'
 import { injectController } from '../../injectController'
+import { isElementFocused } from '@/utils/dom'
 
 const props = defineProps({
 	settingsTeleport: { type: String, required: true },
@@ -25,12 +26,15 @@ const { value, settings } = injectController('phone')
 
 const defaultCountryCode = 'US'
 
+// In case of an empty list, add an empty item, if "multiple" settings is disabled (no option for user to add field)
+if (value.value.length === 0 && !settings.multiple) addNumber()
+
 /**
  * Updates local phone values
- * @param id id of the phone value item
+ * @param index index of item in the value list
  */
-function updateValue(id: number) {
-	const phoneItem = value.value.find(p => p.id === id)
+function formatItem(index: number) {
+	const phoneItem = value.value[index]
 	if (!phoneItem) return
 
 	try {
@@ -50,12 +54,12 @@ function updateValue(id: number) {
 /**
  * Handles user input to one of phone numbers
  */
-const handlePhoneInput = (e: Event, id: number) => {
+const handlePhoneInput = (e: Event, index: number) => {
 	const el: any = e.target
 	if (!el) return
 
 	const selectionStart: number | undefined = el.selectionStart
-	updateValue(id)
+	formatItem(index)
 
 	// Changing v-model value makes the cursor to teleport to the end
 	// This resets it to previous position if it were somewhere in the middle
@@ -63,10 +67,9 @@ const handlePhoneInput = (e: Event, id: number) => {
 		nextTick(() => (el.selectionStart = el.selectionEnd = selectionStart))
 }
 
-const addNumber = () => {
+function addNumber() {
 	const label = getRandom(['Mobile', 'Work', 'Secondary', 'Second', 'Home'])
 	value.value.push({
-		id: lastID++,
 		label,
 		number: '',
 		compact: '',
@@ -74,19 +77,18 @@ const addNumber = () => {
 	})
 }
 
-const removeNumber = (id: number) => {
-	const index = value.value.findIndex(p => p.id === id)
+const removeNumber = (index: number) => {
 	value.value.splice(index, 1)
 }
-const handleNumberTap = (phoneID: number) => {
+const handleNumberTap = (index: number) => {
 	if (props.settingsOpen) return
-	const phone = value.value.find(p => p.id === phoneID)
-	phone && copy(phone.compact)
+	const phone = value.value[index]
+	copy(phone.compact)
 }
 const call = (number: string) => window.open(`tel:${number}`)
 
 watch(
-	() => props.settings.multiple,
+	() => settings.multiple,
 	multiple => {
 		if (!multiple) {
 			if (value.value.length === 0) addNumber()
@@ -103,20 +105,43 @@ const doReorder = (e: CustomEvent) => {
 const moreThanSingleEntry = computed(() => value.value.length > 1)
 const reorderDisabled = computed(
 	() =>
-		!props.settingsOpen ||
-		!props.settings.multiple ||
-		!moreThanSingleEntry.value,
+		!props.settingsOpen || !settings.multiple || !moreThanSingleEntry.value,
 )
+
+const listRef = ref<ComponentPublicInstance>()
+
+const inputDisabled = (index: number): boolean => {
+	const isInputFocused = (): boolean => {
+		const list: HTMLElement | undefined = listRef.value?.$el
+		if (!list) return false
+		const input: HTMLInputElement | null = list.querySelector(
+			`.phone-item[data-index="${index}"] .field-input--phone`,
+		)
+		return isElementFocused(input)
+	}
+
+	return (
+		!isInputFocused() &&
+		!props.settingsOpen &&
+		value.value[index].number.length > 0
+	)
+}
 </script>
 
 <template>
 	<ion-reorder-group
+		ref="listRef"
 		:disabled="reorderDisabled"
 		@ionItemReorder="doReorder($event)"
 		class="phones-list"
 		:class="{ 'settings-open': settingsOpen }"
 	>
-		<div v-for="phone in value" :key="phone.id" class="phone-item">
+		<div
+			v-for="(phone, index) in value"
+			:key="index"
+			class="phone-item"
+			:data-index="index"
+		>
 			<label
 				v-if="settings.multiple && !settingsOpen && moreThanSingleEntry"
 			>
@@ -137,14 +162,14 @@ const reorderDisabled = computed(
 				</div>
 				<input
 					:name="phone.label"
-					:disabled="!settingsOpen"
+					:disabled="inputDisabled(index)"
 					v-model="phone.number"
-					@input="handlePhoneInput($event, phone.id)"
+					@input="handlePhoneInput($event, index)"
 					placeholder="(000) 000-0000"
 					type="tel"
 					inputmode="tel"
 					class="field-input field-input--phone"
-					v-touch="() => handleNumberTap(phone.id)"
+					v-touch="() => handleNumberTap(index)"
 				/>
 
 				<ion-button
@@ -162,7 +187,7 @@ const reorderDisabled = computed(
 					v-if="settings.multiple"
 					fill="clear"
 					color="dark"
-					@click="removeNumber(phone.id)"
+					@click="removeNumber(index)"
 					class="remove-btn"
 				>
 					<ion-icon slot="icon-only" :icon="closeOutline" />
