@@ -66,7 +66,7 @@ for (let i = 0; i < 15; i++) {
 				id: 'wecrsvthdbfjbdhgs',
 				name: '',
 				settings: {},
-				value: '<p>Hello!</p>',
+				value: '<p>&#9;Hello!</p>',
 			},
 			{
 				type: 'phone',

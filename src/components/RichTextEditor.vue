@@ -9,6 +9,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Typography from '@tiptap/extension-typography'
 import Document from '@tiptap/extension-document'
 import Paragraph from '@tiptap/extension-paragraph'
+import { Indent } from '@/modules/tiptap/tabIndent'
 import RichTextFixedMenu from './RichTextFixedMenu.vue'
 
 const props = defineProps({
@@ -30,6 +31,7 @@ const editor = useEditor({
 		Typography,
 		Document,
 		Paragraph,
+		Indent,
 	],
 	onUpdate: ({ editor }) => {
 		emit('update:modelValue', editor.getHTML())
@@ -53,6 +55,12 @@ const editorFocused = ref(false),
 const editorClickAway = () =>
 	setTimeout(() => (editorFocused.value = false), 15)
 const editorFocus = () => (editorFocused.value = true)
+
+// const keydownHandler = (e: KeyboardEvent) => {
+// 	if (e.key !== 'Tab') return
+// 	e.preventDefault()
+// 	console.log('TAB')
+// }
 </script>
 
 <template>
@@ -72,6 +80,13 @@ const editorFocus = () => (editorFocused.value = true)
 		&:focus-visible {
 			@apply outline-none;
 		}
+	}
+
+	>>> ul {
+		list-style: disc;
+	}
+	>>> ol {
+		list-style: decimal;
 	}
 }
 </style>

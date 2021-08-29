@@ -36,29 +36,41 @@ const editorCommand =
 			.focus()
 			// @ts-ignore
 			[command](...params)
+			// @ts-ignore
 			.run()
 	}
+
+const isActive = (name: string, attrs?: Record<string, any>) => () =>
+	!!editor.value?.isActive(name, attrs)
 
 const menuButtons: MenuButtonsMap = {
 	h1: {
 		action: editorCommand('toggleHeading', { level: 1 }),
-		isActive: () => editor.value?.isActive('heading', { level: 1 }),
+		isActive: isActive('heading', { level: 1 }),
 	},
 	h2: {
 		action: editorCommand('toggleHeading', { level: 2 }),
-		isActive: () => editor.value?.isActive('heading', { level: 2 }),
+		isActive: isActive('heading', { level: 2 }),
 	},
 	h3: {
 		action: editorCommand('toggleHeading', { level: 3 }),
-		isActive: () => editor.value?.isActive('heading', { level: 3 }),
+		isActive: isActive('heading', { level: 3 }),
 	},
 	bold: {
 		action: editorCommand('toggleBold'),
-		isActive: () => editor.value?.isActive('bold'),
+		isActive: isActive('bold'),
 	},
 	italic: {
 		action: editorCommand('toggleItalic'),
-		isActive: () => editor.value?.isActive('italic'),
+		isActive: isActive('italic'),
+	},
+	ul: {
+		action: editorCommand('toggleBulletList'),
+		isActive: isActive('bulletList'),
+	},
+	ol: {
+		action: editorCommand('toggleOrderedList'),
+		isActive: isActive('orderedList'),
 	},
 }
 </script>
