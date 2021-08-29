@@ -5,7 +5,7 @@ export default { inheritAttrs: false }
 <script lang="ts" setup>
 import { watch } from 'vue'
 import Slider from '@vueform/slider'
-import { injectController } from '../../injectController'
+import { injectController } from '../../useController'
 
 defineProps({
 	settingsTeleport: { type: String, required: true },

@@ -62,6 +62,13 @@ for (let i = 0; i < 15; i++) {
 				value: 235,
 			},
 			{
+				type: 'note',
+				id: 'wecrsvthdbfjbdhgs',
+				name: '',
+				settings: {},
+				value: '<p>Hello!</p>',
+			},
+			{
 				type: 'phone',
 				id: 'wqertbj',
 				name: 'My contacts',

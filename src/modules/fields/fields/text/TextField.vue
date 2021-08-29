@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { injectController } from '../../injectController'
+import { injectController } from '../../useController'
 
 const props = defineProps({
 	settingsTeleport: { type: String, required: true },

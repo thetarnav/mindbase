@@ -12,6 +12,7 @@ import { modalController } from '@ionic/vue'
 import Field from './Field.vue'
 import { itemCollapseTransition } from '@/utils/transitions'
 import DOCUMENT from '@/modules/documents/useDocument'
+import ContentNote from '../fields/note/ContentNote.vue'
 
 const PickFieldModal = defineAsyncComponent(
 	() => import('./PickFieldModal.vue'),
@@ -63,46 +64,48 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 		</ion-list-header> -->
 
 		<transition-group :css="false" @leave="itemCollapseTransition">
-			<Field
-				v-for="field in fields"
-				:key="field.id"
-				:id="field.id"
-				:type="field.type"
-				:settings-open="openedSettingsID === field.id"
-				v-touch:hold="() => toggleSettings(field.id)"
-				v-click-away="
-					// @ts-ignore
-					e => onClickAway(field.id, e)
-				"
-			>
-				<template v-slot:actions>
-					<ion-button
-						fill="clear"
-						color="danger"
-						@click="removeField(field.id)"
-					>
-						<ion-icon slot="icon-only" :icon="trashOutline" />
-					</ion-button>
-					<ion-button fill="clear" color="dark">
-						<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
-					</ion-button>
-					<ion-button
-						fill="clear"
-						color="dark"
-						class="open-options-btn"
-						@click="() => toggleSettings(field.id)"
-					>
-						<ion-icon
-							slot="icon-only"
-							:icon="
-								openedSettingsID === field.id
-									? closeOutline
-									: ellipsisHorizontal
-							"
-						/>
-					</ion-button>
-				</template>
-			</Field>
+			<template v-for="field in fields" :key="field.id">
+				<Field
+					v-if="field.type !== 'note'"
+					:id="field.id"
+					:type="field.type"
+					:settings-open="openedSettingsID === field.id"
+					v-touch:hold="() => toggleSettings(field.id)"
+					v-click-away="
+						// @ts-ignore
+						e => onClickAway(field.id, e)
+					"
+				>
+					<template v-slot:actions>
+						<ion-button
+							fill="clear"
+							color="danger"
+							@click="removeField(field.id)"
+						>
+							<ion-icon slot="icon-only" :icon="trashOutline" />
+						</ion-button>
+						<ion-button fill="clear" color="dark">
+							<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
+						</ion-button>
+						<ion-button
+							fill="clear"
+							color="dark"
+							class="open-options-btn"
+							@click="() => toggleSettings(field.id)"
+						>
+							<ion-icon
+								slot="icon-only"
+								:icon="
+									openedSettingsID === field.id
+										? closeOutline
+										: ellipsisHorizontal
+								"
+							/>
+						</ion-button>
+					</template>
+				</Field>
+				<ContentNote v-else :id="field.id" />
+			</template>
 		</transition-group>
 
 		<ion-button

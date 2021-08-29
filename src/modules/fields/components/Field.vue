@@ -3,7 +3,7 @@ import {} from 'ionicons/icons'
 import { nanoid } from 'nanoid'
 import { defineAsyncComponent } from 'vue'
 import { getFieldComponentImport } from '../fieldFactory'
-import { provideController } from '../injectController'
+import { provideController } from '../useController'
 import { FieldType } from '../types'
 
 const props = defineProps({

@@ -14,7 +14,7 @@ import {
 import { AsYouType } from 'libphonenumber-js'
 import { getRandom } from '@/utils/functions'
 import copy from '@/modules/clipboard'
-import { injectController } from '../../injectController'
+import { injectController } from '../../useController'
 import { isElementFocused } from '@/utils/dom'
 
 const props = defineProps({

@@ -21,34 +21,34 @@ const fieldTypes: Record<FieldType, FieldCard> = {
 		name: 'Simple Text Field',
 		desc: 'Note the names, descriptions, car models... in a simple plain-text form.',
 	},
-	rich_text: {
-		name: 'Rich Text Editor',
-		desc: 'Write down extensive paragraphs of formated text. For blogs, articles, or fancy descriptions.',
-	},
 	number: {
 		name: 'Number Field',
 		desc: 'For all your numerical values, like: length, size, number pages in a book, etc.',
 	},
-	email: {
-		name: 'Email Address',
-		desc: 'Store people email addresses. Single or multiple in the same field.',
+	note: {
+		name: 'Just a Note',
+		desc: 'Note.',
 	},
+	// email: {
+	// 	name: 'Email Address',
+	// 	desc: 'Store people email addresses. Single or multiple in the same field.',
+	// },
 	phone: {
 		name: 'Phone Number',
 		desc: 'Save phone numbers of your contacts. Supports multiple numbers and country codes.',
 	},
-	toggle: {
-		name: 'True or False Toggle',
-		desc: 'Store on/off states in your item, e.g: Is this product in store?',
-	},
-	date: {
-		name: 'Date & Time Filed',
-		desc: 'When did something happen? When did it end? At what time you scheduled the event, etc...',
-	},
-	person: {
-		name: 'Person Full Name',
-		desc: "Write down someone's full name, e.g. Kathleen Hopkins (Kathy)",
-	},
+	// toggle: {
+	// 	name: 'True or False Toggle',
+	// 	desc: 'Store on/off states in your item, e.g: Is this product in store?',
+	// },
+	// date: {
+	// 	name: 'Date & Time Filed',
+	// 	desc: 'When did something happen? When did it end? At what time you scheduled the event, etc...',
+	// },
+	// person: {
+	// 	name: 'Person Full Name',
+	// 	desc: "Write down someone's full name, e.g. Kathleen Hopkins (Kathy)",
+	// },
 }
 </script>
 
