@@ -1,10 +1,11 @@
+import { clamp } from '@/utils/functions'
 import { Command, Extension } from '@tiptap/core'
-import { Node } from 'prosemirror-model'
 import { TextSelection, AllSelection, Transaction } from 'prosemirror-state'
+import { isListNode } from './utils'
 
 type IndentOptions = {
 	types: string[]
-	indentLevels: number[]
+	indentLevels: number
 	defaultIndentLevel: number
 }
 
@@ -12,65 +13,30 @@ declare module '@tiptap/core' {
 	interface Commands {
 		indent: {
 			/**
-			 * Set the indent attribute
+			 * Increase the data-indent attribute
 			 */
 			indent: () => Command
 			/**
-			 * Unset the indent attribute
+			 * Decrease the data-indent attribute
 			 */
 			outdent: (backspace?: boolean) => Command
 		}
 	}
 }
 
-export function clamp(val: number, min: number, max: number): number {
-	if (val < min) {
-		return min
-	}
-	if (val > max) {
-		return max
-	}
-	return val
-}
-
-export enum IndentProps {
-	min = 0,
-	max = 210,
-
-	more = 30,
-	less = -30,
-}
-
-export function isBulletListNode(node: Node): boolean {
-	return node.type.name === 'bullet_list'
-}
-
-export function isOrderedListNode(node: Node): boolean {
-	return node.type.name === 'order_list'
-}
-
-export function isTodoListNode(node: Node): boolean {
-	return node.type.name === 'todo_list'
-}
-
-export function isListNode(node: Node): boolean {
-	return (
-		isBulletListNode(node) || isOrderedListNode(node) || isTodoListNode(node)
-	)
-}
-
 function setNodeIndentMarkup(
 	tr: Transaction,
 	pos: number,
 	delta: number,
+	options: IndentOptions,
 ): Transaction {
 	if (!tr.doc) return tr
 
 	const node = tr.doc.nodeAt(pos)
 	if (!node) return tr
 
-	const minIndent = IndentProps.min
-	const maxIndent = IndentProps.max
+	const minIndent = 0
+	const maxIndent = options.indentLevels
 
 	const indent = clamp((node.attrs.indent || 0) + delta, minIndent, maxIndent)
 
@@ -84,16 +50,19 @@ function setNodeIndentMarkup(
 	return tr.setNodeMarkup(pos, node.type, nodeAttrs, node.marks)
 }
 
-function updateIndentLevel(tr: Transaction, delta: number): Transaction {
+function updateIndentLevel(
+	tr: Transaction,
+	delta: number,
+	options: IndentOptions,
+): Transaction {
 	const { doc, selection } = tr
 
 	if (!doc || !selection) return tr
 
 	if (
 		!(selection instanceof TextSelection || selection instanceof AllSelection)
-	) {
+	)
 		return tr
-	}
 
 	const { from, to } = selection
 
@@ -101,7 +70,7 @@ function updateIndentLevel(tr: Transaction, delta: number): Transaction {
 		const nodeType = node.type
 
 		if (nodeType.name === 'paragraph' || nodeType.name === 'heading') {
-			tr = setNodeIndentMarkup(tr, pos, delta)
+			tr = setNodeIndentMarkup(tr, pos, delta, options)
 			return false
 		}
 		if (isListNode(node)) {
@@ -118,7 +87,7 @@ export const Indent = Extension.create<IndentOptions>({
 
 	defaultOptions: {
 		types: ['heading', 'paragraph'],
-		indentLevels: [0, 30, 60, 90, 120, 150, 180, 210],
+		indentLevels: 7,
 		defaultIndentLevel: 0,
 	},
 
@@ -130,11 +99,11 @@ export const Indent = Extension.create<IndentOptions>({
 					indent: {
 						default: this.options.defaultIndentLevel,
 						renderHTML: attributes => ({
-							style: `margin-left: ${attributes.indent}px!important;`,
+							'data-indent': attributes.indent,
 						}),
 						parseHTML: element => ({
 							indent:
-								parseInt(element.style.marginLeft) ||
+								parseInt(element.dataset['data-indent'] ?? '') ||
 								this.options.defaultIndentLevel,
 						}),
 					},
@@ -150,7 +119,7 @@ export const Indent = Extension.create<IndentOptions>({
 				({ tr, state, dispatch }) => {
 					const { selection } = state
 					tr = tr.setSelection(selection)
-					tr = updateIndentLevel(tr, IndentProps.more)
+					tr = updateIndentLevel(tr, 1, this.options)
 
 					if (tr.docChanged) {
 						// eslint-disable-next-line no-unused-expressions
@@ -173,10 +142,9 @@ export const Indent = Extension.create<IndentOptions>({
 						return false
 
 					tr = tr.setSelection(selection)
-					tr = updateIndentLevel(tr, IndentProps.less)
+					tr = updateIndentLevel(tr, -1, this.options)
 
 					if (tr.docChanged) {
-						// eslint-disable-next-line no-unused-expressions
 						dispatch && dispatch(tr)
 						return true
 					}
@@ -186,18 +154,11 @@ export const Indent = Extension.create<IndentOptions>({
 		}
 	},
 
-	// @ts-ignore
 	addKeyboardShortcuts() {
 		return {
-			Tab: ({ editor }) =>
-				editor.isActive('bulletList') || editor.isActive('orderedList')
-					? editor.commands.sinkListItem('listItem')
-					: editor.commands.indent(),
-			'Shift-Tab': ({ editor }) =>
-				editor.isActive('bulletList') || editor.isActive('orderedList')
-					? editor.commands.liftListItem('listItem')
-					: editor.commands.outdent(),
-			Backspace: ({ editor }) => editor.commands.outdent(true),
+			Tab: ({ editor }) => !!editor.commands.indent(),
+			'Shift-Tab': ({ editor }) => !!editor.commands.outdent(),
+			Backspace: ({ editor }) => !!editor.commands.outdent(true),
 		}
 	},
 })

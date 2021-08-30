@@ -74,13 +74,52 @@ const editorFocus = () => (editorFocused.value = true)
 		&:focus-visible {
 			@apply outline-none;
 		}
-	}
 
-	>>> ul {
-		list-style: disc;
-	}
-	>>> ol {
-		list-style: decimal;
+		ul {
+			@apply ml-4 lg:ml-8;
+			li p {
+				@apply relative;
+				&::before {
+					content: '>';
+					@apply absolute right-full mr-2;
+				}
+			}
+		}
+
+		ol {
+			@apply ml-4 lg:ml-8;
+			counter-reset: ol;
+			li p {
+				position: relative;
+				&::before {
+					counter-increment: ol;
+					content: counter(ol) '.';
+					@apply absolute right-full mr-1;
+				}
+			}
+		}
+
+		[data-indent='1'] {
+			@apply ml-4 lg:ml-8;
+		}
+		[data-indent='2'] {
+			@apply ml-8 lg:ml-16;
+		}
+		[data-indent='3'] {
+			@apply ml-12 lg:ml-24;
+		}
+		[data-indent='4'] {
+			@apply ml-16 lg:ml-32;
+		}
+		[data-indent='5'] {
+			@apply ml-20 lg:ml-40;
+		}
+		[data-indent='6'] {
+			@apply ml-24 lg:ml-48;
+		}
+		[data-indent='7'] {
+			@apply ml-28 lg:ml-56;
+		}
 	}
 }
 </style>

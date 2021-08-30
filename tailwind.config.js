@@ -9,7 +9,9 @@ module.exports = {
 			},
 			spaceing: {
 				4.5: '1.125rem',
+				15: '3.75rem',
 				18: '4.5rem',
+				21: '5.25rem',
 				'10vh': '10vh',
 				'20vh': '20vh',
 				'30vh': '30vh',
