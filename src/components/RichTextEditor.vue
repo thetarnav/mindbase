@@ -55,12 +55,6 @@ const editorFocused = ref(false),
 const editorClickAway = () =>
 	setTimeout(() => (editorFocused.value = false), 15)
 const editorFocus = () => (editorFocused.value = true)
-
-// const keydownHandler = (e: KeyboardEvent) => {
-// 	if (e.key !== 'Tab') return
-// 	e.preventDefault()
-// 	console.log('TAB')
-// }
 </script>
 
 <template>

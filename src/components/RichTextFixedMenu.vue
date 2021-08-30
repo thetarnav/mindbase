@@ -56,11 +56,11 @@ const menuButtons: MenuButtonsMap = {
 		action: editorCommand('toggleHeading', { level: 3 }),
 		isActive: isActive('heading', { level: 3 }),
 	},
-	bold: {
+	b: {
 		action: editorCommand('toggleBold'),
 		isActive: isActive('bold'),
 	},
-	italic: {
+	i: {
 		action: editorCommand('toggleItalic'),
 		isActive: isActive('italic'),
 	},

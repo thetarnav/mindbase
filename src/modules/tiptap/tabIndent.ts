@@ -189,21 +189,15 @@ export const Indent = Extension.create<IndentOptions>({
 	// @ts-ignore
 	addKeyboardShortcuts() {
 		return {
-			Tab: () =>
-				!(
-					this.editor.isActive('bulletList') ||
-					this.editor.isActive('orderedList')
-				)
-					? this.editor.commands.indent()
-					: this.editor.commands.sinkListItem('listItem'),
-			'Shift-Tab': () =>
-				!(
-					this.editor.isActive('bulletList') ||
-					this.editor.isActive('orderedList')
-				)
-					? this.editor.commands.outdent()
-					: this.editor.commands.sinkListItem('listItem'),
-			Backspace: () => this.editor.commands.outdent(true),
+			Tab: ({ editor }) =>
+				editor.isActive('bulletList') || editor.isActive('orderedList')
+					? editor.commands.sinkListItem('listItem')
+					: editor.commands.indent(),
+			'Shift-Tab': ({ editor }) =>
+				editor.isActive('bulletList') || editor.isActive('orderedList')
+					? editor.commands.liftListItem('listItem')
+					: editor.commands.outdent(),
+			Backspace: ({ editor }) => editor.commands.outdent(true),
 		}
 	},
 })
