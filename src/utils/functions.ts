@@ -43,8 +43,22 @@ export function filterDuplicates(iterable: any[] | string): any {
 	return isString ? result.join('') : result
 }
 
-export function removeFromArray<T>(array: T[], item: T): T[] {
-	return array.splice(array.indexOf(item), 1)
+export function removeFromArray<T>(array: T[], item: T): T[]
+export function removeFromArray<T>(
+	array: T[],
+	iterator: (item: T) => boolean,
+): T[]
+export function removeFromArray<T>(
+	array: T[],
+	b: T | ((value: T, index: number, obj: T[]) => boolean),
+): T[] {
+	if (typeof b === 'function' && array.indexOf(b as T) === -1) {
+		const index = array.findIndex(
+			b as (value: T, index: number, obj: T[]) => boolean,
+		)
+		return array.splice(index, 1)
+	}
+	return array.splice(array.indexOf(b as T), 1)
 }
 
 export const keyLookup = <T extends Record<string, any>, K extends keyof T>(

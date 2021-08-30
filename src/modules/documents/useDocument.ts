@@ -1,8 +1,12 @@
 import { DeepReadonly, readonly, watchEffect } from 'vue'
 import { getItemDetails } from '../apiSimulator'
 import { FieldType } from '../fields/types'
-import { createFieldController } from '../fields/fieldFactory'
+import {
+	createFieldController,
+	createNewFieldController,
+} from '../fields/fieldFactory'
 import { AnyFieldController } from '../fields/FieldController'
+import { removeFromArray } from '@/utils/functions'
 
 export interface DocumentMeta {
 	id: string
@@ -159,11 +163,20 @@ export default class DOCUMENT {
 
 	// content = computed<DocumentContent>(() => this._state.content ?? [])
 
-	addField(type: FieldType): void {
-		console.log('addField', type)
+	addField(this: DOCUMENT, type: FieldType): void {
+		const controller = createNewFieldController(type)
+		const id = controller.id
+
+		this._state.fields.push({
+			id,
+			type,
+		})
+		this._controllers[id] = controller
 	}
-	removeField(id: string): void {
-		console.log('remove field', id)
+
+	removeField(this: DOCUMENT, id: string): void {
+		delete this._controllers[id]
+		removeFromArray(this._state.fields, f => f.id === id)
 	}
 }
 

@@ -16,7 +16,7 @@ interface FieldCard {
 	name: string
 	desc: string
 }
-const fieldTypes: Record<FieldType, FieldCard> = {
+const fieldTypes: Omit<Record<FieldType, FieldCard>, 'note'> = {
 	text: {
 		name: 'Simple Text Field',
 		desc: 'Note the names, descriptions, car models... in a simple plain-text form.',
@@ -25,10 +25,10 @@ const fieldTypes: Record<FieldType, FieldCard> = {
 		name: 'Number Field',
 		desc: 'For all your numerical values, like: length, size, number pages in a book, etc.',
 	},
-	note: {
-		name: 'Just a Note',
-		desc: 'Note.',
-	},
+	// note: {
+	// 	name: 'Just a Note',
+	// 	desc: 'Note.',
+	// },
 	// email: {
 	// 	name: 'Email Address',
 	// 	desc: 'Store people email addresses. Single or multiple in the same field.',

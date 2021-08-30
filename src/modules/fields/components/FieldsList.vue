@@ -17,21 +17,23 @@ import ContentNote from '../fields/note/ContentNote.vue'
 const PickFieldModal = defineAsyncComponent(
 	() => import('./PickFieldModal.vue'),
 )
+
+const props = defineProps({
+	id: { type: String, required: true },
+})
+const { fields } = DOCUMENT.instance
+
 const openPickFieldModal = async () => {
 	const modal = await modalController.create({
 		component: PickFieldModal,
 		componentProps: {
 			close: () => modalController.dismiss(),
-			addField,
+			addField: (t: any) => DOCUMENT.instance.addField(t),
 		},
 	})
 	modal.present()
 }
-
-const props = defineProps({
-	id: { type: String, required: true },
-})
-const { addField, removeField, fields } = DOCUMENT.instance
+const removeField = (id: string) => DOCUMENT.instance.removeField(id)
 
 const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
@@ -54,6 +56,10 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 		return el.classList.contains('select-alert') ? true : false
 	})
 	!foundPremitted && closeSettings(fieldID)
+}
+
+const addContentNote = () => {
+	console.log('add text')
 }
 </script>
 
@@ -108,23 +114,25 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 			</template>
 		</transition-group>
 
-		<ion-button
-			@click="openPickFieldModal"
-			color="light"
-			expand="block"
-			class="add-field-btn"
-		>
-			<ion-icon :icon="addOutline" slot="start" />
-			Add new field
-		</ion-button>
+		<div class="add-new-group">
+			<ion-button @click="openPickFieldModal" color="light" expand="block">
+				<ion-icon :icon="addOutline" slot="start" />
+				Field
+			</ion-button>
+			<ion-button @click="addContentNote" color="light" expand="block">
+				<ion-icon :icon="addOutline" slot="start" />
+				Text
+			</ion-button>
+		</div>
 	</ion-list>
 </template>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .item-fields-list {
 	@apply divide-y divide-gray-200 dark:divide-gray-700 pb-12;
 }
-.add-field-btn {
-	@apply my-6 mx-12;
+.add-new-group {
+	@apply my-4 mx-6 flex justify-center space-x-4;
+	border-width: 0px !important;
 }
 </style>
