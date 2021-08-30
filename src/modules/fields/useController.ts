@@ -1,6 +1,7 @@
 import {
 	inject,
 	InjectionKey,
+	onMounted,
 	onUnmounted,
 	provide,
 	Ref,
@@ -84,25 +85,33 @@ export function injectController<T extends FieldType>(
 	}
 }
 
-export const useNoteController = (
-	id: string,
-): {
+interface UseControllerReturn {
 	controller: ContentNoteController
 	value: WritableComputedRef<string>
-} => {
-	const controller =
-		(DOCUMENT.instance.getController(
-			id,
-		) as FieldControllerGeneric<'note'> | null) ??
-		createNewFieldController('note')
+}
 
-	const value = computed({
-		get: () => controller.value,
-		set: v => (controller.value = v),
+export const useNoteController = (id: string): UseControllerReturn => {
+	const controller = DOCUMENT.instance.getController(id)
+
+	const createReturnObject = (
+		controller: ContentNoteController,
+	): UseControllerReturn => ({
+		controller,
+		value: computed({
+			get: () => controller.value,
+			set: v => (controller.value = v),
+		}),
 	})
 
-	return {
-		controller,
-		value,
+	// TODO: Implement instantly focusing on fields and notes after they're added
+	// onMounted(() => {
+	// 	console.log(id, 'mounted')
+	// })
+
+	if (controller && controller instanceof ContentNoteController) {
+		return createReturnObject(controller)
+	} else {
+		const controller = createNewFieldController('note')
+		return createReturnObject(controller)
 	}
 }

@@ -7,6 +7,7 @@ import {
 } from '../fields/fieldFactory'
 import { AnyFieldController } from '../fields/FieldController'
 import { removeFromArray } from '@/utils/functions'
+import { debounce } from 'lodash'
 
 export interface DocumentMeta {
 	id: string
@@ -21,6 +22,7 @@ interface ContentMeta {
 }
 
 interface ReactiveDocState {
+	id: string | null
 	meta: DocumentMeta | null
 	fields: ContentMeta[]
 }
@@ -30,6 +32,8 @@ type NonNullDocState = OmitNullable<ReactiveDocState>
 interface DocumentDetails extends NonNullDocState {
 	controllers: Record<string, AnyFieldController>
 }
+
+type Change = 'title' | 'description' | 'content' | string // id of the modified field's controller
 
 async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 	try {
@@ -51,6 +55,7 @@ async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 		})
 
 		return {
+			id,
 			meta: {
 				id,
 				title: res.title,
@@ -66,9 +71,27 @@ async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 }
 
 const getClearState = (): ReactiveDocState => ({
+	id: null,
 	meta: null,
 	fields: [],
 })
+
+const emitChanges = async (docID: string, changes: Set<Change>) => {
+	console.log('DOCUMENT', docID, 'changed')
+
+	if (changes.has('content')) {
+		// emits every field
+	} else {
+		// emits only modified fields
+	}
+
+	if (changes.has('title')) {
+		// emits new title
+	}
+	if (changes.has('description')) {
+		// emits new description
+	}
+}
 
 export default class DOCUMENT {
 	private static _instance: DOCUMENT
@@ -76,13 +99,13 @@ export default class DOCUMENT {
 	static exists = ref(false)
 
 	private readonly _state: ReactiveDocState
-	private _controllers: Record<string, AnyFieldController>
 	readonly state: DeepReadonly<ReactiveDocState>
+	private _controllers: Record<string, AnyFieldController> = {}
+	private changes: Set<Change> = new Set()
 
 	private constructor() {
 		this._state = reactive<ReactiveDocState>(getClearState())
 		this.state = readonly(this._state)
-		this._controllers = {}
 	}
 	static get instance(): DOCUMENT {
 		if (!DOCUMENT._instance) DOCUMENT._instance = new DOCUMENT()
@@ -147,6 +170,7 @@ export default class DOCUMENT {
 			if (!meta || meta.title === v) return
 			console.log('set Title:', v)
 			meta.title = v
+			this.addChange('title')
 		},
 		get: () => this._state.meta?.title ?? '',
 	})
@@ -157,11 +181,10 @@ export default class DOCUMENT {
 			if (!meta || meta.description === v) return
 			console.log('set Description:', v)
 			meta.description = v
+			this.addChange('descriprion')
 		},
 		get: () => this._state.meta?.description ?? '',
 	})
-
-	// content = computed<DocumentContent>(() => this._state.content ?? [])
 
 	addField(this: DOCUMENT, type: FieldType): void {
 		const controller = createNewFieldController(type)
@@ -172,12 +195,31 @@ export default class DOCUMENT {
 			type,
 		})
 		this._controllers[id] = controller
+		this.addChange('content')
 	}
 
 	removeField(this: DOCUMENT, id: string): void {
 		delete this._controllers[id]
 		removeFromArray(this._state.fields, f => f.id === id)
+		console.log('removed', id)
+
+		this.addChange('content')
 	}
+
+	fieldChanged(controller: AnyFieldController): void {
+		this.addChange(controller.id)
+	}
+
+	private addChange(change: Change) {
+		this.changes.add(change)
+		this.emitChanges()
+	}
+
+	private emitChanges = debounce(
+		() => this._state.id && emitChanges(this._state.id, this.changes),
+		4000,
+		{ maxWait: 10000 },
+	)
 }
 
 watchEffect(() => {

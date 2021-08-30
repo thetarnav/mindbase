@@ -17,7 +17,11 @@ const props = defineProps({
 	disabled: { type: Boolean, default: false },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits<{
+	(e: 'update:modelValue', value: string): void
+	(e: 'focus'): void
+	(e: 'blur', textContent: string): void
+}>()
 
 const editor = useEditor({
 	content: props.modelValue,
@@ -33,14 +37,16 @@ const editor = useEditor({
 		Paragraph,
 		Indent,
 	],
-	onUpdate: ({ editor }) => {
+	onUpdate({ editor }) {
 		emit('update:modelValue', editor.getHTML())
 	},
 	onFocus() {
 		editorFocus()
+		emit('focus')
 	},
-	onBlur() {
+	onBlur({ transaction }) {
 		editorClickAway()
+		emit('blur', transaction.doc.textContent)
 	},
 })
 
@@ -69,7 +75,7 @@ const editorFocus = () => (editorFocused.value = true)
 <style lang="postcss" scoped>
 .editor {
 	>>> .ProseMirror {
-		@apply py-2 min-h-[4rem];
+		@apply min-h-[2rem];
 
 		&:focus-visible {
 			@apply outline-none;

@@ -23,6 +23,9 @@ const props = defineProps({
 })
 const { fields } = DOCUMENT.instance
 
+const openedSettingsID = ref<string | null>(null)
+const listRef = ref<ComponentPublicInstance>()
+
 const openPickFieldModal = async () => {
 	const modal = await modalController.create({
 		component: PickFieldModal,
@@ -35,8 +38,9 @@ const openPickFieldModal = async () => {
 }
 const removeField = (id: string) => DOCUMENT.instance.removeField(id)
 
-const openedSettingsID = ref<string | null>(null)
-const listRef = ref<ComponentPublicInstance>()
+const addContentNote = () => {
+	DOCUMENT.instance.addField('note')
+}
 
 const toggleSettings = (fieldID: string) => {
 	openedSettingsID.value = openedSettingsID.value === fieldID ? null : fieldID
@@ -57,10 +61,6 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 	})
 	!foundPremitted && closeSettings(fieldID)
 }
-
-const addContentNote = () => {
-	console.log('add text')
-}
 </script>
 
 <template>
@@ -71,8 +71,9 @@ const addContentNote = () => {
 
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<template v-for="field in fields" :key="field.id">
+				<ContentNote v-if="field.type === 'note'" :id="field.id" />
 				<Field
-					v-if="field.type !== 'note'"
+					v-else
 					:id="field.id"
 					:type="field.type"
 					:settings-open="openedSettingsID === field.id"
@@ -110,7 +111,6 @@ const addContentNote = () => {
 						</ion-button>
 					</template>
 				</Field>
-				<ContentNote v-else :id="field.id" />
 			</template>
 		</transition-group>
 

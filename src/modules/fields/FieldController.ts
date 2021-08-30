@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash'
 import { nanoid } from 'nanoid'
+import DOCUMENT from '../documents/useDocument'
 import {
 	ClientFieldValues,
 	FieldSettings,
@@ -11,6 +12,7 @@ export type AnyFieldController = FieldControllerPublic<FieldType>
 
 export interface FieldControllerPublic<T extends FieldType> {
 	readonly type: T
+	readonly id: string
 	getRawValue: () => RawFieldValues[T]
 }
 
@@ -32,6 +34,7 @@ export default abstract class FieldController<T extends FieldType>
 	set name(v: string) {
 		console.log('new name', v)
 		this._name = v
+		this.emitChange()
 	}
 
 	get value(): ClientFieldValues[T] {
@@ -40,6 +43,7 @@ export default abstract class FieldController<T extends FieldType>
 	set value(v: ClientFieldValues[T]) {
 		console.log('new value', v)
 		this._value = v
+		this.emitChange()
 	}
 
 	get settings(): FieldSettings[T] {
@@ -48,6 +52,14 @@ export default abstract class FieldController<T extends FieldType>
 	set settings(v: FieldSettings[T]) {
 		console.log('new settings', v)
 		this._settings = v
+		this.emitChange()
+	}
+
+	/**
+	 * Notifies DOCUMENT that the field has beed modified
+	 */
+	emitChange(): void {
+		DOCUMENT.instance.fieldChanged(this)
 	}
 
 	getRawValue(): RawFieldValues[T] {

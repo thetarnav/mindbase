@@ -6,13 +6,19 @@ import RichTextEditor from '@/components/RichTextEditor.vue'
 const props = defineProps({
 	id: { type: String, required: true },
 })
-
 const { controller, value } = useNoteController(props.id)
+const editor = ref<InstanceType<typeof RichTextEditor>>()
+
+const handleEditorBlur = (content: string) => {
+	// When user clicks away from the note leaving it empty,
+	// then remove it from the DOCUMENT
+	if (content.length === 0) controller.removeNote()
+}
 </script>
 
 <template>
 	<div class="wrapper">
-		<RichTextEditor v-model="value" />
+		<RichTextEditor ref="editor" v-model="value" @blur="handleEditorBlur" />
 	</div>
 </template>
 

@@ -1,7 +1,7 @@
 import FieldController from '../../FieldController'
 
 export type PhoneFieldValue = {
-	label?: string
+	label: string
 	number: string
 }[]
 
@@ -38,5 +38,12 @@ export default class PhoneFieldController extends FieldController<'phone'> {
 		}))
 
 		super('phone', id, name, settings, localValue)
+	}
+
+	getRawValue(): PhoneFieldValue {
+		return this.value.map(p => ({
+			label: p.label,
+			number: p.compact,
+		}))
 	}
 }

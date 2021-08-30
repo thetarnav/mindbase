@@ -1,12 +1,5 @@
+import DOCUMENT from '@/modules/documents/useDocument'
 import FieldController from '../../FieldController'
-
-// export const createTextFieldController = (
-// 	id?: string,
-// 	name?: string,
-// 	settings = defaultSettings.text,
-// 	value = defaultValues.text,
-// ): TextFieldController => new TextFieldController(id, name, settings, value)
-
 export default class ContentNoteController extends FieldController<'note'> {
 	constructor(
 		id?: string,
@@ -18,5 +11,9 @@ export default class ContentNoteController extends FieldController<'note'> {
 		name = ''
 		settings = {}
 		super('note', id, name, settings, value)
+	}
+
+	removeNote(): void {
+		DOCUMENT.instance.removeField(this.id)
 	}
 }
