@@ -7,13 +7,15 @@ import {
 	closeOutline,
 } from 'ionicons/icons'
 import { defineAsyncComponent } from 'vue'
-import type { ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance, Ref } from 'vue'
 import { modalController } from '@ionic/vue'
+import type { IonList } from '@ionic/vue'
 import Field from './Field.vue'
 import { itemCollapseTransition } from '@/utils/transitions'
 import DOCUMENT from '@/modules/documents/useDocument'
 import ContentNote from '../fields/note/ContentNote.vue'
 import { isElementInPath } from '@/utils/dom'
+import useReorderList from '../useReorderList'
 
 const PickFieldModal = defineAsyncComponent(
 	() => import('./PickFieldModal.vue'),
@@ -45,8 +47,7 @@ const addContentNote = () => {
 
 const toggleSettings = (fieldID: string) => {
 	openedSettingsID.value = openedSettingsID.value === fieldID ? null : fieldID
-	listRef.value?.$el.closeSlidingItems?.()
-	console.log('toggle settings', openedSettingsID.value)
+	// listRef.value?.$el.closeSlidingItems?.()
 }
 const closeSettings = (fieldID: string) => {
 	if (openedSettingsID.value === fieldID) openedSettingsID.value = null
@@ -66,15 +67,18 @@ const doReorder = (e: CustomEvent) => {
 	// 	console.log('after timeout', openedSettingsID.value)
 	// }, 500)
 }
+
+useReorderList(listRef as Ref<ComponentPublicInstance>)
 </script>
 
 <template>
-	<ion-reorder-group
+	<!-- <ion-reorder-group
 		class="item-fields-list"
 		ref="listRef"
 		:disabled="false"
 		@ionItemReorder="doReorder($event)"
-	>
+	> -->
+	<ion-list class="item-fields-list" ref="listRef">
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<template v-for="field in fields" :key="field.id">
 				<ContentNote v-if="field.type === 'note'" :id="field.id" />
@@ -97,11 +101,11 @@ const doReorder = (e: CustomEvent) => {
 						>
 							<ion-icon slot="icon-only" :icon="trashOutline" />
 						</ion-button>
-						<ion-reorder>
-							<ion-button fill="clear" color="dark">
-								<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
-							</ion-button>
-						</ion-reorder>
+						<!-- <ion-reorder> -->
+						<ion-button fill="clear" color="dark" class="reorder-handle">
+							<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
+						</ion-button>
+						<!-- </ion-reorder> -->
 						<ion-button
 							fill="clear"
 							color="dark"
@@ -132,7 +136,8 @@ const doReorder = (e: CustomEvent) => {
 				Text
 			</ion-button>
 		</div>
-	</ion-reorder-group>
+	</ion-list>
+	<!-- </ion-reorder-group> -->
 </template>
 
 <style lang="postcss" scoped>

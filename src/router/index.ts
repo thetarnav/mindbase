@@ -67,7 +67,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/item/:itemID',
 		name: 'Item',
-		component: () => import('../views/Document.vue'),
+		component: () => import('../views/ItemView.vue'),
 	},
 ]
 
