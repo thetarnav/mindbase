@@ -156,7 +156,7 @@ function calcCollapseMargin(e: CustomEvent) {
 
 	/* Hidden - static header underneath */
 	&:not(.fixed) {
-		@apply static;
+		@apply static invisible;
 		> * {
 			opacity: 0 !important;
 			visibility: hidden;

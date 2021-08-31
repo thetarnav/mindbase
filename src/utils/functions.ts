@@ -172,3 +172,7 @@ export function roundNumber(num: number, scale: number): number {
 export function capitalize(string: string): string {
 	return string.charAt(0).toUpperCase() + string.slice(1)
 }
+
+export const reorderArray = (array: any[], from: number, to: number): void => {
+	array.splice(to, 0, array.splice(from, 1)[0])
+}

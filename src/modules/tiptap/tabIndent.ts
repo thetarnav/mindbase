@@ -1,4 +1,3 @@
-import { clamp } from '@/utils/functions'
 import { Command, Extension } from '@tiptap/core'
 import { TextSelection, AllSelection, Transaction } from 'prosemirror-state'
 import { isListNode } from './utils'
@@ -35,10 +34,8 @@ function setNodeIndentMarkup(
 	const node = tr.doc.nodeAt(pos)
 	if (!node) return tr
 
-	const minIndent = 0
 	const maxIndent = options.indentLevels
-
-	const indent = clamp((node.attrs.indent || 0) + delta, minIndent, maxIndent)
+	const indent = Math.min((node.attrs.indent || 0) + delta, maxIndent)
 
 	if (indent === node.attrs.indent) return tr
 

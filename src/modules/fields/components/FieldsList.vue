@@ -13,6 +13,7 @@ import Field from './Field.vue'
 import { itemCollapseTransition } from '@/utils/transitions'
 import DOCUMENT from '@/modules/documents/useDocument'
 import ContentNote from '../fields/note/ContentNote.vue'
+import { isElementInPath } from '@/utils/dom'
 
 const PickFieldModal = defineAsyncComponent(
 	() => import('./PickFieldModal.vue'),
@@ -45,30 +46,35 @@ const addContentNote = () => {
 const toggleSettings = (fieldID: string) => {
 	openedSettingsID.value = openedSettingsID.value === fieldID ? null : fieldID
 	listRef.value?.$el.closeSlidingItems?.()
+	console.log('toggle settings', openedSettingsID.value)
 }
 const closeSettings = (fieldID: string) => {
 	if (openedSettingsID.value === fieldID) openedSettingsID.value = null
 }
 
-const onClickAway = (fieldID: string, e: TouchEvent) => {
+const onClickAway = (fieldID: string, e: Event) => {
 	// Close Settings only if clicked on not-permitted element
-	const { path } = e as any
-	const foundPremitted = path.some((node: HTMLElement | Document | Window) => {
-		if (node === document || node === window || !(node as any)?.classList)
-			return false
-		const el = node as HTMLElement
-		return el.classList.contains('select-alert') ? true : false
-	})
-	!foundPremitted && closeSettings(fieldID)
+	isElementInPath(e, '.select-alert') || closeSettings(fieldID)
+}
+
+const doReorder = (e: CustomEvent) => {
+	// DOCUMENT.instance.fieldsReorder(e.detail.complete(fields.value))
+	DOCUMENT.instance.fieldsReorder(e.detail.from, e.detail.to)
+	e.detail.complete()
+	console.log('after reorder', openedSettingsID.value)
+	setTimeout(() => {
+		console.log('after timeout', openedSettingsID.value)
+	}, 500)
 }
 </script>
 
 <template>
-	<ion-list class="item-fields-list" ref="listRef">
-		<!-- <ion-list-header>
-			<ion-label>Item Fields:</ion-label>
-		</ion-list-header> -->
-
+	<ion-reorder-group
+		class="item-fields-list"
+		ref="listRef"
+		:disabled="false"
+		@ionItemReorder="doReorder($event)"
+	>
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<template v-for="field in fields" :key="field.id">
 				<ContentNote v-if="field.type === 'note'" :id="field.id" />
@@ -91,9 +97,11 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 						>
 							<ion-icon slot="icon-only" :icon="trashOutline" />
 						</ion-button>
-						<ion-button fill="clear" color="dark">
-							<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
-						</ion-button>
+						<ion-reorder>
+							<ion-button fill="clear" color="dark">
+								<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
+							</ion-button>
+						</ion-reorder>
 						<ion-button
 							fill="clear"
 							color="dark"
@@ -124,7 +132,7 @@ const onClickAway = (fieldID: string, e: TouchEvent) => {
 				Text
 			</ion-button>
 		</div>
-	</ion-list>
+	</ion-reorder-group>
 </template>
 
 <style lang="postcss" scoped>

@@ -6,7 +6,7 @@ import {
 	createNewFieldController,
 } from '../fields/fieldFactory'
 import { AnyFieldController } from '../fields/FieldController'
-import { removeFromArray } from '@/utils/functions'
+import { removeFromArray, reorderArray } from '@/utils/functions'
 import { debounce } from 'lodash'
 
 export interface DocumentMeta {
@@ -201,13 +201,20 @@ export default class DOCUMENT {
 	removeField(this: DOCUMENT, id: string): void {
 		delete this._controllers[id]
 		removeFromArray(this._state.fields, f => f.id === id)
-		console.log('removed', id)
-
 		this.addChange('content')
 	}
 
 	fieldChanged(controller: AnyFieldController): void {
 		this.addChange(controller.id)
+	}
+
+	// fieldsReorder(newOrder: ContentMeta[]): void {
+	fieldsReorder(from: number, to: number): void {
+		// this._state.fields = newOrder
+		// reorderArray(this._state.fields, from, to)
+		// TODO: figure out a way to emit reorder change without touching the `this._state.fields` as it's reactive and sucks
+		console.table(this._state.fields)
+		this.addChange('content')
 	}
 
 	private addChange(change: Change) {
@@ -216,7 +223,10 @@ export default class DOCUMENT {
 	}
 
 	private emitChanges = debounce(
-		() => this._state.id && emitChanges(this._state.id, this.changes),
+		() => {
+			this._state.id && emitChanges(this._state.id, this.changes)
+			this.changes.clear()
+		},
 		4000,
 		{ maxWait: 10000 },
 	)

@@ -38,7 +38,7 @@ const dataTeleport = nanoid()
 					noNL
 					noHTML
 				/>
-				<!-- <p class="field-type">{{ field.type }} Field</p> -->
+				<p class="field-type">{{ id }}</p>
 			</header>
 
 			<component
@@ -127,7 +127,7 @@ const dataTeleport = nanoid()
 .field-item--actions {
 	@apply absolute top-3 right-3 p-1 flex;
 	@apply transition-colors rounded;
-	> * {
+	ion-button {
 		@apply m-0 transition-opacity;
 
 		&:not(.open-options-btn) {
@@ -140,7 +140,7 @@ const dataTeleport = nanoid()
 }
 .field-settings-open .field-item--actions {
 	@apply z-10 bg-gray-100 dark:bg-gray-800 bg-opacity-50;
-	> * {
+	ion-button {
 		@apply opacity-100 pointer-events-auto;
 	}
 }
