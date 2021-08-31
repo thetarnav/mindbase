@@ -58,13 +58,13 @@ const onClickAway = (fieldID: string, e: Event) => {
 }
 
 const doReorder = (e: CustomEvent) => {
-	// DOCUMENT.instance.fieldsReorder(e.detail.complete(fields.value))
-	DOCUMENT.instance.fieldsReorder(e.detail.from, e.detail.to)
-	e.detail.complete()
-	console.log('after reorder', openedSettingsID.value)
-	setTimeout(() => {
-		console.log('after timeout', openedSettingsID.value)
-	}, 500)
+	DOCUMENT.instance.fieldsReorder(e.detail.complete(fields.value))
+	// DOCUMENT.instance.fieldsReorder(e.detail.from, e.detail.to)
+	// e.detail.complete()
+	// console.log('after reorder', openedSettingsID.value)
+	// setTimeout(() => {
+	// 	console.log('after timeout', openedSettingsID.value)
+	// }, 500)
 }
 </script>
 

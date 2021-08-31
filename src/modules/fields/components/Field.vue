@@ -38,7 +38,7 @@ const dataTeleport = nanoid()
 					noNL
 					noHTML
 				/>
-				<p class="field-type">{{ id }}</p>
+				<p class="field-type">{{ id }}: {{ type }}</p>
 			</header>
 
 			<component

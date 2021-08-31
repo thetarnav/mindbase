@@ -208,9 +208,9 @@ export default class DOCUMENT {
 		this.addChange(controller.id)
 	}
 
-	// fieldsReorder(newOrder: ContentMeta[]): void {
-	fieldsReorder(from: number, to: number): void {
-		// this._state.fields = newOrder
+	fieldsReorder(newOrder: ContentMeta[]): void {
+		// fieldsReorder(from: number, to: number): void {
+		this._state.fields = newOrder
 		// reorderArray(this._state.fields, from, to)
 		// TODO: figure out a way to emit reorder change without touching the `this._state.fields` as it's reactive and sucks
 		console.table(this._state.fields)
