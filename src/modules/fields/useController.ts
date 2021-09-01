@@ -8,7 +8,7 @@ import {
 	WritableComputedRef,
 } from 'vue'
 import DOCUMENT from '../documents/useDocument'
-import { FieldControllerPublicGeneral } from './FieldController'
+import { AnyFieldControllerPublic } from './FieldController'
 import {
 	createNewFieldController,
 	FieldControllerGeneric,
@@ -26,7 +26,7 @@ interface useControllerReturn<T extends FieldType> extends ControllerRefs<T> {
 	controller: FieldControllerGeneric<T>
 }
 
-const FieldControllerKey: InjectionKey<FieldControllerPublicGeneral> =
+const FieldControllerKey: InjectionKey<AnyFieldControllerPublic> =
 	Symbol('FieldController')
 
 const getControllerRefs = <T extends FieldType>(

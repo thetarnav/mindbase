@@ -8,13 +8,12 @@ import {
 import { AnyFieldController } from '../fields/FieldController'
 import { removeFromArray, reorderArray } from '@/utils/functions'
 import { debounce } from 'lodash'
-
-export interface DocumentMeta {
-	id: string
-	title: string
-	description: string
-	thumbnail?: string
-}
+import { generateJSON } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import Typography from '@tiptap/extension-typography'
+import { Indent } from '../tiptap/tabIndent'
+import VueComponent from '@/modules/tiptap/testVueExtension'
+import { DocumentMeta } from '@/types/api'
 
 interface ContentMeta {
 	id: string
@@ -24,7 +23,7 @@ interface ContentMeta {
 interface ReactiveDocState {
 	id: string | null
 	meta: DocumentMeta | null
-	fields: ContentMeta[]
+	content: string
 }
 
 type NonNullDocState = OmitNullable<ReactiveDocState>
@@ -38,21 +37,42 @@ type Change = 'title' | 'description' | 'content' | string // id of the modified
 async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 	try {
 		const res = await getItemDetails(id)
-		const contentList = res.fields.map(i => ({
-			id: i.id,
-			type: i.type,
-		}))
 		const controllers: Record<string, AnyFieldController> = {}
+		const contentList: string[] = []
 
-		res.fields.forEach(i => {
-			controllers[i.id] = createFieldController(
-				i.type,
-				i.id,
-				i.name,
-				i.settings,
-				i.value,
-			)
+		res.content.forEach(i => {
+			if (typeof i === 'string') {
+				// For Text just add it to the content as it is
+				contentList.push(i)
+			} else {
+				// For each field create it's controller and add to the content as a vue-component "field"
+				controllers[i.id] = createFieldController(
+					i.type,
+					i.id,
+					i.name,
+					i.settings,
+					i.value,
+				)
+				contentList.push(`<field id="${i.id}" type="${i.type}"></field>`)
+			}
 		})
+
+		const html = contentList.join('')
+
+		console.log(html)
+
+		console.log(
+			generateJSON(html, [
+				StarterKit.configure({
+					heading: {
+						levels: [1, 2, 3],
+					},
+				}),
+				Typography,
+				Indent,
+				VueComponent,
+			]),
+		)
 
 		return {
 			id,
@@ -62,7 +82,7 @@ async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 				thumbnail: res.thumbnail,
 				description: res.description,
 			},
-			fields: contentList,
+			content: contentList.join(''),
 			controllers,
 		}
 	} catch (error) {
@@ -73,7 +93,7 @@ async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 const getClearState = (): ReactiveDocState => ({
 	id: null,
 	meta: null,
-	fields: [],
+	content: '',
 })
 
 const emitChanges = async (docID: string, changes: Set<Change>) => {
@@ -162,8 +182,6 @@ export default class DOCUMENT {
 		return this._controllers[id] || null
 	}
 
-	fields = computed<ContentMeta[]>(() => this._state.fields)
-
 	title = computed<string>({
 		set: v => {
 			const { meta } = this._state
@@ -187,21 +205,23 @@ export default class DOCUMENT {
 	})
 
 	addField(this: DOCUMENT, type: FieldType): void {
-		const controller = createNewFieldController(type)
-		const id = controller.id
+		console.log('add field', type)
+		// const controller = createNewFieldController(type)
+		// const id = controller.id
 
-		this._state.fields.push({
-			id,
-			type,
-		})
-		this._controllers[id] = controller
-		this.addChange('content')
+		// this._state.content.push({
+		// 	id,
+		// 	type,
+		// })
+		// this._controllers[id] = controller
+		// this.addChange('content')
 	}
 
 	removeField(this: DOCUMENT, id: string): void {
-		delete this._controllers[id]
-		removeFromArray(this._state.fields, f => f.id === id)
-		this.addChange('content')
+		console.log('remove field', id)
+		// delete this._controllers[id]
+		// removeFromArray(this._state.content, f => f.id === id)
+		// this.addChange('content')
 	}
 
 	fieldChanged(controller: AnyFieldController): void {
@@ -210,11 +230,11 @@ export default class DOCUMENT {
 
 	fieldsReorder(newOrder: ContentMeta[]): void {
 		// fieldsReorder(from: number, to: number): void {
-		this._state.fields = newOrder
+		// this._state.content = newOrder
 		// reorderArray(this._state.fields, from, to)
 		// TODO: figure out a way to emit reorder change without touching the `this._state.fields` as it's reactive and sucks
-		console.table(this._state.fields)
-		this.addChange('content')
+		// console.table(this._state.content)
+		// this.addChange('content')
 	}
 
 	private addChange(change: Change) {

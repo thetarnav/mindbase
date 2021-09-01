@@ -7,15 +7,13 @@ import {
 	closeOutline,
 } from 'ionicons/icons'
 import { defineAsyncComponent } from 'vue'
-import type { ComponentPublicInstance, Ref } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import { modalController } from '@ionic/vue'
-import type { IonList } from '@ionic/vue'
-import Field from './Field.vue'
 import { itemCollapseTransition } from '@/utils/transitions'
 import DOCUMENT from '@/modules/documents/useDocument'
-import ContentNote from '../fields/note/ContentNote.vue'
 import { isElementInPath } from '@/utils/dom'
-import useReorderList from '../useReorderList'
+import ContentNote from '../fields/note/ContentNote.vue'
+import Field from './Field.vue'
 
 const PickFieldModal = defineAsyncComponent(
 	() => import('./PickFieldModal.vue'),
@@ -24,7 +22,8 @@ const PickFieldModal = defineAsyncComponent(
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { fields } = DOCUMENT.instance
+// const { fields } = DOCUMENT.instance
+const fields = []
 
 const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
@@ -59,7 +58,7 @@ const onClickAway = (fieldID: string, e: Event) => {
 }
 
 const doReorder = (e: CustomEvent) => {
-	DOCUMENT.instance.fieldsReorder(e.detail.complete(fields.value))
+	// DOCUMENT.instance.fieldsReorder(e.detail.complete(fields.value))
 	// DOCUMENT.instance.fieldsReorder(e.detail.from, e.detail.to)
 	// e.detail.complete()
 	// console.log('after reorder', openedSettingsID.value)
@@ -67,8 +66,6 @@ const doReorder = (e: CustomEvent) => {
 	// 	console.log('after timeout', openedSettingsID.value)
 	// }, 500)
 }
-
-useReorderList(listRef as Ref<ComponentPublicInstance>)
 </script>
 
 <template>

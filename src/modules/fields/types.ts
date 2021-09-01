@@ -6,7 +6,7 @@ import {
 	PhoneFieldValueClient,
 } from './fields/phone/PhoneFieldController'
 
-export type FieldType = 'text' | 'number' | 'phone' | 'note'
+export type FieldType = 'text' | 'number' | 'phone'
 // | 'toggle'
 // | 'email'
 // | 'rich_text'
@@ -17,7 +17,6 @@ export interface RawFieldValues {
 	text: string
 	number: number
 	phone: PhoneFieldValue
-	note: string
 	// rich_text: string
 	// toggle: boolean
 	// email: string
@@ -33,5 +32,4 @@ export interface FieldSettings {
 	text: TextFieldSettings
 	number: NumberFieldSettings
 	phone: PhoneFieldSettings
-	note: Record<any, any>
 }

@@ -1,3 +1,4 @@
+import { FieldRawData } from '@/types/api'
 import { cloneDeep } from 'lodash'
 import { nanoid } from 'nanoid'
 import DOCUMENT from '../documents/useDocument'
@@ -8,15 +9,14 @@ import {
 	RawFieldValues,
 } from './types'
 
-export type AnyFieldController = FieldControllerPublic<FieldType>
-
 export interface FieldControllerPublic<T extends FieldType> {
 	readonly type: T
 	readonly id: string
 	getRawValue: () => RawFieldValues[T]
+	getData: () => FieldRawData<T>
 }
 
-export type FieldControllerPublicGeneral = FieldControllerPublic<FieldType>
+export type AnyFieldController = FieldControllerPublic<FieldType>
 export default abstract class FieldController<T extends FieldType>
 	implements FieldControllerPublic<T>
 {
@@ -64,5 +64,15 @@ export default abstract class FieldController<T extends FieldType>
 
 	getRawValue(): RawFieldValues[T] {
 		return this._value
+	}
+
+	getData(): FieldRawData<T> {
+		return {
+			id: this.id,
+			type: this.type,
+			name: this._name,
+			settings: this._settings,
+			value: this.getRawValue(),
+		}
 	}
 }
