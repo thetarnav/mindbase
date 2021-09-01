@@ -1,24 +1,18 @@
 import { DeepReadonly, readonly, watchEffect } from 'vue'
 import { getItemDetails } from '../apiSimulator'
 import { FieldType } from '../fields/types'
-import {
-	createFieldController,
-	createNewFieldController,
-} from '../fields/fieldFactory'
+import { createNewFieldController } from '../fields/fieldFactory'
 import { AnyFieldController } from '../fields/FieldController'
-import { removeFromArray, reorderArray } from '@/utils/functions'
+import { removeFromArray } from '@/utils/functions'
 import { debounce } from 'lodash'
+import { ContentMeta } from '../ItemContent/types'
+import { getFieldsFromRawContent } from '../ItemContent/parseContent'
 
 export interface DocumentMeta {
 	id: string
 	title: string
-	description: string
-	thumbnail?: string
-}
-
-interface ContentMeta {
-	id: string
-	type: FieldType
+	description: string | null
+	thumbnail: string | null
 }
 
 interface ReactiveDocState {
@@ -38,21 +32,7 @@ type Change = 'title' | 'description' | 'content' | string // id of the modified
 async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 	try {
 		const res = await getItemDetails(id)
-		const contentList = res.fields.map(i => ({
-			id: i.id,
-			type: i.type,
-		}))
-		const controllers: Record<string, AnyFieldController> = {}
-
-		res.fields.forEach(i => {
-			controllers[i.id] = createFieldController(
-				i.type,
-				i.id,
-				i.name,
-				i.settings,
-				i.value,
-			)
-		})
+		const { fields, controllers } = getFieldsFromRawContent(res.content)
 
 		return {
 			id,
@@ -62,7 +42,7 @@ async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 				thumbnail: res.thumbnail,
 				description: res.description,
 			},
-			fields: contentList,
+			fields,
 			controllers,
 		}
 	} catch (error) {

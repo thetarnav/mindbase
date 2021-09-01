@@ -1,39 +1,25 @@
+import { AnyFieldRawData, DocumentMeta, DocumentRawData } from '@/types/api'
 import { random, wait } from '@/utils/functions'
 import { cloneDeep } from 'lodash'
 import { loremIpsum } from 'lorem-ipsum'
 import { nanoid } from 'nanoid'
 import { Ref } from 'vue'
-import { FieldSettings, FieldType, RawFieldValues } from './fields/types'
 
 const randomSize = () => 350 + random(0, 10, 'round') * 10,
 	randomImg = () =>
 		`https://source.unsplash.com/${randomSize()}x${randomSize()}`
 
-interface DummyField<T extends FieldType> {
-	type: T
+class DummyItem implements DocumentMeta {
 	id: string
-	name: string
-	settings: FieldSettings[T]
-	value: RawFieldValues[T]
-}
-
-class DummyItem {
-	id: string
-	thumbnail?: string
-	title: string
-	description: string
-	fields: DummyField<FieldType>[]
+	thumbnail: string
 
 	constructor(
-		title: string,
-		description = '',
-		fields: DummyField<FieldType>[] = [],
+		public title: string,
+		public description: string | null,
+		public content: Array<AnyFieldRawData | string>,
 	) {
 		this.id = nanoid()
 		this.thumbnail = randomImg()
-		this.title = title
-		this.description = description.slice(0, 200)
-		this.fields = fields
 	}
 }
 
@@ -61,13 +47,7 @@ for (let i = 0; i < 15; i++) {
 				},
 				value: 235,
 			},
-			{
-				type: 'note',
-				id: 'wecrsvthdbfjbdhgs',
-				name: '',
-				settings: {},
-				value: '<p>&#9;Hello!</p>',
-			},
+			'<p>&#9;Hello!</p><p>This just some text</p>',
 			{
 				type: 'phone',
 				id: 'wqertbj',
@@ -89,16 +69,9 @@ for (let i = 0; i < 10; i++) {
 	allItems.value.push(new DummyItem(loremIpsum(), 'no description', []))
 }
 
-interface DummyItemMeta {
-	id: string
-	title: string
-	thumbnail: string | undefined
-	description: string
-}
-
 export async function getItems(
 	which: 'all' | 'recent',
-): Promise<DummyItemMeta[]> {
+): Promise<DocumentMeta[]> {
 	await wait(random(100, 1500, 'ceil'))
 	const items = cloneDeep(which === 'all' ? allItems.value : recentItems.value)
 	return items.map(item => ({
@@ -109,7 +82,7 @@ export async function getItems(
 	}))
 }
 
-export async function getItemDetails(id: string): Promise<DummyItem> {
+export async function getItemDetails(id: string): Promise<DocumentRawData> {
 	await wait(random(100, 1500, 'ceil'))
 	const doc = allItems.value.find(item => item.id === id)
 	if (!doc) return Promise.reject(`There is no document with this ID: ${id}`)
