@@ -11,8 +11,11 @@ export default Node.create({
 
 	addAttributes() {
 		return {
-			count: {
-				default: 0,
+			id: {
+				default: '',
+			},
+			type: {
+				default: '',
 			},
 		}
 	},

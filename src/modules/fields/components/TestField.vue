@@ -3,23 +3,29 @@
 		<span class="label">Vue Component</span>
 
 		<div class="content">
-			<button @click="increase">
-				This button has been clicked {{ node?.attrs.count }} times.
-			</button>
+			<button>This button has been clicked 0 times.</button>
 		</div>
 	</node-view-wrapper>
 </template>
 
-<script setup lang="ts">
-import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3'
+<script lang="ts">
+import { NodeViewWrapper } from '@tiptap/vue-3'
+import { defineComponent } from 'vue-demi'
 
-const props = defineProps(nodeViewProps)
-
-const increase = () => {
-	props.updateAttributes?.({
-		count: props.node?.attrs.count + 1,
-	})
-}
+export default defineComponent({
+	components: {
+		NodeViewWrapper,
+	},
+	props: {
+		node: {
+			type: Object,
+			required: true,
+		},
+	},
+	setup() {
+		return {}
+	},
+})
 </script>
 
 <style>

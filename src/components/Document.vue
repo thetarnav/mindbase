@@ -1,19 +1,16 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import Fields from '@/modules/fields/components/FieldsList.vue'
 import ItemHeader from '../modules/documents/components/ItemHeader.vue'
 import { IonContent } from '@ionic/vue'
 import DOCUMENT from '@/modules/documents/useDocument'
-import { onMounted } from 'vue-demi'
+import { onMounted } from 'vue'
+import ContentEditor from './ContentEditor.vue'
 
 const props = defineProps({
 	id: { type: String, required: true },
 })
 
-const showContent = computed(
-	() => DOCUMENT.exists.value && !DOCUMENT.fetching.value,
-)
-
+const showContent = computed(() => DOCUMENT.exists.value && !DOCUMENT.fetching.value)
 const headerComponent = ref<InstanceType<typeof ItemHeader>>()
 
 onMounted(() => {
@@ -29,7 +26,11 @@ onMounted(() => {
 		@ionScroll="headerComponent?.contentScroll($event)"
 		v-if="showContent"
 	>
-		<Fields :id="id" />
+		<!-- <Fields :id="id" /> -->
+		<ContentEditor
+			v-if="DOCUMENT.instance.contentEditor"
+			:editor-controller="DOCUMENT.instance.contentEditor"
+		/>
 	</ion-content>
 </template>
 

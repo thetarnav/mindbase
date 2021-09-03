@@ -1,4 +1,4 @@
-import { DeepReadonly, readonly, watchEffect } from 'vue'
+import { DeepReadonly, readonly, UnwrapRef, watchEffect } from 'vue'
 import { getItemDetails } from '../apiSimulator'
 import { FieldType } from '../fields/types'
 import {
@@ -6,30 +6,25 @@ import {
 	createNewFieldController,
 } from '../fields/fieldFactory'
 import { AnyFieldController } from '../fields/FieldController'
-import { removeFromArray, reorderArray } from '@/utils/functions'
 import { debounce } from 'lodash'
-import { generateJSON } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Typography from '@tiptap/extension-typography'
-import { Indent } from '../tiptap/tabIndent'
-import VueComponent from '@/modules/tiptap/testVueExtension'
-import { DocumentMeta } from '@/types/api'
+import { DocumentMeta, DocumentRawContent } from '@/types/api'
+import { getHTMLFromRawContent } from './parseContent'
+import createContentEditor, { ContentEditor } from '../editor/ContentEditor'
+import { Editor } from '@tiptap/vue-3'
 
 interface ContentMeta {
 	id: string
 	type: FieldType
 }
 
-interface ReactiveDocState {
-	id: string | null
-	meta: DocumentMeta | null
-	content: string
+interface DocumentDetails {
+	meta: DocumentMeta
+	content: DocumentRawContent
 }
 
-type NonNullDocState = OmitNullable<ReactiveDocState>
-
-interface DocumentDetails extends NonNullDocState {
-	controllers: Record<string, AnyFieldController>
+interface ReactiveDocState {
+	meta: DocumentMeta | null
+	editor: ContentEditor | null
 }
 
 type Change = 'title' | 'description' | 'content' | string // id of the modified field's controller
@@ -37,53 +32,14 @@ type Change = 'title' | 'description' | 'content' | string // id of the modified
 async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 	try {
 		const res = await getItemDetails(id)
-		const controllers: Record<string, AnyFieldController> = {}
-		const contentList: string[] = []
-
-		res.content.forEach(i => {
-			if (typeof i === 'string') {
-				// For Text just add it to the content as it is
-				contentList.push(i)
-			} else {
-				// For each field create it's controller and add to the content as a vue-component "field"
-				controllers[i.id] = createFieldController(
-					i.type,
-					i.id,
-					i.name,
-					i.settings,
-					i.value,
-				)
-				contentList.push(`<field id="${i.id}" type="${i.type}"></field>`)
-			}
-		})
-
-		const html = contentList.join('')
-
-		console.log(html)
-
-		console.log(
-			generateJSON(html, [
-				StarterKit.configure({
-					heading: {
-						levels: [1, 2, 3],
-					},
-				}),
-				Typography,
-				Indent,
-				VueComponent,
-			]),
-		)
-
 		return {
-			id,
 			meta: {
 				id,
 				title: res.title,
 				thumbnail: res.thumbnail,
 				description: res.description,
 			},
-			content: contentList.join(''),
-			controllers,
+			content: res.content,
 		}
 	} catch (error) {
 		return Promise.reject('Get Document Failed: ' + error)
@@ -91,9 +47,8 @@ async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 }
 
 const getClearState = (): ReactiveDocState => ({
-	id: null,
 	meta: null,
-	content: '',
+	editor: null,
 })
 
 const emitChanges = async (docID: string, changes: Set<Change>) => {
@@ -120,11 +75,10 @@ export default class DOCUMENT {
 
 	private readonly _state: ReactiveDocState
 	readonly state: DeepReadonly<ReactiveDocState>
-	private _controllers: Record<string, AnyFieldController> = {}
 	private changes: Set<Change> = new Set()
 
 	private constructor() {
-		this._state = reactive<ReactiveDocState>(getClearState())
+		this._state = reactive(getClearState()) as ReactiveDocState
 		this.state = readonly(this._state)
 	}
 	static get instance(): DOCUMENT {
@@ -138,9 +92,9 @@ export default class DOCUMENT {
 
 		let succeeded: boolean
 		try {
-			const state = await getDocumentDetails(id)
-			this.instance.setState(state)
-			this.instance.setControllers(state.controllers)
+			const details = await getDocumentDetails(id)
+			this.instance.setState(details)
+			this.instance.createEditor(details.content)
 			succeeded = true
 		} catch (error) {
 			console.log(error)
@@ -152,8 +106,7 @@ export default class DOCUMENT {
 		return succeeded
 	}
 	static clear(): void {
-		this.instance.setState(getClearState())
-		this.instance.setControllers(null)
+		this.instance.clearState()
 		this.exists.value = false
 
 		// clear again if called during fetching
@@ -171,15 +124,20 @@ export default class DOCUMENT {
 	private setState(newState: Partial<DeepReadonly<ReactiveDocState>>): void {
 		Object.assign(this._state, newState)
 	}
+	private clearState(): void {
+		Object.assign(this._state, getClearState())
+	}
 
-	private setControllers(
-		controllers: Record<string, AnyFieldController> | null,
-	): void {
-		this._controllers = controllers ?? {}
+	createEditor(content: DocumentRawContent): ContentEditor | null {
+		this._state.editor = createContentEditor(content)
+		return this._state.editor
 	}
 
 	getController(id: string): AnyFieldController | null {
-		return this._controllers[id] || null
+		return null
+	}
+	get contentEditor(): ContentEditor | null {
+		return this._state.editor ?? null
 	}
 
 	title = computed<string>({
@@ -244,8 +202,8 @@ export default class DOCUMENT {
 
 	private emitChanges = debounce(
 		() => {
-			this._state.id && emitChanges(this._state.id, this.changes)
-			this.changes.clear()
+			// this._state.id && emitChanges(this._state.id, this.changes)
+			// this.changes.clear()
 		},
 		4000,
 		{ maxWait: 10000 },

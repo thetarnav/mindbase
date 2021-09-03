@@ -17,6 +17,8 @@ export interface FieldControllerPublic<T extends FieldType> {
 }
 
 export type AnyFieldController = FieldControllerPublic<FieldType>
+
+export type FieldControllerMap = Record<string, AnyFieldController>
 export default abstract class FieldController<T extends FieldType>
 	implements FieldControllerPublic<T>
 {
