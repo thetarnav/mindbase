@@ -74,7 +74,7 @@ const editorFocus = () => (editorFocused.value = true)
 
 <style lang="postcss" scoped>
 .editor {
-	>>> .ProseMirror {
+	&:deep(.ProseMirror) {
 		@apply min-h-[2rem];
 
 		&:focus-visible {

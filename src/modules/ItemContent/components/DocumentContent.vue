@@ -6,20 +6,15 @@ import {
 	reorderTwoOutline,
 	closeOutline,
 } from 'ionicons/icons'
-import { defineAsyncComponent } from 'vue'
 import type { ComponentPublicInstance, Ref } from 'vue'
-import { modalController } from '@ionic/vue'
-import type { IonList } from '@ionic/vue'
-import Field from './Field.vue'
+import { IonList } from '@ionic/vue'
 import { itemCollapseTransition } from '@/utils/transitions'
 import DOCUMENT from '@/modules/documents/useDocument'
-import ContentNote from '../fields/note/ContentNote.vue'
 import { isElementInPath } from '@/utils/dom'
 import useReorderList from '../useReorderList'
-
-const PickFieldModal = defineAsyncComponent(
-	() => import('./PickFieldModal.vue'),
-)
+import Field from '@/modules/fields/components/Field.vue'
+import ContentNote from '@/modules/fields/fields/note/ContentNote.vue'
+import usePickFieldModal from '@/modules/fields/usePickFieldModal'
 
 const props = defineProps({
 	id: { type: String, required: true },
@@ -30,14 +25,10 @@ const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
 
 const openPickFieldModal = async () => {
-	const modal = await modalController.create({
-		component: PickFieldModal,
-		componentProps: {
-			close: () => modalController.dismiss(),
-			addField: (t: any) => DOCUMENT.instance.addField(t),
-		},
-	})
-	modal.present()
+	try {
+		const type = await usePickFieldModal()
+		DOCUMENT.instance.addField(type)
+	} catch (error) {}
 }
 const removeField = (id: string) => DOCUMENT.instance.removeField(id)
 
@@ -58,26 +49,10 @@ const onClickAway = (fieldID: string, e: Event) => {
 	isElementInPath(e, '.select-alert') || closeSettings(fieldID)
 }
 
-const doReorder = (e: CustomEvent) => {
-	DOCUMENT.instance.fieldsReorder(e.detail.complete(fields.value))
-	// DOCUMENT.instance.fieldsReorder(e.detail.from, e.detail.to)
-	// e.detail.complete()
-	// console.log('after reorder', openedSettingsID.value)
-	// setTimeout(() => {
-	// 	console.log('after timeout', openedSettingsID.value)
-	// }, 500)
-}
-
 useReorderList(listRef as Ref<ComponentPublicInstance>)
 </script>
 
 <template>
-	<!-- <ion-reorder-group
-		class="item-fields-list"
-		ref="listRef"
-		:disabled="false"
-		@ionItemReorder="doReorder($event)"
-	> -->
 	<ion-list class="item-fields-list" ref="listRef">
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<template v-for="field in fields" :key="field.id">
@@ -101,11 +76,9 @@ useReorderList(listRef as Ref<ComponentPublicInstance>)
 						>
 							<ion-icon slot="icon-only" :icon="trashOutline" />
 						</ion-button>
-						<!-- <ion-reorder> -->
 						<ion-button fill="clear" color="dark" class="reorder-handle">
 							<ion-icon slot="icon-only" :icon="reorderTwoOutline" />
 						</ion-button>
-						<!-- </ion-reorder> -->
 						<ion-button
 							fill="clear"
 							color="dark"
@@ -137,7 +110,6 @@ useReorderList(listRef as Ref<ComponentPublicInstance>)
 			</ion-button>
 		</div>
 	</ion-list>
-	<!-- </ion-reorder-group> -->
 </template>
 
 <style lang="postcss" scoped>

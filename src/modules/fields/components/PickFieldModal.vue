@@ -4,11 +4,11 @@ import {} from 'ionicons/icons'
 
 const props = defineProps({
 	close: { type: Function, required: true },
-	addField: { type: Function, default: undefined },
+	pickField: { type: Function, default: undefined },
 })
 
-const addField = (type: FieldType) => {
-	props.addField?.(type)
+const pickField = (type: FieldType) => {
+	props.pickField?.(type)
 	props.close()
 }
 
@@ -69,7 +69,7 @@ const fieldTypes: Omit<Record<FieldType, FieldCard>, 'note'> = {
 				button
 				detail
 				class="field-thumbnail"
-				@click="addField(field)"
+				@click="pickField(field)"
 			>
 				<div class="field-thumbnail--content">
 					<h5>{{ name }}</h5>
