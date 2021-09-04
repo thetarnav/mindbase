@@ -17,15 +17,13 @@ interface ContentMeta {
 	type: FieldType
 }
 
-interface DocumentDetails {
-	meta: DocumentMeta
+interface ReactiveDocState {
+	meta: DocumentMeta | null
 	content: DocumentRawContent
 }
 
-interface ReactiveDocState {
-	meta: DocumentMeta | null
-	editor: ContentEditor | null
-}
+type DocumentDetails = OmitNullable<ReactiveDocState>
+// editor: ContentEditor | null
 
 type Change = 'title' | 'description' | 'content' | string // id of the modified field's controller
 
@@ -48,7 +46,7 @@ async function getDocumentDetails(id: string): Promise<DocumentDetails> {
 
 const getClearState = (): ReactiveDocState => ({
 	meta: null,
-	editor: null,
+	content: [],
 })
 
 const emitChanges = async (docID: string, changes: Set<Change>) => {
@@ -75,6 +73,7 @@ export default class DOCUMENT {
 
 	private readonly _state: ReactiveDocState
 	readonly state: DeepReadonly<ReactiveDocState>
+	private _editorController: ContentEditor | null = null
 	private changes: Set<Change> = new Set()
 
 	private constructor() {
@@ -129,15 +128,15 @@ export default class DOCUMENT {
 	}
 
 	createEditor(content: DocumentRawContent): ContentEditor | null {
-		this._state.editor = createContentEditor(content)
-		return this._state.editor
+		this._editorController = createContentEditor(content)
+		return this._editorController
 	}
 
 	getController(id: string): AnyFieldController | null {
 		return null
 	}
 	get contentEditor(): ContentEditor | null {
-		return this._state.editor ?? null
+		return this._editorController
 	}
 
 	title = computed<string>({

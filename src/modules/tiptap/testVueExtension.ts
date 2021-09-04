@@ -8,7 +8,6 @@ export default Node.create({
 	group: 'block',
 
 	atom: true,
-
 	addAttributes() {
 		return {
 			id: {
