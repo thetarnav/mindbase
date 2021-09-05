@@ -1,7 +1,8 @@
 import Typography from '@tiptap/extension-typography'
 import StarterKit from '@tiptap/starter-kit'
 import { Indent } from './tabIndent'
-import VueComponent from '@/modules/tiptap/testVueExtension'
+import FieldNode from '@/modules/tiptap/FieldNode'
+import RequiredNodes from './RequiredNodes'
 
 export const editorExtensions = [
 	StarterKit.configure({
@@ -11,5 +12,6 @@ export const editorExtensions = [
 	}),
 	Typography,
 	Indent,
-	VueComponent,
+	FieldNode,
+	RequiredNodes,
 ]

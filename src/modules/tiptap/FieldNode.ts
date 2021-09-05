@@ -4,33 +4,25 @@ import Field from '@/modules/fields/components/TestField.vue'
 
 export default Node.create({
 	name: 'field',
-
 	group: 'block',
-
+	draggable: true,
 	atom: true,
-	addAttributes() {
-		return {
-			id: {
-				default: '',
-			},
-			type: {
-				default: '',
-			},
-		}
-	},
-
-	parseHTML() {
-		return [
-			{
-				tag: 'field',
-			},
-		]
-	},
-
+	addAttributes: () => ({
+		id: {
+			default: '',
+		},
+		type: {
+			default: '',
+		},
+	}),
+	parseHTML: () => [
+		{
+			tag: 'field',
+		},
+	],
 	renderHTML({ HTMLAttributes }) {
 		return ['field', mergeAttributes(HTMLAttributes)]
 	},
-
 	addNodeView() {
 		return VueNodeViewRenderer(Field)
 	},

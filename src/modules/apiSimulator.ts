@@ -6,8 +6,7 @@ import { nanoid } from 'nanoid'
 import { Ref } from 'vue'
 
 const randomSize = () => 350 + random(0, 10, 'round') * 10,
-	randomImg = () =>
-		`https://source.unsplash.com/${randomSize()}x${randomSize()}`
+	randomImg = () => `https://source.unsplash.com/${randomSize()}x${randomSize()}`
 
 class DummyItem implements DocumentMeta {
 	id: string
@@ -57,6 +56,7 @@ for (let i = 0; i < 15; i++) {
 				},
 				value: [],
 			},
+			'<p><b>Bye bye!</b></p>',
 		]),
 	)
 }
@@ -69,9 +69,7 @@ for (let i = 0; i < 10; i++) {
 	allItems.value.push(new DummyItem(loremIpsum(), 'no description', []))
 }
 
-export async function getItems(
-	which: 'all' | 'recent',
-): Promise<DocumentMeta[]> {
+export async function getItems(which: 'all' | 'recent'): Promise<DocumentMeta[]> {
 	await wait(random(100, 1500, 'ceil'))
 	const items = cloneDeep(which === 'all' ? allItems.value : recentItems.value)
 	return items.map(item => ({

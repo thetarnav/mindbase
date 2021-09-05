@@ -1,6 +1,6 @@
 <template>
 	<node-view-wrapper class="vue-component">
-		<span class="label">Vue Component</span>
+		<span class="label" draggable="true" data-drag-handle>Vue Component</span>
 
 		<div class="content">
 			<button>This button has been clicked 0 times.</button>
