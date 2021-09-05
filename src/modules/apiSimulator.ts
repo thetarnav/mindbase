@@ -27,6 +27,7 @@ const recentItems: Ref<DummyItem[]> = ref([])
 for (let i = 0; i < 15; i++) {
 	recentItems.value.push(
 		new DummyItem(loremIpsum(), 'no description', [
+			'<p>To jest moja notatka</p>',
 			{
 				type: 'text',
 				id: 'sarghtjykdsgasdf',

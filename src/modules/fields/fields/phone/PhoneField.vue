@@ -14,15 +14,20 @@ import {
 import { AsYouType } from 'libphonenumber-js'
 import { getRandom } from '@/utils/functions'
 import copy from '@/modules/clipboard'
-import { injectController } from '../../useController'
 import { isElementFocused } from '@/utils/dom'
+import {
+	useControllerValue,
+	useControllerSettings,
+} from '@/modules/fields/useControllerRefs'
+import PhoneFieldController from './PhoneFieldController'
 
 const props = defineProps({
+	controller: { type: Object as () => PhoneFieldController, required: true },
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
-
-const { value, settings } = injectController('phone')
+const value = useControllerValue<'phone'>(props.controller)
+const settings = useControllerSettings<'phone'>(props.controller)
 
 const defaultCountryCode = 'US'
 
@@ -104,8 +109,7 @@ const doReorder = (e: CustomEvent) => {
 }
 const moreThanSingleEntry = computed(() => value.value.length > 1)
 const reorderDisabled = computed(
-	() =>
-		!props.settingsOpen || !settings.multiple || !moreThanSingleEntry.value,
+	() => !props.settingsOpen || !settings.multiple || !moreThanSingleEntry.value,
 )
 
 const listRef = ref<ComponentPublicInstance>()
@@ -142,9 +146,7 @@ const inputDisabled = (index: number): boolean => {
 			class="phone-item"
 			:data-index="index"
 		>
-			<label
-				v-if="settings.multiple && !settingsOpen && moreThanSingleEntry"
-			>
+			<label v-if="settings.multiple && !settingsOpen && moreThanSingleEntry">
 				{{ phone.label }}
 			</label>
 			<ion-input

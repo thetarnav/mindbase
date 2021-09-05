@@ -1,64 +1,84 @@
-<script lang="ts" setup>
+<script lang="ts">
 import {} from 'ionicons/icons'
 import { nanoid } from 'nanoid'
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, defineComponent } from 'vue'
 import { getFieldComponentImport } from '../fieldFactory'
-import { provideController } from '../useController'
-import { FieldType } from '../types'
+import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3'
+import { ContentEditor } from '@/modules/content/ContentEditor'
+import { useControllerName } from '../useControllerRefs'
 
-const props = defineProps({
-	id: { type: String, required: true },
-	type: { type: String as () => FieldType, required: true },
-	settingsOpen: { type: Boolean, default: false },
+export default defineComponent({
+	components: { NodeViewWrapper },
+	props: nodeViewProps,
+	setup(props) {
+		const dataTeleport = nanoid()
+		const settingsOpen = false
+		const FieldComponent = defineAsyncComponent(
+			getFieldComponentImport(props.node?.attrs.type),
+		)
+
+		const controller = (props.editor as ContentEditor)?.getFieldController(
+			props.node?.attrs.id,
+		)
+		const name = controller ? useControllerName(controller) : ''
+
+		return {
+			controller,
+			name,
+			dataTeleport,
+			settingsOpen,
+			type: props.node?.attrs.type,
+			id: props.node?.attrs.id,
+			FieldComponent,
+		}
+	},
 })
-
-const fieldComponent = defineAsyncComponent(getFieldComponentImport(props.type))
-
-const { controller, name } = provideController(props.type, props.id)
-const dataTeleport = nanoid()
 </script>
 
 <template>
-	<div
-		v-if="controller"
-		class="field-item--wrapper"
-		:class="{ 'field-settings-open': settingsOpen }"
-	>
-		<div class="field-item--actions">
-			<slot name="actions"></slot>
-		</div>
+	<node-view-wrapper>
+		<div
+			v-if="controller"
+			class="field-item--wrapper"
+			:class="{ 'field-settings-open': settingsOpen }"
+		>
+			<div class="field-item--actions">
+				<slot name="actions"></slot>
+			</div>
 
-		<div class="field-item" :class="`field-item--${type}`">
-			<header>
-				<contenteditable
-					tag="h6"
-					class="title"
-					v-model="name"
-					:contenteditable="settingsOpen"
-					noNL
-					noHTML
+			<div class="field-item" :class="`field-item--${type}`">
+				<header>
+					<contenteditable
+						tag="h6"
+						class="title"
+						v-model="name"
+						:contenteditable="settingsOpen"
+						noNL
+						noHTML
+					/>
+					<p class="field-type">{{ id }}: {{ type }}</p>
+				</header>
+
+				<component
+					:is="FieldComponent"
+					:controller="controller"
+					:settings-teleport="`[data-teleport='${dataTeleport}']`"
+					:settings-open="settingsOpen"
 				/>
-				<p class="field-type">{{ id }}: {{ type }}</p>
-			</header>
-
-			<component
-				:is="fieldComponent"
-				:settings-teleport="`[data-teleport='${dataTeleport}']`"
-				:settings-open="settingsOpen"
-			/>
+			</div>
+			<footer class="field-item--settings">
+				<CollapseTransition>
+					<div
+						v-show="settingsOpen"
+						class="settings-content"
+						:data-teleport="dataTeleport"
+					>
+						<!-- <label>Settings</label> -->
+					</div>
+				</CollapseTransition>
+			</footer>
 		</div>
-		<footer class="field-item--settings">
-			<CollapseTransition>
-				<div
-					v-show="settingsOpen"
-					class="settings-content"
-					:data-teleport="dataTeleport"
-				>
-					<!-- <label>Settings</label> -->
-				</div>
-			</CollapseTransition>
-		</footer>
-	</div>
+	</node-view-wrapper>
 </template>
 
 <style lang="postcss">

@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { UnwrapRef } from 'vue'
-import { ContentEditor } from '@/modules/editor/ContentEditor'
-import { Editor, EditorContent } from '@tiptap/vue-3'
-import { editorExtensions } from '@/modules/tiptap/editorExtensions'
+import { ContentEditor } from '@/modules/content/ContentEditor'
+import { EditorContent } from '@tiptap/vue-3'
 
 const props = defineProps({
 	editorController: { type: Object as () => ContentEditor, required: true },
@@ -11,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-	<EditorContent :editor="editorController.editor" class="editor" />
+	<EditorContent :editor="editorController" class="editor" />
 </template>
 
 <style lang="postcss" scoped></style>

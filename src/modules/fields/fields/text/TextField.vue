@@ -1,13 +1,18 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { injectController } from '../../useController'
+import {
+	useControllerSettings,
+	useControllerValue,
+} from '@/modules/fields/useControllerRefs'
+import TextFieldController from './TextFieldController'
 
 const props = defineProps({
+	controller: { type: Object as () => TextFieldController, required: true },
 	settingsTeleport: { type: String, required: true },
 	settingsOpen: { type: Boolean, required: true },
 })
-
-const { value, settings } = injectController('text')
+const value = useControllerValue<'text'>(props.controller)
+const settings = useControllerSettings<'text'>(props.controller)
 </script>
 
 <template>

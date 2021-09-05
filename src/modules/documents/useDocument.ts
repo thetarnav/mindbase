@@ -9,7 +9,7 @@ import { AnyFieldController } from '../fields/FieldController'
 import { debounce } from 'lodash'
 import { DocumentMeta, DocumentRawContent } from '@/types/api'
 import { getHTMLFromRawContent } from './parseContent'
-import createContentEditor, { ContentEditor } from '../editor/ContentEditor'
+import createContentEditor, { ContentEditor } from '../content/ContentEditor'
 import { Editor } from '@tiptap/vue-3'
 
 interface ContentMeta {

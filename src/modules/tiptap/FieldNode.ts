@@ -1,6 +1,6 @@
 import { Node, mergeAttributes } from '@tiptap/core'
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
-import Field from '@/modules/fields/components/TestField.vue'
+import Field from '@/modules/fields/components/Field.vue'
 
 export default Node.create({
 	name: 'field',
