@@ -26,6 +26,7 @@
     "libphonenumber-js": "^1.9.25",
     "lodash": "^4.17.21",
     "lorem-ipsum": "^2.0.3",
+    "mobile-drag-drop": "^2.3.0-rc.2",
     "nanoid": "^3.1.25",
     "postcss-mixins": "^8.1.0",
     "register-service-worker": "^1.7.2",

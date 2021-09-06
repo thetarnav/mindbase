@@ -1,4 +1,6 @@
 import '@/services/firebase'
+import { polyfill } from 'mobile-drag-drop'
+polyfill()
 
 // Global Composition API imports
 import 'vue-global-api/ref'

@@ -22,6 +22,11 @@ export default defineComponent({
 		)
 		const name = controller ? useControllerName(controller) : ''
 
+		watch(props, () => {
+			console.log('props changed')
+			console.log(props)
+		})
+
 		return {
 			controller,
 			name,
@@ -47,7 +52,7 @@ export default defineComponent({
 			</div>
 
 			<div class="field-item" :class="`field-item--${type}`">
-				<header>
+				<header data-drag-handle>
 					<contenteditable
 						tag="h6"
 						class="title"
@@ -83,10 +88,10 @@ export default defineComponent({
 
 <style lang="postcss">
 .field-item {
-	@apply px-4 py-6 flex flex-col items-stretch;
+	@apply flex flex-col items-stretch;
 
 	&--wrapper {
-		@apply relative;
+		@apply relative my-2 ring-1 ring-gray-600 dark:ring-gray-800;
 	}
 
 	/* background: var(--background); */
@@ -96,7 +101,7 @@ export default defineComponent({
 	}
 
 	> header {
-		@apply mb-4;
+		@apply mb-2;
 	}
 
 	.title {

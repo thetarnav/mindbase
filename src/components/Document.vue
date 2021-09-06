@@ -29,7 +29,7 @@ onMounted(() => {
 		<!-- <Fields :id="id" /> -->
 		<ContentEditor
 			v-if="DOCUMENT.instance.contentEditor"
-			:editor-controller="DOCUMENT.instance.contentEditor"
+			:editor="DOCUMENT.instance.contentEditor"
 		/>
 	</ion-content>
 </template>
