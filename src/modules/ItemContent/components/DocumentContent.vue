@@ -56,13 +56,19 @@ useReorderList(listRef as Ref<ComponentPublicInstance>)
 	<ion-list class="item-fields-list" ref="listRef">
 		<transition-group :css="false" @leave="itemCollapseTransition">
 			<template v-for="field in fields" :key="field.id">
-				<ContentNote v-if="field.type === 'note'" :id="field.id" />
+				<ContentNote
+					v-if="field.type === 'note'"
+					class="content-note-component"
+					:data-field-id="field.id"
+					:id="field.id"
+				/>
 				<Field
 					v-else
+					class="content-field-component"
+					:data-field-id="field.id"
 					:id="field.id"
 					:type="field.type"
 					:settings-open="openedSettingsID === field.id"
-					v-touch:hold="() => toggleSettings(field.id)"
 					v-click-away="
 						// @ts-ignore
 						e => onClickAway(field.id, e)

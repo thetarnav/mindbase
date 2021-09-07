@@ -12,18 +12,24 @@ const editor = ref<InstanceType<typeof RichTextEditor>>()
 const handleEditorBlur = (content: string) => {
 	// When user clicks away from the note leaving it empty,
 	// then remove it from the DOCUMENT
-	if (content.length === 0) controller.removeNote()
+	// if (content.length === 0) controller.removeNote()
 }
 </script>
 
 <template>
-	<div class="wrapper">
+	<div class="content-note">
 		<RichTextEditor ref="editor" v-model="value" @blur="handleEditorBlur" />
 	</div>
 </template>
 
 <style lang="postcss" scoped>
-.wrapper {
-	@apply p-4;
+.content-note {
+	@apply py-4;
+
+	&:deep(.ProseMirror) {
+		> * {
+			@apply px-4;
+		}
+	}
 }
 </style>

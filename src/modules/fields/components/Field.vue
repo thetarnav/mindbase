@@ -11,11 +11,18 @@ const props = defineProps({
 	type: { type: String as () => FieldType, required: true },
 	settingsOpen: { type: Boolean, default: false },
 })
+defineEmits<{
+	(name: 'dragstart', e: DragEvent): void
+}>()
 
 const fieldComponent = defineAsyncComponent(getFieldComponentImport(props.type))
 
 const { controller, name } = provideController(props.type, props.id)
 const dataTeleport = nanoid()
+
+const onDragstart = (e: DragEvent) => {
+	console.log(e.target)
+}
 </script>
 
 <template>
@@ -24,6 +31,7 @@ const dataTeleport = nanoid()
 		class="field-item--wrapper"
 		:class="{ 'field-settings-open': settingsOpen }"
 	>
+		<!-- @dragstart="$emit('dragstart', $event)" -->
 		<div class="field-item--actions">
 			<slot name="actions"></slot>
 		</div>
@@ -67,12 +75,6 @@ const dataTeleport = nanoid()
 
 	&--wrapper {
 		@apply relative;
-	}
-
-	/* background: var(--background); */
-
-	&::part(native) {
-		--inner-border-width: 0;
 	}
 
 	> header {

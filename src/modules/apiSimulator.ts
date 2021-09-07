@@ -33,7 +33,7 @@ for (let i = 0; i < 15; i++) {
 				id: 'sarghtjykdsgasdf',
 				name: 'Test text field',
 				settings: {
-					multiline: true,
+					multiline: false,
 					rich: false,
 				},
 				value: 'lorem ipsum',

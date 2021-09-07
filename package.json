@@ -15,6 +15,7 @@
     "@ionic/vue": "^6.0.0-dev.202108111541.83d9799",
     "@ionic/vue-router": "^6.0.0-dev.202108111541.83d9799",
     "@ivanv/vue-collapse-transition": "^1.0.2",
+    "@shopify/draggable": "^1.0.0-beta.12",
     "@tiptap/extension-placeholder": "^2.0.0-beta.28",
     "@tiptap/extension-typography": "^2.0.0-beta.14",
     "@tiptap/starter-kit": "^2.0.0-beta.101",

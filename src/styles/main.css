@@ -1,3 +1,13 @@
 .ion-page {
-   background-color: var(--ion-background-color);
+	background-color: var(--ion-background-color);
+}
+
+.drop-bottom {
+	box-shadow: 0px 4px 0px 0px blue !important;
+}
+.drop-top {
+	box-shadow: 0px -4px 0px 0px blue !important;
+}
+.draggable-mirror {
+	@apply opacity-50 pointer-events-none;
 }

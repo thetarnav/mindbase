@@ -34,7 +34,7 @@ export const getFieldsFromRawContent = (
 	fields: FieldsList
 	controllers: Record<string, AnyFieldController>
 } => {
-	content = correctContent(content)
+	// content = correctContent(content)
 	const fields: FieldsList = []
 	const controllers: Record<string, AnyFieldController> = {}
 
@@ -45,7 +45,13 @@ export const getFieldsFromRawContent = (
 				id,
 				type: 'note',
 			})
-			controllers[id] = createFieldController('note', id)
+			controllers[id] = createFieldController(
+				'note',
+				id,
+				undefined,
+				undefined,
+				item,
+			)
 		} else {
 			fields.push({
 				id: item.id,
