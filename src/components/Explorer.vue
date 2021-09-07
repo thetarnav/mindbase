@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import { getItems } from '@/modules/apiSimulator'
-import { DocumentMeta } from '@/modules/documents/useDocument'
-import {} from 'ionicons/icons'
 import { onMounted } from 'vue-demi'
-// import { getItems } from '@/modules/documents/items'
-import ItemMini from '../modules/documents/components/ItemMini.vue'
+import ItemMini from './ItemMini.vue'
 
 const props = defineProps({
 	category: { type: String, required: true },

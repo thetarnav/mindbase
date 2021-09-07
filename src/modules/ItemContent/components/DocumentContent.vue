@@ -9,17 +9,19 @@ import {
 import type { ComponentPublicInstance, Ref } from 'vue'
 import { IonList } from '@ionic/vue'
 import { itemCollapseTransition } from '@/utils/transitions'
-import DOCUMENT from '@/modules/documents/useDocument'
 import { isElementInPath } from '@/utils/dom'
 import useReorderList from '../useReorderList'
 import Field from '@/modules/fields/components/Field.vue'
 import ContentNote from '@/modules/fields/fields/note/ContentNote.vue'
 import usePickFieldModal from '@/modules/fields/usePickFieldModal'
+import useContent from '@/store/content'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { fields } = DOCUMENT.instance
+const content = useContent()
+const { content: fields } = storeToRefs(content)
 
 const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()
@@ -27,13 +29,15 @@ const listRef = ref<ComponentPublicInstance>()
 const openPickFieldModal = async () => {
 	try {
 		const type = await usePickFieldModal()
-		DOCUMENT.instance.addField(type)
+		// DOCUMENT.instance.addField(type)
 	} catch (error) {}
 }
-const removeField = (id: string) => DOCUMENT.instance.removeField(id)
+const removeField = (id: string) => {
+	//
+}
 
 const addContentNote = () => {
-	DOCUMENT.instance.addField('note')
+	// DOCUMENT.instance.addField('note')
 }
 
 const toggleSettings = (fieldID: string) => {

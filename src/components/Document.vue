@@ -1,24 +1,17 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import ItemHeader from '../modules/documents/components/ItemHeader.vue'
 import { IonContent } from '@ionic/vue'
-import DOCUMENT from '@/modules/documents/useDocument'
-import { onMounted } from 'vue-demi'
+import ItemHeader from '../modules/documents/components/ItemHeader.vue'
 import DocumentContent from '@/modules/ItemContent/components/DocumentContent.vue'
+import useDocument from '@/store/document'
 
-const props = defineProps({
+defineProps({
 	id: { type: String, required: true },
 })
 
-const showContent = computed(
-	() => DOCUMENT.exists.value && !DOCUMENT.fetching.value,
-)
+const document = useDocument()
 
 const headerComponent = ref<InstanceType<typeof ItemHeader>>()
-
-onMounted(() => {
-	console.log('doc mounted', headerComponent.value?.$el)
-})
 </script>
 
 <template>
@@ -27,7 +20,7 @@ onMounted(() => {
 		fullscreen
 		:scrollEvents="true"
 		@ionScroll="headerComponent?.contentScroll($event)"
-		v-if="showContent"
+		v-if="document.fetchState === 'success'"
 	>
 		<DocumentContent :id="id" />
 	</ion-content>

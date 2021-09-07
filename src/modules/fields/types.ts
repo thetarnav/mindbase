@@ -6,13 +6,6 @@ import {
 	PhoneFieldValueClient,
 } from './fields/phone/PhoneFieldController'
 
-export type FieldType = 'text' | 'number' | 'phone' | 'note'
-// | 'toggle'
-// | 'email'
-// | 'rich_text'
-// | 'date'
-// | 'person'
-
 export interface RawFieldValues {
 	text: string
 	number: number

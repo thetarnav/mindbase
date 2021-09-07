@@ -1,4 +1,3 @@
-import { AnyFieldRawData, DocumentMeta, DocumentRawData } from '@/types/api'
 import { random, wait } from '@/utils/functions'
 import { cloneDeep } from 'lodash'
 import { loremIpsum } from 'lorem-ipsum'
@@ -15,8 +14,8 @@ class DummyItem implements DocumentMeta {
 
 	constructor(
 		public title: string,
-		public description: string | null,
-		public content: Array<AnyFieldRawData | string>,
+		public description: string | undefined,
+		public content: Array<AnyAPIFieldData | string>,
 	) {
 		this.id = nanoid()
 		this.thumbnail = randomImg()
@@ -82,9 +81,12 @@ export async function getItems(
 	}))
 }
 
-export async function getItemDetails(id: string): Promise<DocumentRawData> {
+export async function fetchDocumentData(
+	docID: DocumentID,
+): Promise<APIDocumentData> {
 	await wait(random(100, 1500, 'ceil'))
-	const doc = allItems.value.find(item => item.id === id)
-	if (!doc) return Promise.reject(`There is no document with this ID: ${id}`)
+	const doc = allItems.value.find(item => item.id === docID)
+	if (!doc)
+		return Promise.reject(`There is no document with this ID: ${docID}`)
 	return cloneDeep(doc)
 }

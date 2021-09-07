@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
-import { useNoteController } from '../../useController'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 
 const props = defineProps({
 	id: { type: String, required: true },
 })
-const { controller, value } = useNoteController(props.id)
+// const { controller, value } = useNoteController(props.id)
+const value = 'Note'
 const editor = ref<InstanceType<typeof RichTextEditor>>()
 
 const handleEditorBlur = (content: string) => {

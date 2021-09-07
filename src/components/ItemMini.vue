@@ -1,20 +1,19 @@
 <script lang="ts" setup>
+import useDocument from '@/store/document'
 import {} from 'ionicons/icons'
-import { toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import DOC from '../useDocument'
 
 const props = defineProps({
 	title: { type: String, default: 'Item Without a Title' },
-	img: { type: String as () => string | undefined, default: undefined },
+	img: { type: String as () => string | null, default: undefined },
 	id: { type: String, required: true },
 	desc: { type: String, default: undefined },
 })
-const { title, img } = toRefs(props),
-	router = useRouter()
+const router = useRouter(),
+	document = useDocument()
 
 const openDetails = () => {
-	DOC.fetch(props.id)
+	document.fetch(props.id)
 	router.push({ name: 'Item', params: { itemID: props.id } })
 }
 </script>

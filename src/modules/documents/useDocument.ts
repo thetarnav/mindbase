@@ -1,12 +1,6 @@
 import { DeepReadonly, readonly, watchEffect } from 'vue'
-import { getItemDetails } from '../apiSimulator'
 import { FieldType } from '../fields/types'
-import { createNewFieldController } from '../fields/fieldFactory'
-import { AnyFieldController } from '../fields/FieldController'
-import { removeFromArray } from '@/utils/functions'
 import { debounce } from 'lodash'
-import { ContentMeta } from '../ItemContent/types'
-import { getFieldsFromRawContent } from '../ItemContent/parseContent'
 
 export interface DocumentMeta {
 	id: string
@@ -18,42 +12,15 @@ export interface DocumentMeta {
 interface ReactiveDocState {
 	id: string | null
 	meta: DocumentMeta | null
-	fields: ContentMeta[]
-}
-
-type NonNullDocState = OmitNullable<ReactiveDocState>
-
-interface DocumentDetails extends NonNullDocState {
-	controllers: Record<string, AnyFieldController>
+	content: FieldsList
 }
 
 type Change = 'title' | 'description' | 'content' | string // id of the modified field's controller
 
-async function getDocumentDetails(id: string): Promise<DocumentDetails> {
-	try {
-		const res = await getItemDetails(id)
-		const { fields, controllers } = getFieldsFromRawContent(res.content)
-
-		return {
-			id,
-			meta: {
-				id,
-				title: res.title,
-				thumbnail: res.thumbnail,
-				description: res.description,
-			},
-			fields,
-			controllers,
-		}
-	} catch (error) {
-		return Promise.reject('Get Document Failed: ' + error)
-	}
-}
-
 const getClearState = (): ReactiveDocState => ({
 	id: null,
 	meta: null,
-	fields: [],
+	content: [],
 })
 
 const emitChanges = async (docID: string, changes: Set<Change>) => {
@@ -80,7 +47,7 @@ export default class DOCUMENT {
 
 	private readonly _state: ReactiveDocState
 	readonly state: DeepReadonly<ReactiveDocState>
-	private _controllers: Record<string, AnyFieldController> = {}
+	private contentController: ContentController | null = null
 	private changes: Set<Change> = new Set()
 
 	private constructor() {
@@ -100,7 +67,10 @@ export default class DOCUMENT {
 		try {
 			const state = await getDocumentDetails(id)
 			this.instance.setState(state)
-			this.instance.setControllers(state.controllers)
+			this.instance.contentController = new ContentController(
+				this.instance,
+				state.content,
+			)
 			succeeded = true
 		} catch (error) {
 			console.log(error)
@@ -113,7 +83,7 @@ export default class DOCUMENT {
 	}
 	static clear(): void {
 		this.instance.setState(getClearState())
-		this.instance.setControllers(null)
+		this.instance.contentController = null
 		this.exists.value = false
 
 		// clear again if called during fetching
@@ -132,17 +102,7 @@ export default class DOCUMENT {
 		Object.assign(this._state, newState)
 	}
 
-	private setControllers(
-		controllers: Record<string, AnyFieldController> | null,
-	): void {
-		this._controllers = controllers ?? {}
-	}
-
-	getController(id: string): AnyFieldController | null {
-		return this._controllers[id] || null
-	}
-
-	fields = computed<ContentMeta[]>(() => this._state.fields)
+	fields = computed<FieldsList>(() => this._state.content)
 
 	title = computed<string>({
 		set: v => {
@@ -167,35 +127,35 @@ export default class DOCUMENT {
 	})
 
 	addField(this: DOCUMENT, type: FieldType): void {
-		const controller = createNewFieldController(type)
-		const id = controller.id
-
-		this._state.fields.push({
-			id,
-			type,
-		})
-		this._controllers[id] = controller
-		this.addChange('content')
+		// const controller = createNewFieldController(type)
+		// const id = controller.id
+		// // this._state.content.push({
+		// // 	id,
+		// // 	type,
+		// // 	settings: {},
+		// // })
+		// this._controllers[id] = controller
+		// this.addChange('content')
 	}
 
 	removeField(this: DOCUMENT, id: string): void {
-		delete this._controllers[id]
-		removeFromArray(this._state.fields, f => f.id === id)
-		this.addChange('content')
+		// delete this._controllers[id]
+		// removeFromArray(this._state.fields, f => f.id === id)
+		// this.addChange('content')
 	}
 
-	fieldChanged(controller: AnyFieldController): void {
-		this.addChange(controller.id)
-	}
+	// fieldChanged(controller: AnyFieldController): void {
+	// 	this.addChange(controller.id)
+	// }
 
-	fieldsReorder(newOrder: ContentMeta[]): void {
-		// fieldsReorder(from: number, to: number): void {
-		this._state.fields = newOrder
-		// reorderArray(this._state.fields, from, to)
-		// TODO: figure out a way to emit reorder change without touching the `this._state.fields` as it's reactive and sucks
-		console.table(this._state.fields)
-		this.addChange('content')
-	}
+	// fieldsReorder(newOrder: ContentMeta[]): void {
+	// 	// fieldsReorder(from: number, to: number): void {
+	// 	this._state.fields = newOrder
+	// 	// reorderArray(this._state.fields, from, to)
+	// 	// TODO: figure out a way to emit reorder change without touching the `this._state.fields` as it's reactive and sucks
+	// 	console.table(this._state.fields)
+	// 	this.addChange('content')
+	// }
 
 	private addChange(change: Change) {
 		this.changes.add(change)

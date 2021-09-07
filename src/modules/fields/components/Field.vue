@@ -3,8 +3,6 @@ import {} from 'ionicons/icons'
 import { nanoid } from 'nanoid'
 import { defineAsyncComponent } from 'vue'
 import { getFieldComponentImport } from '../fieldFactory'
-import { provideController } from '../useController'
-import { FieldType } from '../types'
 
 const props = defineProps({
 	id: { type: String, required: true },
@@ -17,12 +15,10 @@ defineEmits<{
 
 const fieldComponent = defineAsyncComponent(getFieldComponentImport(props.type))
 
-const { controller, name } = provideController(props.type, props.id)
+// const { controller, name } = provideController(props.type, props.id)
+const controller = false
+const name = 'Field'
 const dataTeleport = nanoid()
-
-const onDragstart = (e: DragEvent) => {
-	console.log(e.target)
-}
 </script>
 
 <template>
@@ -61,9 +57,7 @@ const onDragstart = (e: DragEvent) => {
 					v-show="settingsOpen"
 					class="settings-content"
 					:data-teleport="dataTeleport"
-				>
-					<!-- <label>Settings</label> -->
-				</div>
+				></div>
 			</CollapseTransition>
 		</footer>
 	</div>

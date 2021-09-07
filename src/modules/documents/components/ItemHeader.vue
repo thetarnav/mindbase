@@ -4,14 +4,23 @@ import {
 	heartOutline,
 	shareSocialOutline,
 } from 'ionicons/icons'
-import type { ComponentPublicInstance } from 'vue'
+import { ComponentPublicInstance } from 'vue'
 import contenteditable from 'vue-contenteditable'
 import { clamp, valToP } from '@/utils/functions'
 import { debounce } from 'lodash'
 import displayItemOptionsSheet from '../actionsSheet'
-import DOCUMENT from '../useDocument'
+import useDocument from '@/store/document'
 
-const { title, description: desc } = DOCUMENT.instance
+const document = useDocument()
+
+const title = computed({
+	set: v => document.setTitle(v),
+	get: () => document.title,
+})
+const desc = computed({
+	set: v => document.setDescription(v),
+	get: () => document.description,
+})
 
 const headerComponent = ref<ComponentPublicInstance>()
 

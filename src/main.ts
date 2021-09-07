@@ -9,6 +9,7 @@ import 'vue-global-api/watch'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import { createPinia } from 'pinia'
 
 import '@/router/pageLoadRedirect'
 
@@ -46,6 +47,7 @@ import './styles/variables.css'
 import './styles/main.css'
 
 const app = createApp(App)
+	.use(createPinia())
 	.use(IonicVue)
 	.use(router)
 	.use(VueReCaptcha, { siteKey: import.meta.env.VITE_RECAPTCHA_KEY })
