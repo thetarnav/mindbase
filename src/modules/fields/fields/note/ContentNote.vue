@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import {} from 'ionicons/icons'
 import RichTextEditor from '@/components/RichTextEditor.vue'
+import { useFieldValue } from '../../componentSetup'
 
 const props = defineProps({
 	id: { type: String, required: true },
 })
-// const { controller, value } = useNoteController(props.id)
-const value = 'Note'
 const editor = ref<InstanceType<typeof RichTextEditor>>()
+const value = useFieldValue<'note', string>({ fieldID: props.id })
 
 const handleEditorBlur = (content: string) => {
 	// When user clicks away from the note leaving it empty,

@@ -3,7 +3,7 @@ interface FieldData<T extends FieldType> {
 	id: FieldID
 	name: string
 	settings: FieldSettings[T]
-	value: RawFieldValues[T]
+	value: APIFieldValues[T]
 }
 type AnyFieldData = FieldData<FieldType>
 type FieldsList = AnyFieldData[]

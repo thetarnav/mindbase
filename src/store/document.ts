@@ -49,7 +49,7 @@ const useDocument = defineStore('document', {
 
 			// clear content
 			const content = useContent()
-			content.clearContent()
+			content.$reset()
 		},
 	},
 })

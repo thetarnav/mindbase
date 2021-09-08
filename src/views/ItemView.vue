@@ -11,6 +11,8 @@ const route = useRoute(),
 
 const id = String(route.params.itemID)
 
+if (document.fetchState === null) document.fetch(id)
+
 // Go back to home if fetched document doesn't exists
 watchEffect(() => {
 	if (document.fetchState === 'failure') router.replace('/tabs/home')

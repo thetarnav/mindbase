@@ -21,7 +21,7 @@ const props = defineProps({
 	id: { type: String, required: true },
 })
 const content = useContent()
-const { content: fields } = storeToRefs(content)
+const { fields } = storeToRefs(content)
 
 const openedSettingsID = ref<string | null>(null)
 const listRef = ref<ComponentPublicInstance>()

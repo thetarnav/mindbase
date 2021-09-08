@@ -37,25 +37,25 @@ for (let i = 0; i < 15; i++) {
 				},
 				value: 'lorem ipsum',
 			},
-			{
-				type: 'number',
-				id: 'sadfngmkjst',
-				name: '',
-				settings: {
-					minmax: [0, 1000],
-				},
-				value: 235,
-			},
+			// {
+			// 	type: 'number',
+			// 	id: 'sadfngmkjst',
+			// 	name: '',
+			// 	settings: {
+			// 		minmax: [0, 1000],
+			// 	},
+			// 	value: 235,
+			// },
 			'<p>&#9;Hello!</p><p>This just some text</p>',
-			{
-				type: 'phone',
-				id: 'wqertbj',
-				name: 'My contacts',
-				settings: {
-					multiple: false,
-				},
-				value: [],
-			},
+			// {
+			// 	type: 'phone',
+			// 	id: 'wqertbj',
+			// 	name: 'My contacts',
+			// 	settings: {
+			// 		multiple: false,
+			// 	},
+			// 	value: [],
+			// },
 		]),
 	)
 }

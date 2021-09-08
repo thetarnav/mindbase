@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import useContent from '@/store/content'
 import {} from 'ionicons/icons'
 import { nanoid } from 'nanoid'
 import { defineAsyncComponent } from 'vue'
@@ -12,22 +13,21 @@ const props = defineProps({
 defineEmits<{
 	(name: 'dragstart', e: DragEvent): void
 }>()
-
 const fieldComponent = defineAsyncComponent(getFieldComponentImport(props.type))
-
-// const { controller, name } = provideController(props.type, props.id)
-const controller = false
-const name = 'Field'
 const dataTeleport = nanoid()
+const content = useContent()
+
+const name = computed({
+	set: v => content.setName(props.id, v),
+	get: () => content.getName(props.id),
+})
 </script>
 
 <template>
 	<div
-		v-if="controller"
 		class="field-item--wrapper"
 		:class="{ 'field-settings-open': settingsOpen }"
 	>
-		<!-- @dragstart="$emit('dragstart', $event)" -->
 		<div class="field-item--actions">
 			<slot name="actions"></slot>
 		</div>
@@ -47,6 +47,7 @@ const dataTeleport = nanoid()
 
 			<component
 				:is="fieldComponent"
+				:field-id="id"
 				:settings-teleport="`[data-teleport='${dataTeleport}']`"
 				:settings-open="settingsOpen"
 			/>
