@@ -2,6 +2,9 @@ import { fetchDocumentData } from '@/modules/apiSimulator'
 import { defineStore } from 'pinia'
 import useContent from './content'
 
+/**
+ * Manages state of currently viewed document.
+ */
 const useDocument = defineStore('document', {
 	state: () => ({
 		fetchState: <'pending' | 'success' | 'failure' | null>null,
@@ -28,13 +31,15 @@ const useDocument = defineStore('document', {
 			try {
 				const data = await fetchDocumentData(docID)
 
-				// set own state
-				this.fetchState = 'success'
-				this.mata = data
-
 				// set content in the content store
 				const content = useContent()
 				content.setContent(data.content)
+
+				// set own state
+				this.fetchState = 'success'
+				// @ts-ignore
+				delete data.content
+				this.mata = data
 			} catch (error) {
 				console.log(error)
 				this.fetchState = 'failure'

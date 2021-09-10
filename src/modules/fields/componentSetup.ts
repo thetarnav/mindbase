@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/prefer-as-const */
-import { ComponentObjectPropsOptions, WritableComputedRef } from 'vue'
+import {
+	ComponentObjectPropsOptions,
+	Ref,
+	UnwrapRef,
+	WritableComputedRef,
+} from 'vue'
 import useContent from '@/store/content'
+import { cloneDeep, isEqual } from 'lodash'
 
 const inferPropsType = <T extends ComponentObjectPropsOptions>(map: T) => map
 
@@ -16,8 +22,9 @@ interface UseValueOptions<
 	V extends FieldData<T>['value'],
 > {
 	fieldID: FieldID
-	set?: (v: V) => void
-	get?: () => V
+	defaultValue: FieldData<T>['value']
+	set?: (v: V) => FieldData<T>['value']
+	get?: (v: FieldData<T>['value']) => V
 }
 
 export const useFieldValue = <
@@ -26,31 +33,32 @@ export const useFieldValue = <
 >(
 	options: UseValueOptions<T, V>,
 ): WritableComputedRef<V> => {
-	const { fieldID, set, get } = options
+	const { fieldID, set, get, defaultValue } = options
 	const content = useContent()
 
 	const value = computed<V>({
-		set: v => set?.(v) ?? content.setValue<T>(fieldID, v),
-		get: () => get?.() ?? (content.getValue<T>(fieldID) as V),
+		set: v => {
+			const raw = set ? set(v) : (v as FieldData<T>['value'])
+			content.setValue(fieldID, raw)
+		},
+		get: () => {
+			const raw = content.getValue<T>(fieldID) ?? defaultValue
+			return get ? get(raw) : (raw as V)
+		},
 	})
+
 	return value
 }
 
 interface UseSettingsOptions<T extends FieldType> {
 	fieldID: FieldID
-	set?: (s: FieldData<T>['settings']) => void
-	get?: () => FieldData<T>['settings']
+	defaultValue: FieldData<T>['settings']
 }
 
 export const useFieldSettings = <T extends FieldType>(
 	options: UseSettingsOptions<T>,
-): WritableComputedRef<FieldData<T>['settings']> => {
-	const { fieldID, set, get } = options
+): FieldData<T>['settings'] => {
+	const { fieldID, defaultValue } = options
 	const content = useContent()
-
-	const settings = computed({
-		set: s => set?.(s) ?? content.setSettings(fieldID, s),
-		get: () => get?.() ?? content.getSettings(fieldID) ?? {},
-	})
-	return settings
+	return content.getReactiveSettings(fieldID, defaultValue)
 }

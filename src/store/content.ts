@@ -1,6 +1,9 @@
 import { parseAPIContentToFields } from '@/modules/api/content'
 import { defineStore } from 'pinia'
 
+/**
+ * Manages state of the currently viewed document's content.
+ */
 const useContent = defineStore('content', {
 	state: () => ({
 		fields: <FieldsList>[],
@@ -24,6 +27,15 @@ const useContent = defineStore('content', {
 		getSettings() {
 			return <T extends FieldType>(fieldID: FieldID) =>
 				this.getField<T>(fieldID)?.settings
+		},
+		getReactiveSettings() {
+			return <T extends FieldType>(
+				fieldID: FieldID,
+				defaultValue: FieldSettings[T],
+			): FieldSettings[T] => {
+				const field = this.getField<T>(fieldID)
+				return reactive(field?.settings ?? defaultValue) as FieldSettings[T]
+			}
 		},
 	},
 	actions: {

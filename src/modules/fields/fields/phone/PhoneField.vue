@@ -14,15 +14,21 @@ import {
 import { AsYouType } from 'libphonenumber-js'
 import { getRandom } from '@/utils/functions'
 import copy from '@/modules/clipboard'
-import { injectController } from '../../useController'
 import { isElementFocused } from '@/utils/dom'
+import {
+	fieldPropValues,
+	useFieldSettings,
+} from '@/modules/fields/componentSetup'
+import { useReactivePhoneValue } from './phoneSetup'
 
-const props = defineProps({
-	settingsTeleport: { type: String, required: true },
-	settingsOpen: { type: Boolean, required: true },
+const props = defineProps(fieldPropValues)
+const value = useReactivePhoneValue(props.fieldId)
+const settings = useFieldSettings<'phone'>({
+	fieldID: props.fieldId,
+	defaultValue: {
+		multiple: false,
+	},
 })
-
-const { value, settings } = injectController('phone')
 
 const defaultCountryCode = 'US'
 
@@ -63,7 +69,7 @@ const handlePhoneInput = (e: Event, index: number) => {
 
 	// Changing v-model value makes the cursor to teleport to the end
 	// This resets it to previous position if it were somewhere in the middle
-	if (selectionStart && selectionStart !== el.value?.length)
+	if (selectionStart && selectionStart !== el?.length)
 		nextTick(() => (el.selectionStart = el.selectionEnd = selectionStart))
 }
 
@@ -100,7 +106,7 @@ watch(
 // Finish reordering by updating value with new order
 const doReorder = (e: CustomEvent) => {
 	if (!e.detail.complete) return
-	value.value = e.detail.complete(value.value)
+	Object.assign(value.value, e.detail.complete(value.value))
 }
 const moreThanSingleEntry = computed(() => value.value.length > 1)
 const reorderDisabled = computed(

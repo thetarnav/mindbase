@@ -1,6 +1,5 @@
 import { defineAsyncComponent } from 'vue'
 import { modalController } from '@ionic/vue'
-import { FieldType } from './types'
 
 const PickFieldModal = defineAsyncComponent(
 	() => import('@/modules/fields/components/PickFieldModal.vue'),

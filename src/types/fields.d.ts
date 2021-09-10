@@ -26,6 +26,15 @@ interface APIFieldValues {
 	// person: string
 }
 
+interface TextFieldSettings {
+	multiline: boolean
+	rich: boolean
+}
+
+interface NumberFieldSettings {
+	minmax: [number, number] | [null, null]
+}
+
 interface PhoneFieldSettings {
 	multiple: boolean
 }

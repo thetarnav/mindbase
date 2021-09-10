@@ -4,11 +4,20 @@ import {
 	fieldPropValues,
 	useFieldSettings,
 	useFieldValue,
-} from '../../componentSetup'
+} from '@/modules/fields/componentSetup'
 
 const props = defineProps(fieldPropValues)
-const value = useFieldValue<'text', string>({ fieldID: props.fieldId })
-const settings = useFieldSettings<'text'>({ fieldID: props.fieldId })
+const value = useFieldValue<'text', string>({
+	fieldID: props.fieldId,
+	defaultValue: '',
+})
+const settings = useFieldSettings<'text'>({
+	fieldID: props.fieldId,
+	defaultValue: {
+		multiline: false,
+		rich: false,
+	},
+})
 </script>
 
 <template>

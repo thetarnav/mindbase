@@ -5,14 +5,23 @@ export default { inheritAttrs: false }
 <script lang="ts" setup>
 import { watch } from 'vue'
 import Slider from '@vueform/slider'
-import { injectController } from '../../useController'
+import {
+	fieldPropValues,
+	useFieldSettings,
+	useFieldValue,
+} from '@/modules/fields/componentSetup'
 
-defineProps({
-	settingsTeleport: { type: String, required: true },
-	settingsOpen: { type: Boolean, required: true },
+const props = defineProps(fieldPropValues)
+const value = useFieldValue<'number', number>({
+	fieldID: props.fieldId,
+	defaultValue: 0,
 })
-
-const { value, settings } = injectController('number')
+const settings = useFieldSettings<'number'>({
+	fieldID: props.fieldId,
+	defaultValue: {
+		minmax: [null, null],
+	},
+})
 
 const isSliderEnabled = computed(() => !settings.minmax.some(v => v === null))
 
@@ -24,8 +33,7 @@ watch(max, () => MinMaxChanged('max'))
 
 function MinMaxChanged(editing: 'min' | 'max') {
 	// Both min and max must be filled to emit update
-	if ([min.value, max.value].includes(''))
-		return (settings.minmax = [null, null])
+	if ([min.value, max].includes('')) return (settings.minmax = [null, null])
 
 	const minmax: [number, number] = [Number(min.value), Number(max.value)]
 
@@ -111,8 +119,8 @@ function MinMaxChanged(editing: 'min' | 'max') {
 .field-input--number--wrapper {
 	@apply flex w-full items-center;
 }
-.field-input--number {
-}
+/* .field-input--number {
+} */
 .field-input--number-slider {
 	@apply ml-4 flex-grow;
 }
