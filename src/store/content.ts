@@ -1,4 +1,5 @@
 import { parseAPIContentToFields } from '@/modules/api/content'
+import { removeFromArray } from '@/utils/functions'
 import { defineStore } from 'pinia'
 
 /**
@@ -61,6 +62,12 @@ const useContent = defineStore('content', {
 			let fields = parseAPIContentToFields(content)
 			if (!Array.isArray(fields)) fields = []
 			return (this.fields = fields)
+		},
+		addField(newField: AnyFieldData) {
+			this.fields.push(newField)
+		},
+		removeField(fieldID: FieldID) {
+			removeFromArray(this.fields, field => field.id === fieldID)
 		},
 	},
 })

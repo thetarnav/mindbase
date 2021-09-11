@@ -16,6 +16,7 @@ import ContentNote from '@/modules/fields/fields/note/ContentNote.vue'
 import usePickFieldModal from '@/modules/fields/usePickFieldModal'
 import useContent from '@/store/content'
 import { storeToRefs } from 'pinia'
+import { getNewFieldData } from '@/modules/fields/fieldFactory'
 
 const props = defineProps({
 	id: { type: String, required: true },
@@ -29,11 +30,12 @@ const listRef = ref<ComponentPublicInstance>()
 const openPickFieldModal = async () => {
 	try {
 		const type = await usePickFieldModal()
-		// DOCUMENT.instance.addField(type)
+		const newField = getNewFieldData(type)
+		content.addField(newField)
 	} catch (error) {}
 }
 const removeField = (id: string) => {
-	//
+	content.removeField(id)
 }
 
 const addContentNote = () => {

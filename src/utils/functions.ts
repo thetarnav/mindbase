@@ -21,6 +21,7 @@ export function random(
 export const clamp = (value: number, min: number, max: number): number =>
 	Math.min(Math.max(value, min), max)
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function isNullish(val: any): boolean {
 	return [null, undefined, false].indexOf(val) !== -1
 }

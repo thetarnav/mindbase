@@ -12,6 +12,10 @@ export type LocalPhoneFieldValue = PhoneItem[]
 
 export const defaultValue: PhoneFieldValue = []
 
+export const defaultPhoneSettings: PhoneFieldSettings = {
+	multiple: false,
+}
+
 export const setRawPhoneValue = (
 	localValue: LocalPhoneFieldValue,
 ): PhoneFieldValue =>
