@@ -22,7 +22,7 @@ const headerComponent = ref<InstanceType<typeof ItemHeader>>()
 		@ionScroll="headerComponent?.contentScroll($event)"
 		v-if="document.fetchState === 'success'"
 	>
-		<DocumentContent :id="id" />
+		<DocumentContent />
 	</ion-content>
 </template>
 

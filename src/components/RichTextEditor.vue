@@ -55,6 +55,11 @@ watch(
 	() => editor.value?.setEditable(!props.disabled),
 )
 
+watch(
+	() => props.modelValue,
+	content => editor.value?.commands.setContent(content),
+)
+
 const editorFocused = ref(false),
 	fixedMenuFocused = ref(false)
 

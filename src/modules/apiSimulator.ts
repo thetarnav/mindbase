@@ -47,6 +47,7 @@ for (let i = 0; i < 15; i++) {
 				value: 235,
 			},
 			'<p>&#9;Hello!</p><p>This just some text</p>',
+			'<p>Merge testing</p>',
 			{
 				type: 'phone',
 				id: 'w2qer1t81241bj',
@@ -56,6 +57,8 @@ for (let i = 0; i < 15; i++) {
 				},
 				value: [{ label: 'Mobile', number: '+48505683588' }],
 			},
+			'<p>&#9;Hello!</p><p>This just some text</p>',
+			'<p>Merge testing</p>',
 		]),
 	)
 }

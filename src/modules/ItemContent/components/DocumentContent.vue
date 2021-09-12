@@ -18,9 +18,6 @@ import useContent from '@/store/content'
 import { storeToRefs } from 'pinia'
 import { getNewFieldData } from '@/modules/fields/fieldFactory'
 
-const props = defineProps({
-	id: { type: String, required: true },
-})
 const content = useContent()
 const { fields } = storeToRefs(content)
 
@@ -39,7 +36,9 @@ const removeField = (id: string) => {
 }
 
 const addContentNote = () => {
-	// DOCUMENT.instance.addField('note')
+	const newNote = getNewFieldData('note')
+	content.addField(newNote)
+	content.mergeNeighborNotes()
 }
 
 const toggleSettings = (fieldID: string) => {
@@ -61,12 +60,13 @@ useReorderList(listRef as Ref<ComponentPublicInstance>)
 <template>
 	<ion-list class="item-fields-list" ref="listRef">
 		<transition-group :css="false" @leave="itemCollapseTransition">
-			<template v-for="field in fields" :key="field.id">
+			<template v-for="field in fields">
 				<ContentNote
 					v-if="field.type === 'note'"
 					class="content-note-component"
 					:data-field-id="field.id"
 					:id="field.id"
+					:key="field.id + 'note'"
 				/>
 				<Field
 					v-else
@@ -79,6 +79,7 @@ useReorderList(listRef as Ref<ComponentPublicInstance>)
 						// @ts-ignore
 						e => onClickAway(field.id, e)
 					"
+					:key="field.id + 'field'"
 				>
 					<template v-slot:actions>
 						<ion-button
