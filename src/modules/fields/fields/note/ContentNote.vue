@@ -2,6 +2,7 @@
 import {} from 'ionicons/icons'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 import { useFieldValue } from '../../componentSetup'
+import { defaultValue } from './contentNoteSetup'
 
 const props = defineProps({
 	id: { type: String, required: true },
@@ -9,7 +10,7 @@ const props = defineProps({
 const editor = ref<InstanceType<typeof RichTextEditor>>()
 const value = useFieldValue<'note', string>({
 	fieldID: props.id,
-	defaultValue: '',
+	defaultValue,
 })
 
 const handleEditorBlur = (content: string) => {

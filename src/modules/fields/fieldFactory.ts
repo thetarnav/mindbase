@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
 import { defaultPhoneSettings } from './fields/phone/phoneSetup'
+import { defaultValue as defaultNoteValue } from './fields/note/contentNoteSetup'
 
 const componentImport: Record<FieldType, ComponentImport> = {
 	text: () => import('./fields/text/TextField.vue') as any,
@@ -26,7 +27,7 @@ const defaultSettings: FieldSettings = {
 }
 
 const defaultValues: APIFieldValues = {
-	note: '',
+	note: defaultNoteValue,
 	text: '',
 	number: 0,
 	phone: [],
@@ -34,10 +35,11 @@ const defaultValues: APIFieldValues = {
 
 export const getNewFieldData = <T extends FieldType>(
 	type: T,
+	value?: FieldData<T>['value'],
 ): FieldData<T> => ({
 	id: nanoid(),
 	type,
 	name: '',
 	settings: defaultSettings[type],
-	value: defaultValues[type],
+	value: value ?? defaultValues[type],
 })

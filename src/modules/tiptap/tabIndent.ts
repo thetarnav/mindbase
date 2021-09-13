@@ -98,11 +98,12 @@ export const Indent = Extension.create<IndentOptions>({
 						renderHTML: attributes => ({
 							'data-indent': attributes.indent,
 						}),
-						parseHTML: element => ({
-							indent:
-								parseInt(element.dataset['data-indent'] ?? '') ||
-								this.options.defaultIndentLevel,
-						}),
+						parseHTML: element => {
+							const indent = element.getAttribute('data-indent')
+							return indent
+								? parseInt(indent)
+								: this.options.defaultIndentLevel
+						},
 					},
 				},
 			},

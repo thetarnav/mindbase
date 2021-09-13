@@ -1,7 +1,13 @@
 import { parseAPIContentToFields } from '@/modules/api/content'
-import { removeFromArray } from '@/utils/functions'
+import {
+	removeFromArray,
+	removeFromArrayCopy,
+	reorderArray,
+	reorderArrayCopy,
+} from '@/utils/functions'
 import { copyArray, copyObject } from '@/utils/fp'
 import { defineStore } from 'pinia'
+import { getNewFieldData } from '@/modules/fields/fieldFactory'
 
 /**
  * Manages state of the currently viewed document's content.
@@ -17,6 +23,8 @@ const useContent = defineStore('content', {
 				return field as FieldData<T> | undefined
 			}
 		},
+		getFieldIndex: state => (fieldID: FieldID) =>
+			state.fields.findIndex(({ id }) => id === fieldID),
 		getName() {
 			return (fieldID: FieldID) => this.getField(fieldID)?.name ?? ''
 		},
@@ -68,11 +76,37 @@ const useContent = defineStore('content', {
 		addField(newField: AnyFieldData) {
 			this.fields.push(newField)
 		},
-		removeField(fieldID: FieldID) {
-			removeFromArray(this.fields, field => field.id === fieldID)
+		removeField(fieldID: FieldID): AnyFieldData | undefined {
+			return removeFromArray(this.fields, field => field.id === fieldID)
 		},
 		mergeNeighborNotes(): void {
 			this.fields = getMergedNeighborNotes(this.fields)
+		},
+		reorderField(
+			fieldID: FieldID,
+			dropFieldID: FieldID,
+			side: 'above' | 'below',
+		): void {
+			const from = this.getFieldIndex(fieldID)
+			let to = this.getFieldIndex(dropFieldID)
+			if (from === -1 || to === -1) return
+			side === 'below' && to++
+			reorderArray(this.fields, from, to)
+			this.mergeNeighborNotes()
+		},
+		moveFieldBetweenNote(
+			fieldID: FieldID,
+			noteID: FieldID,
+			noteContent: [string, string],
+		) {
+			// TODO: refactor function to be cleaner and not mutating this.fields
+			const field = this.removeField(fieldID)
+			const noteIndex = this.getFieldIndex(noteID)
+			if (noteIndex === -1 || !field) return
+			const noteAbove = getNewFieldData('note', noteContent[0])
+			const noteBelow = getNewFieldData('note', noteContent[1])
+			this.fields.splice(noteIndex, 1, noteAbove, field, noteBelow)
+			this.mergeNeighborNotes()
 		},
 	},
 })

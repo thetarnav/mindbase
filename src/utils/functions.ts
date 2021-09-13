@@ -1,3 +1,5 @@
+import { copyArray } from './fp'
+
 export function random(
 	min: number,
 	max: number,
@@ -44,22 +46,42 @@ export function filterDuplicates(iterable: any[] | string): any {
 	return isString ? result.join('') : result
 }
 
-export function removeFromArray<T>(array: T[], item: T): T[]
+/**
+ * Mutates the array!
+ * @returns deleted item or undefined */
+export function removeFromArray<T>(array: T[], item: T): T | undefined
 export function removeFromArray<T>(
 	array: T[],
-	iterator: (item: T) => boolean,
-): T[]
+	iterator: (value: T, index: number, obj: T[]) => boolean,
+): T | undefined
 export function removeFromArray<T>(
 	array: T[],
 	b: T | ((value: T, index: number, obj: T[]) => boolean),
-): T[] {
+): T | undefined {
 	if (typeof b === 'function' && array.indexOf(b as T) === -1) {
 		const index = array.findIndex(
 			b as (value: T, index: number, obj: T[]) => boolean,
 		)
-		return array.splice(index, 1)
+		return array.splice(index, 1)[0]
 	}
-	return array.splice(array.indexOf(b as T), 1)
+	return array.splice(array.indexOf(b as T), 1)[0]
+}
+
+export function removeFromArrayCopy<T>(
+	array: readonly T[],
+	item: T,
+): { array: T[]; deleted: T | undefined }
+export function removeFromArrayCopy<T>(
+	array: readonly T[],
+	iterator: (item: T) => boolean,
+): { array: T[]; deleted: T | undefined }
+export function removeFromArrayCopy<T>(
+	array: readonly T[],
+	b: T | ((value: T, index: number, obj: T[]) => boolean),
+): { array: T[]; deleted: T | undefined } {
+	const copy = copyArray(array)
+	const deleted = removeFromArray<T>(copy, b as any)
+	return { array: copy, deleted }
 }
 
 export const keyLookup = <T extends Record<string, any>, K extends keyof T>(
@@ -174,6 +196,18 @@ export function capitalize(string: string): string {
 	return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
+/** Mutates the array! */
 export const reorderArray = (array: any[], from: number, to: number): void => {
-	array.splice(to, 0, array.splice(from, 1)[0])
+	array.splice(from < to ? to - 1 : to, 0, array.splice(from, 1)[0])
+}
+
+/** Returns a reordered array */
+export const reorderArrayCopy = <T>(
+	array: readonly T[],
+	from: number,
+	to: number,
+): T[] => {
+	const copy = copyArray(array)
+	reorderArray(copy, from, to)
+	return copy
 }

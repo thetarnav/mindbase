@@ -1,12 +1,13 @@
 import { ComponentPublicInstance, onMounted, onUnmounted, Ref } from 'vue'
 import { Draggable, DragMoveEvent, DragOverEvent } from '@shopify/draggable'
 import { cloneDeep, pull } from 'lodash'
+import useContent from '@/store/content'
 
 interface DragOver {
 	el: HTMLElement | null
 	top: number
 	h: number
-	side: 'bottom' | 'top'
+	side: 'below' | 'above'
 	entry: Entry | null
 }
 
@@ -14,7 +15,7 @@ const initialDragOverState: DragOver = {
 	el: null,
 	top: 0,
 	h: 100,
-	side: 'bottom',
+	side: 'below',
 	entry: null,
 }
 
@@ -113,7 +114,7 @@ const findEntryWithElement = (
 
 export default function useReorderList(
 	listRef: Ref<HTMLElement | ComponentPublicInstance>,
-) {
+): void {
 	let draggable: Draggable
 	let entries: Entry[] = []
 	let sourceID: string | null = null
@@ -122,7 +123,7 @@ export default function useReorderList(
 	const indicator = computed<[HTMLElement, 'drop-bottom' | 'drop-top'] | null>(
 		() => {
 			if (!over.el) return null
-			if (over.side === 'bottom') return [over.el, 'drop-bottom']
+			if (over.side === 'below') return [over.el, 'drop-bottom']
 			const prev = over.entry ? entries[over.entry.index - 1] : null
 			return prev ? [prev.el, 'drop-bottom'] : [over.el, 'drop-top']
 		},
@@ -134,7 +135,7 @@ export default function useReorderList(
 		const { clientY: y } = (e.originalEvent as TouchEvent).touches[0]
 		const fromTop = y - over.top
 		const pastCenter = fromTop > over.h / 2
-		over.side = pastCenter ? 'bottom' : 'top'
+		over.side = pastCenter ? 'below' : 'above'
 	}
 
 	const onDragOver = (e: DragOverEvent) => {
@@ -143,6 +144,42 @@ export default function useReorderList(
 		over.h = bounds.height
 		over.top = bounds.top
 		over.entry = findEntryWithElement(entries, e.over)
+	}
+
+	const onDragStop = () => {
+		const content = useContent()
+		const dropSide = over.side
+		const overEntry = over.entry
+		clearOverEl()
+
+		// TODO: figure out why sometimes overEntry === null
+
+		if (!overEntry || !sourceID || sourceID === overEntry.id) return
+
+		// TODO: move as much generic logic to separate calculations
+
+		if (overEntry.noteIndex !== null) {
+			const contentSplit: [string, string] = ['', '']
+			const n = overEntry.index - overEntry.noteIndex
+			const isAboveUpTo =
+				dropSide === 'above' ? overEntry.index : overEntry.index + 1
+
+			for (let i = 0; i < entries.length; i++) {
+				const entry = entries[i]
+				if (i < n) continue
+				if (entry.is === 'field') break
+
+				if (i < isAboveUpTo) contentSplit[0] += entry.el.outerHTML
+				else contentSplit[1] += entry.el.outerHTML
+			}
+
+			const regex = /class="[a-z\- ]*"/gi
+			contentSplit[0] = contentSplit[0].replaceAll(regex, '')
+			contentSplit[1] = contentSplit[1].replaceAll(regex, '')
+			content.moveFieldBetweenNote(sourceID, overEntry.id, contentSplit)
+		} else {
+			content.reorderField(sourceID, overEntry.id, dropSide)
+		}
 	}
 
 	onMounted(() => {
@@ -161,16 +198,7 @@ export default function useReorderList(
 			onDragMove(e)
 		})
 		draggable.on('drag:out:container', clearOverEl)
-		draggable.on('drag:stop', e => {
-			// console.log(sourceID)
-
-			// console.log(
-			// 	sourceID,
-			// 	'->',
-			// 	over.side === 'bottom' ? over.entry?.index : over.entry?.index - 1,
-			// )
-			clearOverEl()
-		})
+		draggable.on('drag:stop', onDragStop)
 	})
 	onUnmounted(() => {
 		draggable.destroy()
