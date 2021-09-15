@@ -1,5 +1,6 @@
 import { parseAPIContentToFields } from '@/modules/api/content'
 import {
+	arraySplit,
 	removeFromArray,
 	removeFromArrayCopy,
 	reorderArray,
@@ -8,6 +9,12 @@ import {
 import { copyArray, copyObject } from '@/utils/fp'
 import { defineStore } from 'pinia'
 import { getNewFieldData } from '@/modules/fields/fieldFactory'
+import { generateJSON } from '@tiptap/vue-3'
+import {
+	generateNoteHTML,
+	generateNoteJSON,
+} from '@/modules/fields/fields/note/contentNoteSetup'
+import { chunk } from 'lodash'
 
 /**
  * Manages state of the currently viewed document's content.
@@ -94,18 +101,27 @@ const useContent = defineStore('content', {
 			reorderArray(this.fields, from, to)
 			this.mergeNeighborNotes()
 		},
-		moveFieldBetweenNote(
-			fieldID: FieldID,
-			noteID: FieldID,
-			noteContent: [string, string],
-		) {
-			// TODO: refactor function to be cleaner and not mutating this.fields
+		moveFieldIntoNote(fieldID: FieldID, noteID: FieldID, splitIndex: number) {
 			const field = this.removeField(fieldID)
 			const noteIndex = this.getFieldIndex(noteID)
-			if (noteIndex === -1 || !field) return
-			const noteAbove = getNewFieldData('note', noteContent[0])
-			const noteBelow = getNewFieldData('note', noteContent[1])
+			const note = this.getField<'note'>(noteID)
+			if (!field || !note) return
+
+			// get json content of the drop target note & split it in two
+			const noteContent = generateNoteJSON(note.value).content ?? [],
+				contentSplit = arraySplit(noteContent, splitIndex)
+			// create two note fields
+			const noteAbove = getNewFieldData(
+				'note',
+				generateNoteHTML(contentSplit[0]),
+			)
+			const noteBelow = getNewFieldData(
+				'note',
+				generateNoteHTML(contentSplit[1]),
+			)
+			// swap old note with new ones and dragged field in the middle
 			this.fields.splice(noteIndex, 1, noteAbove, field, noteBelow)
+			// merge neighboring notes
 			this.mergeNeighborNotes()
 		},
 	},
@@ -114,7 +130,6 @@ export default useContent
 
 function getMergedNeighborNotes(list: readonly AnyFieldData[]): FieldsList {
 	const listCopy = copyArray(list)
-
 	let prev: AnyFieldData | undefined
 	list.forEach(field => {
 		if (prev?.type === field.type && field.type === 'note') {
@@ -128,4 +143,16 @@ function getMergedNeighborNotes(list: readonly AnyFieldData[]): FieldsList {
 		}
 	})
 	return listCopy
+}
+
+function removeLastEmptyP(string: string): string {
+	const rgx = new RegExp(
+		/(<p[^>]*>(<br[/\\]?>)*<\/p>)(?!.*(<p[^>]*>(<br[/\\]?>)*<\/p>))/gi,
+	)
+
+	console.log(rgx.lastIndex)
+
+	console.log(rgx.lastIndex)
+
+	return string
 }

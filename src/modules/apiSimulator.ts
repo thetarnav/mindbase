@@ -47,7 +47,8 @@ for (let i = 0; i < 15; i++) {
 				value: 235,
 			},
 			'<p>&#9;Hello!</p><p>This just some text</p>',
-			'<p>Merge testing</p>',
+			'<p><br></p>',
+			'<p>Empty line above</p>',
 			{
 				type: 'phone',
 				id: 'w2qer1t81241bj',

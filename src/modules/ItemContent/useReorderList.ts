@@ -156,28 +156,13 @@ export default function useReorderList(
 
 		if (!overEntry || !sourceID || sourceID === overEntry.id) return
 
-		// TODO: move as much generic logic to separate calculations
-
 		if (overEntry.noteIndex !== null) {
-			const contentSplit: [string, string] = ['', '']
-			const n = overEntry.index - overEntry.noteIndex
-			const isAboveUpTo =
-				dropSide === 'above' ? overEntry.index : overEntry.index + 1
-
-			for (let i = 0; i < entries.length; i++) {
-				const entry = entries[i]
-				if (i < n) continue
-				if (entry.is === 'field') break
-
-				if (i < isAboveUpTo) contentSplit[0] += entry.el.outerHTML
-				else contentSplit[1] += entry.el.outerHTML
-			}
-
-			const regex = /class="[a-z\- ]*"/gi
-			contentSplit[0] = contentSplit[0].replaceAll(regex, '')
-			contentSplit[1] = contentSplit[1].replaceAll(regex, '')
-			content.moveFieldBetweenNote(sourceID, overEntry.id, contentSplit)
+			// if placing a field inside a note
+			const contentSplit =
+				dropSide === 'above' ? overEntry.noteIndex : overEntry.noteIndex + 1
+			content.moveFieldIntoNote(sourceID, overEntry.id, contentSplit)
 		} else {
+			// if just reordering fields
 			content.reorderField(sourceID, overEntry.id, dropSide)
 		}
 	}

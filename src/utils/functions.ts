@@ -84,6 +84,11 @@ export function removeFromArrayCopy<T>(
 	return { array: copy, deleted }
 }
 
+export const arraySplit = <T>(array: T[], splitIndex: number): [T[], T[]] => [
+	array.slice(0, splitIndex),
+	array.slice(splitIndex),
+]
+
 export const keyLookup = <T extends Record<string, any>, K extends keyof T>(
 	list: T[],
 	key: K,
