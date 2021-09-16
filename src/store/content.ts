@@ -2,19 +2,16 @@ import { parseAPIContentToFields } from '@/modules/api/content'
 import {
 	arraySplit,
 	removeFromArray,
-	removeFromArrayCopy,
 	reorderArray,
-	reorderArrayCopy,
+	removeFromArrayCopy,
 } from '@/utils/functions'
 import { copyArray, copyObject } from '@/utils/fp'
 import { defineStore } from 'pinia'
 import { getNewFieldData } from '@/modules/fields/fieldFactory'
-import { generateJSON } from '@tiptap/vue-3'
 import {
 	generateNoteHTML,
 	generateNoteJSON,
 } from '@/modules/fields/fields/note/contentNoteSetup'
-import { chunk } from 'lodash'
 
 /**
  * Manages state of the currently viewed document's content.
@@ -25,13 +22,11 @@ const useContent = defineStore('content', {
 	}),
 	getters: {
 		getField(state) {
-			return <T extends FieldType>(fieldID: FieldID) => {
-				const field = state.fields.find(field => field.id === fieldID)
-				return field as FieldData<T> | undefined
-			}
+			return <T extends FieldType>(fieldID: FieldID) =>
+				getField<T>(state.fields, fieldID)
 		},
 		getFieldIndex: state => (fieldID: FieldID) =>
-			state.fields.findIndex(({ id }) => id === fieldID),
+			fieldIndex(state.fields, fieldID),
 		getName() {
 			return (fieldID: FieldID) => this.getField(fieldID)?.name ?? ''
 		},
@@ -84,7 +79,9 @@ const useContent = defineStore('content', {
 			this.fields.push(newField)
 		},
 		removeField(fieldID: FieldID): AnyFieldData | undefined {
-			return removeFromArray(this.fields, field => field.id === fieldID)
+			const { fields, field } = removeField(this.fields, fieldID)
+			this.fields = fields
+			return field
 		},
 		mergeNeighborNotes(): void {
 			this.fields = getMergedNeighborNotes(this.fields)
@@ -102,9 +99,9 @@ const useContent = defineStore('content', {
 			this.mergeNeighborNotes()
 		},
 		moveFieldIntoNote(fieldID: FieldID, noteID: FieldID, splitIndex: number) {
-			const field = this.removeField(fieldID)
-			const noteIndex = this.getFieldIndex(noteID)
-			const note = this.getField<'note'>(noteID)
+			// make a copy of fields list & remove dragged field
+			const { fields, field } = removeField(this.fields, fieldID)
+			const note = getField<'note'>(fields, noteID)
 			if (!field || !note) return
 
 			// get json content of the drop target note & split it in two
@@ -119,14 +116,60 @@ const useContent = defineStore('content', {
 				'note',
 				generateNoteHTML(contentSplit[1]),
 			)
+
 			// swap old note with new ones and dragged field in the middle
-			this.fields.splice(noteIndex, 1, noteAbove, field, noteBelow)
+			replaceField(fields, noteID, noteAbove, field, noteBelow)
 			// merge neighboring notes
-			this.mergeNeighborNotes()
+			this.fields = getMergedNeighborNotes(fields)
 		},
 	},
 })
 export default useContent
+
+function getField<T extends FieldType>(
+	fields: AnyFieldData[],
+	fieldID: FieldID,
+): FieldData<T> | undefined
+function getField<T extends FieldType>(
+	fields: AnyFieldData[],
+	index: number,
+): FieldData<T> | undefined
+function getField<T extends FieldType>(
+	fields: AnyFieldData[],
+	key: FieldID | number,
+): FieldData<T> | undefined {
+	const field =
+		typeof key === 'number'
+			? fields[key]
+			: fields.find(field => field.id === key)
+	return field as FieldData<T> | undefined
+}
+
+const removeField = <T extends FieldType>(
+	fields: readonly AnyFieldData[],
+	fieldID: FieldID,
+): { field: FieldData<T> | undefined; fields: FieldsList } => {
+	const result = removeFromArrayCopy(fields, f => f.id === fieldID)
+	return {
+		fields: result.array,
+		field: result.deleted as FieldData<T> | undefined,
+	}
+}
+
+const fieldIndex = (
+	fields: readonly AnyFieldData[],
+	fieldID: FieldID,
+): number => fields.findIndex(f => f.id === fieldID)
+
+/** Modifies the fields! */
+const replaceField = (
+	fields: FieldsList,
+	replacing: FieldID,
+	...newFields: FieldsList
+): void => {
+	const index = fieldIndex(fields, replacing)
+	fields.splice(index, 1, ...newFields)
+}
 
 function getMergedNeighborNotes(list: readonly AnyFieldData[]): FieldsList {
 	const listCopy = copyArray(list)
@@ -143,16 +186,4 @@ function getMergedNeighborNotes(list: readonly AnyFieldData[]): FieldsList {
 		}
 	})
 	return listCopy
-}
-
-function removeLastEmptyP(string: string): string {
-	const rgx = new RegExp(
-		/(<p[^>]*>(<br[/\\]?>)*<\/p>)(?!.*(<p[^>]*>(<br[/\\]?>)*<\/p>))/gi,
-	)
-
-	console.log(rgx.lastIndex)
-
-	console.log(rgx.lastIndex)
-
-	return string
 }

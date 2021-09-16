@@ -2,6 +2,7 @@ import { ComponentPublicInstance, onMounted, onUnmounted, Ref } from 'vue'
 import { Draggable, DragMoveEvent, DragOverEvent } from '@shopify/draggable'
 import { cloneDeep, pull } from 'lodash'
 import useContent from '@/store/content'
+import { copyObject } from '@/utils/fp'
 
 interface DragOver {
 	el: HTMLElement | null
@@ -83,17 +84,18 @@ const getFieldEntries = (els: HTMLElement[]): Entry[] => {
 	return fields
 }
 
+const getNoteBlockFieldID = (el: Element): string =>
+	(el.closest('.content-note-component') as HTMLElement)?.dataset?.fieldId ??
+	''
+
 const getNoteBlocksEntries = (entries: HTMLElement[]): Entry[] =>
-	filterNoteBlocks(entries).map(el => {
-		const note = el.closest('.content-note-component')
-		return {
-			is: 'note-block',
-			id: (note as HTMLElement)?.dataset?.fieldId ?? '',
-			index: entries.indexOf(el),
-			noteIndex: Array.from(el.parentElement?.children ?? []).indexOf(el),
-			el,
-		}
-	})
+	filterNoteBlocks(entries).map(el => ({
+		is: 'note-block',
+		id: getNoteBlockFieldID(el),
+		index: entries.indexOf(el),
+		noteIndex: Array.from(el.parentElement?.children ?? []).indexOf(el),
+		el,
+	}))
 
 const getEntriesInContainer = (
 	parent: HTMLElement,
@@ -110,7 +112,17 @@ const getEntriesInContainer = (
 const findEntryWithElement = (
 	entries: Entry[],
 	el: HTMLElement,
-): Entry | null => entries.find(e => e.el === el) ?? null
+): Entry | null => {
+	let result = entries.find(e => e.el === el)
+	// sometimes dragover el doesn't match for note blocks with els in entries
+	// so the correct entry can be found using parent index and field id from dataset
+	if (!result) {
+		const index = Array.from(el.parentElement?.childNodes ?? []).indexOf(el)
+		const noteID = getNoteBlockFieldID(el)
+		result = entries.find(e => e.id === noteID && e.noteIndex === index)
+	}
+	return result ?? null
+}
 
 export default function useReorderList(
 	listRef: Ref<HTMLElement | ComponentPublicInstance>,
@@ -147,20 +159,17 @@ export default function useReorderList(
 	}
 
 	const onDragStop = () => {
+		if (!over.entry || !sourceID || sourceID === over.entry.id)
+			return clearOverEl()
 		const content = useContent()
 		const dropSide = over.side
-		const overEntry = over.entry
+		const overEntry = copyObject(over.entry)
 		clearOverEl()
-
-		// TODO: figure out why sometimes overEntry === null
-
-		if (!overEntry || !sourceID || sourceID === overEntry.id) return
 
 		if (overEntry.noteIndex !== null) {
 			// if placing a field inside a note
-			const contentSplit =
-				dropSide === 'above' ? overEntry.noteIndex : overEntry.noteIndex + 1
-			content.moveFieldIntoNote(sourceID, overEntry.id, contentSplit)
+			dropSide === 'below' && overEntry.noteIndex++
+			content.moveFieldIntoNote(sourceID, overEntry.id, overEntry.noteIndex)
 		} else {
 			// if just reordering fields
 			content.reorderField(sourceID, overEntry.id, dropSide)
@@ -183,11 +192,13 @@ export default function useReorderList(
 			onDragMove(e)
 		})
 		draggable.on('drag:out:container', clearOverEl)
-		draggable.on('drag:stop', onDragStop)
+		draggable.on('drag:stop', () => onDragStop())
 	})
 	onUnmounted(() => {
 		draggable.destroy()
 	})
+
+	// TODO: fix the issue with indicator sometimes not showing up or targetting wrong element. This propably has something to do with draggable.js cashing old elements
 
 	watch(indicator, (now, old) => {
 		old && old[0].classList.remove(old[1])
